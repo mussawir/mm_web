@@ -15,6 +15,7 @@ class OperatorDetail extends Model
 		'operation_geo_location',
 		'address',
 		'operation_radius',
+		'operational_area',
 		'commission_percentage',
 		'area_name',
 	];
