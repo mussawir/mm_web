@@ -14,8 +14,6 @@ class Vendor extends Model
 
 	protected $fillable = [
 		'name',
-		'city_id',
-		'branch_id',
 		'company_name',
 		'shop_number',
 		'full_address',
@@ -74,8 +72,8 @@ class Vendor extends Model
 		return $this->belongsTo('App\Models\VendorType');
 	}
 
-	public function branch()
+	public function operator()
 	{
-		return $this->belongsTo('App\Models\Branches');
+		return $this->belongsTo('App\Models\OperatorMaster', 'operator_id');
 	}
 }

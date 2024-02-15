@@ -43,6 +43,7 @@ class OrderMaster extends Model
 	{
 		return $this->hasMany('App\Models\OrderDetails', 'order_master_id');
 	}
+
 	public function vendor()
 	{
 		return $this->belongsTo('App\Models\Vendor');
