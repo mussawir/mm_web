@@ -5,18 +5,65 @@ namespace App\Http\Controllers\Mobile\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Vendor;
 use App\Models\VendorType;
+use App\Models\OperatorMaster;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MobileVendorController extends Controller
 {
-	public function index($branchID,$vendorType)
+	private function getDistance($lat1, $lon1, $lat2, $lon2) {
+        $earthRadius = 6371; // in kilometers
+
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
+
+        $a = sin($dLat / 2) * sin($dLat / 2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon / 2) * sin($dLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        $distance = $earthRadius * $c;
+
+        return $distance;
+    }
+	public function index(Request $request)
 	{
-		$vendors = Vendor::where('branch_id', $branchID)->where('vendor_type_id', $vendorType)->get();
+		// users location coordinates
+		$latitude = $request->input('latitude');
+		$longitude = $request->input('longitude');
+
+		// user selected vendor type
+		$vendorType = $request->input('vendorType');
+
+
+		// fetching all operators
+		$operators = OperatorMaster::with('details')->get();
+
+		// filtering operators based on distance
+		$filteredOperators=[];
+		foreach($operators as $operator){
+			$operatorLocation = json_decode($operator->details->operation_geo_location);
+			$operatorRadius = $operator->details->operation_radius;
+			$distance = $this->getDistance($latitude, $longitude, $operatorLocation->latitude, $operatorLocation->longitude);
+			if($distance > $operatorRadius){
+				continue;
+			}
+			$operator->distance = $distance;
+
+			$filteredOperators[] = $operator;
+		}
+
+
+		// Extracting operator IDs from the filteredOperators array
+		$operatorIds = array_column($filteredOperators, 'id');
+
+
+		// fetching vendors based on operator ids and vendor type
+		$vendors = Vendor::whereIn('operator_id', $operatorIds)->where('vendor_type_id', $vendorType)->get();
 
 		return response()->json([
 			'status' => 200,
 			'message' => 'Vendors retrieved successfully.',
 			'data' => $vendors,
+			'operators' => $filteredOperators
 		]);
 	}
 

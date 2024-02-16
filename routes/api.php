@@ -200,7 +200,7 @@ Route::prefix('v1')->group(function () {
 
 	# Added by Sohail Asghar [22-DEC-2023]
 	Route::prefix('vendors')->group(function() {
-		Route::get('/list/{branch}/{vendorType}', [MobileVendorController::class, 'index']);
+		Route::get('/list', [MobileVendorController::class, 'index']);
 		Route::get('/deals/{id}', [MobileVendorController::class, 'getVendorDeals']);
 		Route::get('/items/{id}', [MobileVendorController::class, 'getVendorItems']);
 		Route::get('/categories/{id}', [MobileVendorController::class, 'getVendorCategories']);
