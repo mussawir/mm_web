@@ -42,7 +42,6 @@ class MobileCustomerOrdersController extends Controller
 		$ordermaster = new OrderMaster;
 
 		$ordermaster->customer_id = $request->data['userobj']['customerid'];
-		$ordermaster->branch_id = $request->data['userobj']['branchId'];
 		$ordermaster->item_quantity = $request->data['userobj']['totalQty'];
 		$ordermaster->order_amount = $request->data['userobj']['orderAmount'];
 		$ordermaster->delivery_charges = $request->data['userobj']['deliveryCharges'];
@@ -51,7 +50,9 @@ class MobileCustomerOrdersController extends Controller
 		$ordermaster->order_address = $request->data['location']['address'];
 		$ordermaster->order_geo_location = json_encode($request->data['location']['selectedCoords']);
 		$ordermaster->further_instructions = $request->data['location']['instructions'];
-		$orderType = $request->data['userobj']['orderType'];
+		// $orderType = $request->data['userobj']['orderType'];
+		// for not using static order type have to decide app flow
+		$orderType = 'Delivery';
 		$paymentMethod = $request->data['userobj']['paymentMethod'];
 
 		$commisionPercentage = Vendor::findOrFail($request->data['userobj']['vendorId'])->value('commission_percentage');
@@ -171,7 +172,7 @@ class MobileCustomerOrdersController extends Controller
 		}
 
 		$existingToken = DB::table('admins')
-			->where('vendor_id', $request->data['userobj']['vendorId'])
+			->where('user_id', $request->data['userobj']['vendorId'])
 			->value('fcm_token');
 
 		$SERVER_API_KEY = 'AAAA67W-sfc:APA91bGirgvIyP53r0i5RZCW2kXficfBXnUmktRnQ0uVt8Ef-OjyGkC6bq3ExkjFfbEgLy2MM5RC9h6QSUwMZIgZ_5Il5ij33uOUB7UXW1mdXKwCkU33MxFwIgKiza36eKMCDvnPVne-';
