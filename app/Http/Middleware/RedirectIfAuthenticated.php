@@ -37,12 +37,10 @@ class RedirectIfAuthenticated
 		if ($guards == "rider" && Auth::guard($guards)->check()) {
 			return redirect('/rider/dashboard');
 		}
-		if ($guards == "shop" && Auth::guard($guards)->check()) {
-			return redirect('/shop/dashboard');
-		}
 		if ($guards == "customer" && Auth::guard($guards)->check()) {
-				return redirect('/home');
+			return redirect('/home');
 		}
+
 		return $next($request);
 	}
 }

@@ -23,6 +23,78 @@
 			</a>
 		</li>
 
+		@can('admin')
+		<li class="menu-item {{ (request()->is('admin/operators') || request()->is('admin/operators/*')) ? 'active' : '' }}">
+			<a href="{{ url('/admin/operators') }}" class="menu-link">
+				<i class="menu-icon tf-icons bx bxs-user-circle"></i>
+				<div data-i18n="Operators">Operators</div>
+			</a>
+		</li>
+		<li class="menu-item {{ (request()->is('admin/categories') || request()->is('admin/categories/*')) ? 'active' : '' }}">
+			<a href="{{ url('/admin/categories') }}" class="menu-link">
+				<i class="menu-icon tf-icons bx bxs-category"></i>
+				<div data-i18n="Categories">Categories</div>
+			</a>
+		</li>
+		<li class="menu-item {{ request()->is('admin/cities') ? 'active' : '' }}">
+			<a href="{{ url('/admin/cities') }}" class="menu-link">
+				<i class="menu-icon tf-icons bx bxs-city"></i>
+				<div data-i18n="Cities">Cities</div>
+			</a>
+		</li>
+		<li class="menu-item {{ request()->is('admin/vendor-types') ? 'active' : '' }}">
+			<a href="{{ url('/admin/vendor-types') }}" class="menu-link">
+				<i class="menu-icon tf-icons bx bxs-user-circle"></i>
+				<div data-i18n="Vendor Types">Vendor Types</div>
+			</a>
+		</li>
+		@endcan
+
+		@can('operator')
+		<li class="menu-item {{ request()->is('admin/vendors') ? 'active' : '' }}">
+			<a href="{{ url('/admin/vendors') }}" class="menu-link">
+				<i class="menu-icon tf-icons bx bxs-user-circle"></i>
+				<div data-i18n="Vendors">Vendors</div>
+			</a>
+		</li>
+		{{-- <li class="menu-item {{ request()->is('admin/branches') ? 'active' : '' }}">
+			<a href="{{ url('/admin/branches') }}" class="menu-link">
+				<i class="menu-icon tf-icons bx bx-store"></i>
+				<div data-i18n="Branches">Branches</div>
+			</a>
+		</li> --}}
+		{{-- <li class="menu-item {{ request()->is('admin/customer/list') ? 'active' : '' }}">
+			<a href="{{ url('/admin/customer/list') }}" class="menu-link">
+				<i class="menu-icon tf-icons bx bxs-user-circle"></i>
+				<div data-i18n="Customers">Customers</div>
+			</a>
+		</li> --}}
+		<li class="menu-item {{ in_array('settings', request()->segments()) ? 'active' : '' }}">
+			<a href="javascript:void(0);" class="menu-link menu-toggle">
+				<i class='menu-icon tf-icons bx bx-cog'></i>
+				<div data-i18n="Settings">Settings</div>
+			</a>
+
+			<ul class="menu-sub">
+				{{-- <li class="menu-item {{ request()->is('admin/settings/reorder') ? 'active' : '' }}">
+					<a href="{{ url('/admin/settings/reorder') }}" class="menu-link">
+						<div data-i18n="Reordering">
+							Reordering
+						</div>
+					</a>
+				</li> --}}
+				<li class="menu-item {{ request()->is('admin/settings/show-old-cart') ? 'active' : '' }}">
+					<a href="{{ url('/admin/settings/show-old-cart') }}" class="menu-link">
+						<div data-i18n="Clean Old Cart">
+							Clean Old Cart
+						</div>
+					</a>
+				</li>
+			</ul>
+		</li>
+		@endcan
+
+		@can('vendor')
 		{{-- Orders --}}
 		<li class="menu-item {{ (in_array('order', request()->segments())) ? 'active' : '' }}">
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -62,66 +134,6 @@
 				<li class="menu-item {{ request()->is('admin/dashboard/order/history') ? 'active' : '' }}">
 					<a href="/admin/dashboard/order/history" class="menu-link">
 						<div data-i18n="History">History</div>
-					</a>
-				</li>
-			</ul>
-		</li>
-		@can('operator')
-		<li class="menu-item {{ request()->is('admin/vendors') ? 'active' : '' }}">
-			<a href="{{ url('/admin/vendors') }}" class="menu-link">
-				<i class="menu-icon tf-icons bx bxs-user-circle"></i>
-				<div data-i18n="Vendors">Vendors</div>
-			</a>
-		</li>
-		<li class="menu-item {{ request()->is('admin/branches') ? 'active' : '' }}">
-			<a href="{{ url('/admin/branches') }}" class="menu-link">
-				<i class="menu-icon tf-icons bx bx-store"></i>
-				<div data-i18n="Branches">Branches</div>
-			</a>
-		</li>
-		<li class="menu-item {{ request()->is('admin/categories') ? 'active' : '' }}">
-			<a href="{{ url('/admin/categories') }}" class="menu-link">
-				<i class="menu-icon tf-icons bx bxs-category"></i>
-				<div data-i18n="Categories">Categories</div>
-			</a>
-		</li>
-		<li class="menu-item {{ request()->is('admin/customer/list') ? 'active' : '' }}">
-			<a href="{{ url('/admin/customer/list') }}" class="menu-link">
-				<i class="menu-icon tf-icons bx bxs-user-circle"></i>
-				<div data-i18n="Customers">Customers</div>
-			</a>
-		</li>
-		<li class="menu-item {{ request()->is('admin/cities') ? 'active' : '' }}">
-			<a href="{{ url('/admin/cities') }}" class="menu-link">
-				<i class="menu-icon tf-icons bx bxs-city"></i>
-				<div data-i18n="Cities">Cities</div>
-			</a>
-		</li>
-		<li class="menu-item {{ request()->is('admin/vendor-types') ? 'active' : '' }}">
-			<a href="{{ url('/admin/vendor-types') }}" class="menu-link">
-				<i class="menu-icon tf-icons bx bxs-user-circle"></i>
-				<div data-i18n="Vendor Types">Vendor Types</div>
-			</a>
-		</li>
-		<li class="menu-item {{ in_array('settings', request()->segments()) ? 'active' : '' }}">
-			<a href="javascript:void(0);" class="menu-link menu-toggle">
-				<i class='menu-icon tf-icons bx bx-cog'></i>
-				<div data-i18n="Settings">Settings</div>
-			</a>
-
-			<ul class="menu-sub">
-				{{-- <li class="menu-item {{ request()->is('admin/settings/reorder') ? 'active' : '' }}">
-					<a href="{{ url('/admin/settings/reorder') }}" class="menu-link">
-						<div data-i18n="Reordering">
-							Reordering
-						</div>
-					</a>
-				</li> --}}
-				<li class="menu-item {{ request()->is('admin/settings/show-old-cart') ? 'active' : '' }}">
-					<a href="{{ url('/admin/settings/show-old-cart') }}" class="menu-link">
-						<div data-i18n="Clean Old Cart">
-							Clean Old Cart
-						</div>
 					</a>
 				</li>
 			</ul>

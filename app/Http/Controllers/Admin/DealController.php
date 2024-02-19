@@ -47,7 +47,6 @@ class DealController extends Controller
 		]);
 
 		$previousBanner = session()->get('deal.info.banner', null);
-		$branchID = $request->input('branch');
 		$vendorID = $request->input('vendor');
 
 		if($request->hasfile('banner'))
@@ -61,7 +60,7 @@ class DealController extends Controller
 
 				foreach ($sizes as $size) {
 					$image = Image::make($file);
-					$path = "images/deal-banners/{$vendorID}/{$size}x{$size}/";
+					$path = "images/vendors/{$vendorID}/deals/{$size}x{$size}/";
 
 					if (!File::isDirectory($path)) {
 						File::makeDirectory($path, 0755, true, true);
@@ -86,7 +85,6 @@ class DealController extends Controller
 		}
 
 		$request->session()->put('deal.info', $validatedData);
-		$request->session()->put('deal.info.branch', $branchID);
 		$request->session()->put('deal.info.vendor', $vendorID);
 		$request->session()->put('deal.info.description', $request->input('description'));
 		$request->session()->put('deal.info.banner', $banner);
@@ -96,8 +94,7 @@ class DealController extends Controller
 
 	public function showItemsForm(Request $request, $vendorID)
 	{
-		if ($request->session()->get('deal', []))
-		{
+		if ($request->session()->get('deal', [])) {
 			$vendor = Vendor::findOrFail($vendorID);
 			$categories = Category::whereNull('parent_id')
 				->where('vendor_type_id', $vendor->vendor_type_id)
@@ -196,7 +193,6 @@ class DealController extends Controller
 		$deal->banner = $info['banner'];
 		$deal->start_date = $info['start_date'];
 		$deal->end_date = $info['end_date'];
-		$deal->branch_id = $info['branch'];
 		$deal->vendor_id = $info['vendor'];
 		$deal->grand_total = $grandTotal;
 		$deal->offer = $discountPrice;
@@ -248,11 +244,13 @@ class DealController extends Controller
 		$action = $request->input('action');
 
 		if ($action === 'saveAndAddMore') {
-			return redirect()->route('deal.create', $request->input('vendor'))
+			return redirect()
+				->route('deal.create', $request->input('vendor'))
 				->with('message', 'Deal added successfully! Add another.');
 		}
 
-		return redirect()->route('vendors.deals', $request->input('vendor'))
+		return redirect()
+			->route('vendors.deals', $request->input('vendor'))
 			->with('message', 'Deal created successfully.');
 	}
 
@@ -279,7 +277,6 @@ class DealController extends Controller
 
 		// Store the deal image in session
 		$previousBanner = session('deal.edit.info.banner', $request->input('previous_banner'));
-		$branchID = $request->input('branch');
 		$vendorID = $request->input('vendor');
 
 		if($request->hasfile('banner'))
@@ -292,7 +289,7 @@ class DealController extends Controller
 
 				foreach ($sizes as $size) {
 					$image = Image::make($file);
-					$path = "images/deal-banners/{$branchID}/{$size}x{$size}/";
+					$path = "images/vendors/{$vendorID}/deals/{$size}x{$size}/";
 
 					if (!File::isDirectory($path)) {
 						File::makeDirectory($path, 0755, true, true);
@@ -317,7 +314,6 @@ class DealController extends Controller
 		}
 
 		$request->session()->put('deal.edit.info', $validatedData);
-		$request->session()->put('deal.edit.info.branch', $branchID);
 		$request->session()->put('deal.edit.info.vendor', $vendorID);
 		$request->session()->put('deal.edit.info.description', $request->input('description'));
 
@@ -456,27 +452,11 @@ class DealController extends Controller
 
 		$deal = DealMaster::findOrFail($id);
 
-		// Remove currently stored image for the deal
-		if ($deal->banner) {
-			$sizes = [150, 250, 500];
-
-			foreach ($sizes as $size) {
-				$path = "images/deal-banners/{$info['branch']}/{$size}x{$size}/";
-				
-				$oldBanner = public_path($path . $deal->banner);
-
-				if (isset($oldBanner) && file_exists($oldBanner)) {
-					unlink ($oldBanner);
-				}
-			}
-		}
-
 		$deal->name = $info['name'];
 		$deal->description = $info['description'];
 		$deal->banner = $info['banner'];
 		$deal->start_date = $info['start_date'];
 		$deal->end_date = $info['end_date'];
-		$deal->branch_id = $info['branch'];
 		$deal->vendor_id = $info['vendor'];
 		$deal->grand_total = $grandTotal;
 		$deal->offer = $discountPrice;
@@ -529,7 +509,8 @@ class DealController extends Controller
 		// Clear the session data for the deal after successful confirmation
 		$request->session()->forget('deal');
 
-		return redirect()->route('vendors.deals', $request->input('vendor'))
+		return redirect()
+			->route('vendors.deals', $request->input('vendor'))
 			->with('message', 'Deal updated successfully.');
 	}
 

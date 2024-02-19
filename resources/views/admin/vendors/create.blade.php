@@ -10,6 +10,12 @@
 			<div class="card-body">
 				<form method="POST" action="/admin/vendors" enctype="multipart/form-data">
 					@csrf
+					<input
+						type="hidden"
+						name="operator_id"
+						id="operator-id"
+						value="{{ $operatorID }}"
+					/>
 					<div class="row mb-3">
 						<div class="col-sm-6">
 							<label for="name" class="form-label">
@@ -283,50 +289,6 @@
 					</div>
 					<div class="row mb-3">
 						<div class="col-sm-6">
-							<label for="city" class="form-label">
-								City
-								<span class='text-danger' aria-hidden='true'>
-									*
-								</span>
-							</label>
-							<select class="form-select @error('city') is-invalid @enderror" name='city' id='city' aria-required='true'>
-								<option value=''>
-									Select City
-								</option>
-								@foreach($cities as $city)
-								<option value="{{ $city->id }}" {{ old('city') == $city->id ? 'selected' : '' }}>
-									{{ $city->name }}
-								</option>
-								@endforeach
-							</select>
-							@if ($errors->has('city'))
-							<span class="invalid-feedback" role="alert">
-								<strong>
-									{{ $errors->first('city') }}
-								</strong>
-							</span>
-							@endif
-						</div>
-						<div class="col-sm-6">
-							<label for="branch" class="form-label">
-								Area
-								<span class='text-danger' aria-hidden='true'>
-									*
-								</span>
-							</label>
-							<select class="form-select @error('branch') is-invalid @enderror" name='branch' id='branch' aria-required='true'>
-							</select>
-							@if ($errors->has('branch'))
-							<span class="invalid-feedback" role="alert">
-								<strong>
-									{{ $errors->first('branch') }}
-								</strong>
-							</span>
-							@endif
-						</div>
-					</div>
-					<div class="row mb-3">
-						<div class="col-sm-6">
 							<label for="commission_percentage" class="form-label">
 								Commission Percentage
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -444,6 +406,31 @@
 							@endif
 						</div>
 					</div>
+					<div class="divider text-start">
+						<div class="divider-text fw-bold">
+							Vendor Login
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-md-4">
+							<label for="password" class="form-label">
+								Login Password
+							</label>
+							<input
+								class="form-control"
+								type="text"
+								name="password"
+								id="password"
+								value="{{ trim($randomPassword) }}"
+								readonly
+							>
+						</div>
+					</div>
+					<div class="divider text-start">
+						<div class="divider-text fw-bold">
+							Social Links
+						</div>
+					</div>
 					<div class="row mb-3">
 						<div class="col-sm-6">
 							<label for="facebook" class="form-label">
@@ -540,50 +527,4 @@
 		</div>
 	</div>
 </div>
-@endsection
-
-@section('js')
-<script>
- 	document.addEventListener('DOMContentLoaded', function () {
-		var citySelect = document.getElementById('city');
-		var branchSelect = document.getElementById('branch');
-
-		// Function to fetch and update branches based on the selected city
-		function updateAreas(selectedCityId, preSelectedBranch = 0) {
-			// Clear existing options
-			branchSelect.innerHTML = '<option value="">Select Area</option>';
-
-			// Fetch branches based on the selected city
-			fetch(`/api/v1/city/branches/list/${selectedCityId}`)
-				.then(response => response.json())
-				.then(data => {
-					data.data.forEach(branch => {
-						var option = document.createElement('option');
-						option.value = branch.id;
-						option.textContent = branch.name;
-
-						if (branch.id == preSelectedBranch) {
-							option.selected = true;
-						}
-
-						branchSelect.appendChild(option);
-					});
-				})
-				.catch(error => console.error('Error fetching areas:', error));
-		}
-
-		// Attach change event listener to the city dropdown
-		citySelect.addEventListener('change', function () {
-			var selectedCityId = this.value;
-			updateAreas(selectedCityId);
-		});
-
-		// Trigger the change event if a city is already selected on page load
-		var preSelectedCityId = citySelect.value;
-		if (preSelectedCityId) {
-			const preSelectedBranch = @json(old('branch', 0));
-			updateAreas(preSelectedCityId, preSelectedBranch);
-		}
-	});
-</script>
 @endsection

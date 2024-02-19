@@ -43,7 +43,7 @@
 				<tr>
 					<th scope="col">Name</th>
 					<th scope="col">Company Name</th>
-					<th scope="col">Branch Name</th>
+					<th scope="col">Operator Name</th>
 					<th scope="col">Vendor Type</th>
 					<th scope="col">Date Joining</th>
 					<th scope="col">Actions</th>
@@ -54,7 +54,7 @@
 				<tr>
 					<td>{{ $vendor->name }}</td>
 					<td>{{ $vendor->company_name }}</td>
-					<td>{{ $vendor->branch->name }}</td>
+					<td>{{ $vendor->operator->name ?? '' }}</td>
 					<td>{{ $vendor->vendorType->type_name ?? '' }}</td>
 					<td>{{ $vendor->date_joining->format('d M Y') }}</td>
 					<td>
@@ -63,10 +63,6 @@
 								<i class="bx bx-dots-vertical-rounded"></i>
 							</button>
 							<div class="dropdown-menu">
-								<a class="dropdown-item d-flex align-items-center gap-1" href="/admin/vendors/{{ $vendor->id }}/login-list">
-									<i class="bx bx-user me-1"></i>
-									Vendor Login
-								</a>
 								<a class="dropdown-item d-flex align-items-center gap-1" href="/admin/vendors/{{ $vendor->id }}/edit">
 									<i class="bx bx-edit me-1"></i>
 									Edit
@@ -91,10 +87,6 @@
 									<i class='bx bxs-plus-circle'></i>
 									Add New Deal
 								</a>
-								{{-- <a class="dropdown-item" href="/admin/reservations/{{ $vendor->branch_id }}">
-									<i class="bx bx-location-plus me-1"></i>
-									Reservations
-								</a> --}}
 								<form action="{{ route('vendors.destroy', ['id' => $vendor->id]) }}" method="POST">
 									@csrf
 									@method('DELETE')
@@ -109,7 +101,7 @@
 				</tr>
 				@empty
 				<tr class="fw-semibold lead my-0 alert alert-danger text-center">
-					<td colspan="7">
+					<td colspan="6">
 						No vendors available.
 					</td>
 				</tr>

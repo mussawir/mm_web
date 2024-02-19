@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
-use App\Models\Branches;
-use App\Models\City;
 use App\Models\DealMaster;
 use App\Models\Items_list;
 use App\Models\OperatorCommissionHistory;
@@ -13,6 +11,7 @@ use App\Models\OrderMaster;
 use App\Models\Vendor;
 use App\Models\VendorType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class VendorController extends Controller
@@ -30,10 +29,11 @@ class VendorController extends Controller
 
 	public function create()
 	{
-		$cities = City::all();
+		$operatorID = Auth::user()->user_id;
 		$vendorTypes = VendorType::where('status', 1)->get();
+		$randomPassword = '12345678';
 
-		return view('admin.vendors.create', compact('cities', 'vendorTypes'));
+		return view('admin.vendors.create', compact('operatorID', 'vendorTypes', 'randomPassword'));
 	}
 
 	public function store(Request $request)
@@ -46,8 +46,8 @@ class VendorController extends Controller
 			'current_balance' => 'required|numeric',
 			'points_in_hand' => 'required|numeric',
 			'date_joining' => 'required|date',
-			'primary_contact' => 'required|numeric',
-			'secondary_contact' => 'required|numeric',
+			'primary_contact' => 'required|numeric|unique:vendors,contact_number_primary',
+			'secondary_contact' => 'required|numeric|unique:vendors,contact_number_sec',
 			'commission_percentage' => 'required|numeric|min:2|max:20',
 			'delivery_free_after' => 'required|numeric',
 			'delivery_charges' => 'required|numeric',
@@ -60,8 +60,6 @@ class VendorController extends Controller
 			'logo' => 'required|image|mimes:jpeg,png,jpg|min:100|max:500|dimensions:min_width=200,min_height=200',
 			'banners' => 'required|array|min:3|max:3',
 			'banners.*' => 'image|mimes:jpeg,png,jpg|max:500',
-			'city' => 'required',
-			'branch' => 'required',
 			'vendor_type' => 'required',
 		]);
 
@@ -120,8 +118,7 @@ class VendorController extends Controller
 		$vendor->banner2 = $banners[1];
 		$vendor->banner3 = $banners[2];
 
-		$vendor->city_id = $request->get('city');
-		$vendor->branch_id = $request->get('branch');
+		$vendor->operator_id = $request->get('operator_id');
 
 		$vendor->save();
 
@@ -130,9 +127,19 @@ class VendorController extends Controller
 				'vendor_id' => $vendor->id,
 				'commission percentage' => $vendor->commission_percentage,
 			]);
+
+			$vendorLogin = new Admin;
+
+			$vendorLogin->user_id = $vendor->id;
+			$vendorLogin->email = $vendor->email;
+			$vendorLogin->password = Hash::make($request->get('password'));
+			$vendorLogin->role = 2;
+
+			$vendorLogin->save();
 		}
 
-		return redirect()->route('vendors.index')->with('message', 'Vendor added successfully.');
+		return redirect()->route('vendors.index')
+			->with('message', 'Vendor added successfully.');
 	}
 
 	public function show($id)
@@ -143,13 +150,13 @@ class VendorController extends Controller
 
 	public function edit($id)
 	{
-		$vendor = Vendor::findOrFail($id);
-
+		$vendor = Vendor::where('id', $id)
+			->with('operator')
+			->firstOrFail();
+		$operatorID = $vendor->operator->id ?? Auth::user()->user_id;
 		$vendorTypes = VendorType::where('status', 1)->get();
-		$cities = City::all();
-		$branches = Branches::where('deleted', 0)->get();
 
-		return view('admin.vendors.edit', compact('vendor', 'vendorTypes', 'cities', 'branches'));
+		return view('admin.vendors.edit', compact('vendor', 'operatorID', 'vendorTypes'));
 	}
 
 	public function update(Request $request, $id)
@@ -162,13 +169,13 @@ class VendorController extends Controller
 			'current_balance' => 'required|numeric',
 			'points_in_hand' => 'required|numeric',
 			'date_joining' => 'required|date',
-			'primary_contact' => 'required|numeric',
-			'secondary_contact' => 'required|numeric',
+			'primary_contact' => 'required|numeric|unique:vendors,contact_number_primary',
+			'secondary_contact' => 'required|numeric|unique:vendors,contact_number_sec',
 			'commission_percentage' => 'required|numeric|min:2|max:20',
 			'delivery_free_after' => 'required|numeric',
 			'delivery_charges' => 'required|numeric',
 			'minimum_delivery_amount' => 'required|numeric',
-			'email' => 'required|email',
+			'email' => 'required|email|unique:vendors,email',
 			'facebook' => 'nullable|string',
 			'website' => 'nullable|string',
 			'instagram' => 'nullable|string',
@@ -176,8 +183,6 @@ class VendorController extends Controller
 			'logo' => 'image|mimes:jpeg,png,jpg|min:100|max:500|dimensions:min_width=200,min_height=200',
 			'banners' => 'array|min:3|max:3',
 			'banners.*' => 'image|mimes:jpeg,png,jpg|max:500',
-			'city' => 'required',
-			'branch' => 'required',
 			'vendor_type' => 'required',
 		]);
 
@@ -229,6 +234,7 @@ class VendorController extends Controller
 			}
 		}
 
+		$vendor->operator_id = $request->get('operator_id');
 		$vendor->name = $request->get('name');
 		$vendor->vendor_type_id = $request->get('vendor_type');
 		$vendor->company_name = $request->get('company_name');
@@ -258,9 +264,6 @@ class VendorController extends Controller
 			$vendor->banner3 = $banners[2];
 		}
 
-		$vendor->city_id = $request->get('city');
-		$vendor->branch_id = $request->get('branch');
-
 		if ($vendor->commission_percentage != $request->get('commission_percentage')) {
 			$vendor->commission_percentage = $request->get('commission_percentage');
 
@@ -274,7 +277,8 @@ class VendorController extends Controller
 			$vendor->save();
 		}
 
-		return redirect()->route('vendors.index')->with('message', 'Vendor updated successfully!');
+		return redirect()->route('vendors.index')
+			->with('message', 'Vendor updated successfully!');
 	}
 
 	public function destroy($id)
@@ -282,42 +286,8 @@ class VendorController extends Controller
 		$vendor = Vendor::findOrFail($id);
 		$vendor->delete();
 
-		return redirect()->route('vendors.index')->with('message', 'Vendor deleted successfully!');
-	}
-
-	public function vendorLoginList($id)
-	{
-		$vendorLogins = Vendor::findOrFail($id)->logins;
-		return view('admin.vendors.vendor-logins.index', compact('id', 'vendorLogins'));
-	}
-
-	public function showVendorLoginForm($id)
-	{
-		return view('admin.vendors.vendor-logins.create', compact('id'));
-	}
-
-	public function createVendorLogin(Request $request, $id)
-	{
-		$request->validate([
-			'first_name' => 'required|string|min:3',
-			'email' => 'required|email|unique:admins,email',
-			'password' => 'required|min:6|confirmed',
-		]);
-
-		$admin = new Admin;
-
-		$admin->first_name = $request->get('first_name');
-		$admin->last_name = $request->get('last_name');
-		$admin->phone_number = $request->get('phone_number');
-		$admin->email = $request->get('email');
-		$admin->password = Hash::make($request->get('password'));
-		$admin->role = 2;
-		$admin->vendor_id = $id;
-
-		$admin->save();
-
-		return redirect()->route('vendors.login.list', $id)
-			->with('message', 'Vendor login created successfully.');
+		return redirect()->route('vendors.index')
+			->with('message', 'Vendor deleted successfully!');
 	}
 
 	public function getVendorOrders($vendorID)

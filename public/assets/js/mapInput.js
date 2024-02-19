@@ -40,34 +40,6 @@ async function initialize() {
 			const autocomplete = new google.maps.places.Autocomplete(input);
 			autocomplete.key = fieldKey;
 			autocompletes.push({input: input, map: map, marker: marker, autocomplete: autocomplete});
-
-			// google.maps.event.trigger(autocomplete, 'place_changed', function () {
-			// 	marker.setVisible(false);
-			// 	const place = autocomplete.getPlace();
-
-			// 	geocoder.geocode({'placeId': place.place_id}, function (results, status) {
-			// 		if (status === google.maps.GeocoderStatus.OK) {
-			// 			const lat = results[0].geometry.location.lat();
-			// 			const lng = results[0].geometry.location.lng();
-			// 			setLocationCoordinates(autocomplete.key, lat, lng);
-			// 		}
-			// 	});
-
-			// 	if (!place.geometry) {
-			// 		window.alert("No details available for input: '" + place.name + "'");
-			// 		input.value = "";
-			// 		return;
-			// 	}
-
-			// 	if (place.geometry.viewport) {
-			// 		map.fitBounds(place.geometry.viewport);
-			// 	} else {
-			// 		map.setCenter(place.geometry.location);
-			// 		map.setZoom(17);
-			// 	}
-			// 	marker.setPosition(place.geometry.location);
-			// 	marker.setVisible(true);
-			// });
 		}
 
 		for (let i = 0; i < autocompletes.length; i++) {

@@ -10,7 +10,7 @@ class VendorTypeController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('can:operator');
+		$this->middleware('can:admin');
 	}
 
 	public function index()
