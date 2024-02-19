@@ -62,8 +62,12 @@ Route::prefix('v1')->group(function () {
 	//Route::post('/create/order',[MobileCustomerOrdersController::class, 'store']);
 	Route::post('/update/order/{id}',[MobileCustomerOrdersController::class, 'update']);
 	Route::post('/create/customer',[MobileCustomerRegistrationController::class,'store']);
-	Route::get('/checkotp/{cid}/{otp}',[MobileCustomerRegOtpController::class,'checkOtp']);
-	Route::get('/checknumber/{phone_number}',[MobileCustomerRegOtpController::class,'checkNumber']);
+	// Route::get('/checkotp/{cid}/{otp}',[MobileCustomerRegOtpController::class,'checkOtp']);
+	// new api for checking otp
+	Route::post('/checkotp',[MobileCustomerRegOtpController::class,'checkOtp']);
+	// new api for checking number
+	Route::post('/checknumber',[MobileCustomerRegOtpController::class,'checkNumber']);
+
 	Route::post('/update/customer/{cid}',[MobileCustomerRegOtpController::class,'update']);
 	Route::get('/show/customer/otp/{cid}',[MobileCustomerRegOtpController::class,'showCustRegOtp']);
 	Route::get('/get/customers/list',[MobileCustomerRegistrationController::class,'index']);
