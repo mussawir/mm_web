@@ -38,9 +38,14 @@
 										{{ Auth::guard('admin')->user()->first_name . ' ' . Auth::guard('admin')->user()->last_name }}
 									</span>
 									<small class="text-muted">
-										@if(Auth::user()->role == '1')
+										@php
+											$role = Auth::user()->role;
+										@endphp
+										@if ($role == '0')
+											Admin
+										@elseif($role == '1')
 											Operator
-										@elseif (Auth::user()->role == '2')
+										@elseif ($role == '2')
 											Vendor
 										@endif
 									</small>

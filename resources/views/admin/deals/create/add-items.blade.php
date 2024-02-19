@@ -21,7 +21,7 @@
 							@if ($banner ?? null)
 							<img
 								class="card-img card-img-left"
-								src='{{ "/images/deal-banners/{$vendor}/250x250/{$banner}" }}'
+								src='{{ "/images/vendors/{$vendor}/deals/250x250/{$banner}" }}'
 								alt="{{ $name }}"
 								title="{{ $name }}"
 								style="width:200px;"
@@ -41,13 +41,13 @@
 								<p class="card-text">
 									<span class="me-3">
 										Start Date:
-										<small class="text-muted">
+										<small class="fw-bold">
 											{{ date('d M Y', strtotime($start_date)) }}
 										</small>
 									</span>
 									<span>
 										End Date:
-										<small class="text-muted">
+										<small class="fw-bold">
 											{{ date('d M Y', strtotime($end_date)) }}
 										</small>
 									</span>

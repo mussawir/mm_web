@@ -15,11 +15,6 @@
 					@csrf
 					<input
 						type="hidden"
-						name="branch"
-						value="{{ $deal->branch_id }}"
-					/>
-					<input
-						type="hidden"
 						name="vendor"
 						value="{{ $vendorID }}"
 					/>
@@ -137,7 +132,7 @@
 								<span class="form-label">
 									Current Image:
 								</span>
-								<img class="img-thumbnail rounded mt-1 border border-2" src='{{ "/images/deal-banners/{$vendorID}/500x500/{$deal->banner}" }}' style="height:150px;"/>
+								<img class="img-thumbnail rounded mt-1 border border-2" src='{{ "/images/vendors/{$vendorID}/deals/500x500/{$deal->banner}" }}' style="height:150px;"/>
 							</div>
 							@endif
 						</div>

@@ -45,7 +45,6 @@ class LoginController extends Controller
 		$this->middleware('guest')->except('logout');
 		$this->middleware('guest:admin')->except('logout');
 		$this->middleware('guest:rider')->except('logout');
-		$this->middleware('guest:shop')->except('logout');
 		$this->middleware('guest:customer')->except('logout');
 	}
 
@@ -60,10 +59,11 @@ class LoginController extends Controller
 			'email' => 'required|email',
 			'password' => 'required|min:6'
 		]);
+
 		if (Auth::guard('admin')->attempt(['email' => $request->input('email'), 'password' => $request->input('password')], $request->get('remember'))) {
-			//this is new file
 			return redirect()->intended('/admin/dashboard');
 		}
+
 		$errors = new MessageBag(['password' => ['Email and/or password invalid.']]);
 
 		return Redirect::back()->withErrors($errors)->withInput($request->only('email', 'remember'));
@@ -82,27 +82,6 @@ class LoginController extends Controller
 		]);
 		if (Auth::guard('rider')->attempt(['email' => $request->input('email'), 'password' => $request->input('password')], $request->get('remember'))) {
 			return redirect()->intended('/rider/dashboard');
-		}
-		$errors = new MessageBag(['password' => ['Email and/or password invalid.']]);
-
-		return Redirect::back()->withErrors($errors)->withInput($request->only('email', 'remember'));
-	}
-
-	public function showShopLoginForm()
-	{
-		return view('auth.login', ['url' => 'shop']);
-	}
-
-	public function shopLogin(Request $request)
-	{
-		$this->validate($request, [
-			'email' => 'required|email',
-			'password' => 'required|min:4'
-		]);
-		
-		if (Auth::guard('shop')->attempt(['email' => $request->input('email'), 'password' => $request->input('password')], $request->get('remember')))
-		{
-			return redirect()->intended('/shop/dashboard');
 		}
 		$errors = new MessageBag(['password' => ['Email and/or password invalid.']]);
 

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\BranchesController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\DealController;
+use App\Http\Controllers\Admin\OperatorController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\VendorTypeController;
@@ -34,78 +35,6 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Auth::routes();
-
-# Front End Routes Start
-Route::controller(FrontController::class)->group(function () {
-	Route::get('/home', 'index')->name('home');
-	Route::get('/', 'index');
-	Route::get('/vendors/detail/{id}', 'vendorDetail')
-		->name('vendor.detail');
-	Route::get('/vendor/{vendorId}/items/detail/{itemId}', 'itemDetail')
-		->name('vendor.item.details');
-	Route::get('/vendor/{vendorId}/deals/detail/{dealId}', 'dealDetail')
-		->name('vendor.deal.details');
-	Route::get('/items/detail/{id}', 'itemDetail')->name('item.detail');
-	Route::get('/deals/detail/{id}', 'dealDetail')->name('deal.detail');
-	# Added by Sohail Asghar [25-Sept-2023]
-	Route::get('/load-deals-and-categories/{branch}', 'loadDealsAndCategories')
-		->name('load.deals.categories');
-	Route::get('/load-vendors/{branch}', 'loadVendors')->name('load.vendors');
-	Route::post('/save-selected-branch', 'saveSelectedBranch')
-		->name('save.selectedBranch');
-});
-# Front End Routes End
-
-// Route::get('/', [HomeController::class, 'index']);
-
-// Start Shop Routes
-// Route::get('/shop-registration', [ShopRegistrationController::class, 'shopRegistationForm']);
-// Route::post('/shop/register', [ShopRegistrationController::class, 'shopRegistration']);
-// Route::get('/shop/login', [LoginController::class, 'showshopLoginForm']);
-// Route::post('/login/shop', [LoginController::class, 'shopLogin']);
-
-// Route::group(['middleware' => 'auth:shop'], function () {
-// 	Route::view('/shop', 'shop');
-// 	Route::view('/shop/dashboard', 'layouts.shop');
-// 	Route::resource('shops', ShopController::class);
-// 	Route::resource('/shop/items', ShopController::class);
-// 	Route::get('/shop/shop-product-list', [ShopController::class, 'showProductList']);
-// 	Route::post('/shop/upload-store-items/{id}', [ShopController::class, 'storeItems']);
-// });
-// End Shop Routes
-Route::get('/thankyou', [ShopRegistrationController::class, 'thankYou']);
-
-// Customer Routes Start
-Route::get('/customer-registration', [ShopRegistrationController::class, 'customerRegistationForm'])->name('customer.register');
-Route::post('/customer/register', [ShopRegistrationController::class, 'customerRegistration']);
-// Customer Routes End
-
-// Rider Routes Start
-Route::get('/rider-registration', [ShopRegistrationController::class, 'riderRegistationForm']);
-Route::post('/rider/register', [ShopRegistrationController::class, 'riderRegistration']);
-// Rider Routes End
-
-// Front Pages Routes Start
-Route::controller(HomeController::class)->group(function () {
-	Route::get('/why-join-us', 'whyJoinUs');
-	Route::get('/testimonials', 'testimonials');
-	Route::get('/about-us', 'aboutUs');
-	Route::get('/gallery', 'gallery');
-	Route::get('/contact-us', 'contactUs');
-	Route::get('/privacy-policy', 'privacyPolicy');
-});
-// Front Pages Routes End
-
-// Customer Login Routes Start
-Route::get('customer/login', [LoginController::class, 'showCustomerLoginForm'])
-	->name('customer.login');
-Route::post('login/customer', [LoginController::class, 'customerLogin'])
-	->name('customer.login.submit');
-Route::get('customer/verify', [LoginController::class, 'verifyForm'])
-	->name('customer.verify');
-Route::post('customer/verify', [LoginController::class, 'verify'])
-	->name('customer.verify.submit');
-// Customer Login Routes End
 
 // ================= Admin Routes =================
 Route::get('/admin/login', [LoginController::class, 'showAdminLoginForm'])
@@ -138,6 +67,18 @@ Route::group(['middleware' => 'auth:admin'], function () {
 		});
 		// Admin Dashboard Routes End
 
+		// Admin Operators Routes Start
+		Route::controller(OperatorController::class)->group(function () {
+			Route::get('/operators', 'index')->name('operators.index');
+			Route::get('/operators/create', 'create')->name('operators.create');
+			Route::post('/operators', 'store')->name('operators.store');
+			Route::get('/operators/{id}', 'show')->name('operators.show');
+			Route::get('/operators/{id}/edit', 'edit')->name('operators.edit');
+			Route::put('/operators/{id}', 'update')->name('operators.update');
+			Route::delete('/operators/{id}', 'destroy')->name('operators.destroy');
+		});
+		// Admin Operators Routes End
+
 		// Admin Shops List Routes Start
 		Route::controller(AShopsListController::class)->group(function () {
 			Route::get('/new-shops-list', 'showNewShopList');
@@ -166,7 +107,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
 			Route::get('/store/{id}', 'index');
 			Route::post('/upload-store-items/store/{id}', 'storeItems');
 			Route::get('/inventory/status', 'status');
-			Route::get('/branch/itemlist/{branch}', 'branchItemList');
+			// Route::get('/branch/itemlist/{branch}', 'branchItemList');
 			Route::get('/inventory/itemlist', 'getItemList');
 			Route::get('/addnew/item/{vendor}', 'create')->name('item.create');
 			Route::post('/addnew/item', 'store')->name('item.store');
@@ -294,10 +235,6 @@ Route::group(['middleware' => 'auth:admin'], function () {
 			Route::get('/vendors/{id}/edit', 'edit')->name('vendors.edit');
 			Route::put('/vendors/{id}', 'update')->name('vendors.update');
 			Route::delete('/vendors/{id}', 'destroy')->name('vendors.destroy');
-			Route::get('/vendors/{id}/login-list', 'vendorLoginList')->name('vendors.login.list');
-			Route::get('/vendors/{id}/login/create', 'showVendorLoginForm')->name('vendor.login.form');
-			Route::post('/vendors/{id}/login', 'createVendorLogin')->name('vendor.login.store');
-			Route::delete('/vendors/{id}/login', 'destroyVendorLogin')->name('vendors.login.destroy');
 			Route::get('/vendors/orders/{id}', 'getVendorOrders')
 				->name('vendors.orders');
 			Route::get('/vendors/item-list/{id}', 'vendorItemList')
@@ -327,6 +264,78 @@ Route::group(['middleware' => 'auth:admin'], function () {
 		// Admin Vendor Type Routes End
 	});
 });
+
+# Front End Routes Start
+Route::controller(FrontController::class)->group(function () {
+	Route::get('/home', 'index')->name('home');
+	Route::get('/', 'index');
+	Route::get('/vendors/detail/{id}', 'vendorDetail')
+		->name('vendor.detail');
+	Route::get('/vendor/{vendorId}/items/detail/{itemId}', 'itemDetail')
+		->name('vendor.item.details');
+	Route::get('/vendor/{vendorId}/deals/detail/{dealId}', 'dealDetail')
+		->name('vendor.deal.details');
+	Route::get('/items/detail/{id}', 'itemDetail')->name('item.detail');
+	Route::get('/deals/detail/{id}', 'dealDetail')->name('deal.detail');
+	# Added by Sohail Asghar [25-Sept-2023]
+	Route::get('/load-deals-and-categories/{branch}', 'loadDealsAndCategories')
+		->name('load.deals.categories');
+	Route::get('/load-vendors/{branch}', 'loadVendors')->name('load.vendors');
+	Route::post('/save-selected-branch', 'saveSelectedBranch')
+		->name('save.selectedBranch');
+});
+# Front End Routes End
+
+// Route::get('/', [HomeController::class, 'index']);
+
+// Start Shop Routes
+// Route::get('/shop-registration', [ShopRegistrationController::class, 'shopRegistationForm']);
+// Route::post('/shop/register', [ShopRegistrationController::class, 'shopRegistration']);
+// Route::get('/shop/login', [LoginController::class, 'showshopLoginForm']);
+// Route::post('/login/shop', [LoginController::class, 'shopLogin']);
+
+// Route::group(['middleware' => 'auth:shop'], function () {
+// 	Route::view('/shop', 'shop');
+// 	Route::view('/shop/dashboard', 'layouts.shop');
+// 	Route::resource('shops', ShopController::class);
+// 	Route::resource('/shop/items', ShopController::class);
+// 	Route::get('/shop/shop-product-list', [ShopController::class, 'showProductList']);
+// 	Route::post('/shop/upload-store-items/{id}', [ShopController::class, 'storeItems']);
+// });
+// End Shop Routes
+Route::get('/thankyou', [ShopRegistrationController::class, 'thankYou']);
+
+// Customer Routes Start
+Route::get('/customer-registration', [ShopRegistrationController::class, 'customerRegistationForm'])->name('customer.register');
+Route::post('/customer/register', [ShopRegistrationController::class, 'customerRegistration']);
+// Customer Routes End
+
+// Rider Routes Start
+Route::get('/rider-registration', [ShopRegistrationController::class, 'riderRegistationForm']);
+Route::post('/rider/register', [ShopRegistrationController::class, 'riderRegistration']);
+// Rider Routes End
+
+// Front Pages Routes Start
+Route::controller(HomeController::class)->group(function () {
+	Route::get('/why-join-us', 'whyJoinUs');
+	Route::get('/testimonials', 'testimonials');
+	Route::get('/about-us', 'aboutUs');
+	Route::get('/gallery', 'gallery');
+	Route::get('/contact-us', 'contactUs');
+	Route::get('/privacy-policy', 'privacyPolicy');
+});
+// Front Pages Routes End
+
+// Customer Login Routes Start
+Route::get('customer/login', [LoginController::class, 'showCustomerLoginForm'])
+	->name('customer.login');
+Route::post('login/customer', [LoginController::class, 'customerLogin'])
+	->name('customer.login.submit');
+Route::get('customer/verify', [LoginController::class, 'verifyForm'])
+	->name('customer.verify');
+Route::post('customer/verify', [LoginController::class, 'verify'])
+	->name('customer.verify.submit');
+// Customer Login Routes End
 
 // ================= Rider route =================
 // Route::get('/rider/login', [LoginController::class, 'showRiderLoginForm']);

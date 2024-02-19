@@ -10,12 +10,12 @@ class CityController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('can:operator');
+		$this->middleware('can:admin');
 	}
 
 	public function index()
 	{
-		$cities = City::with(['branches', 'vendors'])->latest()->get();
+		$cities = City::latest()->get();
 		return view('admin.cities.index', compact('cities'));
 	}
 
@@ -75,7 +75,7 @@ class CityController extends Controller
 	{
 		$vendor = City::findOrFail($id);
 
-		// Check if city has branches, vendors etc.
+		// Conditions when a city should be deleted
 		// $vendor->delete();
 
 		return redirect()

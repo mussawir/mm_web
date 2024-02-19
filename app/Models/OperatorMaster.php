@@ -21,4 +21,9 @@ class OperatorMaster extends Model
 	{
 		return $this->hasOne('App\Models\OperatorDetail', 'operator_id');
 	}
+
+	public function vendors()
+	{
+		return $this->hasMany('App\Models\Vendor', 'operator_id');
+	}
 }

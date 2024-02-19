@@ -37,11 +37,6 @@ class Items_list extends Model
 	{
 		return $this->belongsTo('App\Models\Category');
 	}
-	
-	public function branch()
-	{
-		return $this->belongsTo('App\Models\Branches');
-	}
 
 	public function vendor ()
 	{

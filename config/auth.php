@@ -52,14 +52,6 @@ return [
             'driver' => 'session',
             'provider' => 'riders',
         ],
-        // 'shopkeeper' => [
-        //     'driver' => 'session',
-        //     'provider' => 'shopkeepers',
-        // ],
-        'shop' => [
-            'driver' => 'session',
-            'provider' => 'shops',
-        ],
     ],
 
     /*
@@ -95,15 +87,7 @@ return [
         'riders' => [
             'driver' => 'eloquent',
             'model' => App\Models\Rider::class,
-        ],
-        // 'shopkeepers' => [
-        //     'driver' => 'eloquent',
-        //     'model' => App\Models\Shop::class,
-        // ],
-        'shops' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Shop::class,
-        ],
+        ]
     ],
 
     /*

@@ -7,10 +7,10 @@
 <div class="card">
 	<div class="card-header">
 		@if ($message = Session::get('message'))
-		<div class="alert alert-success alert-dismissible">
-			<strong>{{ $message }}</strong>
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		</div>
+			<div class="alert alert-success alert-dismissible">
+				<strong>{{ $message }}</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
 		@endif
 		<div class="row gap-md-0 gap-4">
 			<div class="col-md-6">

@@ -12,20 +12,15 @@
 		<div class="card">
 			<div class="card-body">
 				@if(session('message'))
-				<div class="alert alert-success alert-dismissible">
-					<strong>
-						{{ session('message') }}
-					</strong>
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
+					<div class="alert alert-success alert-dismissible">
+						<strong>
+							{{ session('message') }}
+						</strong>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
 				@endif
 				<form method="POST" action="{{ route('deal.info') }}" enctype="multipart/form-data">
 					@csrf
-					<input
-						type="hidden"
-						name="branch"
-						value="{{ $vendor->branch_id }}"
-					/>
 					<input
 						type="hidden"
 						name="vendor"

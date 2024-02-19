@@ -7,10 +7,10 @@
 <div class="card">
 	<div class="card-header">
 		@if ($message = Session::get('message'))
-		<div class="alert alert-success alert-dismissible">
-			<strong>{{ $message }}</strong>
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		</div>
+			<div class="alert alert-success alert-dismissible">
+				<strong>{{ $message }}</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
 		@endif
 		<div class="row gap-md-0 gap-4">
 			<div class="col-md-6">
@@ -40,7 +40,7 @@
 		{{ $items->links() }}
 	</div>
 	{{-- Hoverable Table Rows --}}
-	<div class="table-responsive text-nowrap">
+	<div class="text-nowrap">
 		<table id="searching_table" class="table table-hover">
 			<thead>
 				<tr>
@@ -58,10 +58,10 @@
 					<td>{{ $loop->iteration }}</td>
 					<td>
 						<img
-							src="{{ '/images/branch-products/' . $item->branch_id . '/250x250/' . $item->main_image }}"
+							src="/images/vendors/{{ $item->vendor_id }}/items/250x250/{{ $item->main_image }}"
 							class="rounded"
 							alt="{{ $item->name }}"
-							style="width:08rem;height:08rem;object-fit:cover;"
+							style="width:6rem;height:6rem;object-fit:cover;"
 						/>
 					</td>
 					<td>
@@ -94,7 +94,7 @@
 				</tr>
 				@empty
 				<tr class="fw-semibold lead my-0 alert alert-danger text-center">
-					<td colspan="7">
+					<td colspan="6">
 						No items available.
 					</td>
 				</tr>

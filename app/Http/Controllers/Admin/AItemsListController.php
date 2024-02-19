@@ -17,29 +17,10 @@ class AItemsListController extends Controller
 		$this->middleware('can:operator');
 	}
 
-	public function index($id)
-	{
-		$Items_list = Items_list::where('shop_id', $id)
-			->get();
-
-		return view('admin.uploadBulkProducts', compact('Items_list', 'id'));
-	}
-
 	public function getItemList()
 	{
 		$ItemsList = Items_list::all();
 		return view('admin.ItemList', compact('ItemsList'));
-	}
-
-	public function branchItemList($branchId)
-	{
-		$items = Items_list::where('branch_id', $branchId)
-			->where('is_addon', 0)
-			->with('category')
-			->latest()
-			->paginate(25);
-
-		return view('admin.items.item-list', compact('items', 'branchId'));
 	}
 
 	public function create($vendorID)
@@ -70,7 +51,6 @@ class AItemsListController extends Controller
 			'preparation_time' => 'required',
 		]);
 
-		$branchID = $request->get('branch');
 		$vendorID = $request->get('vendor');
 
 		if($request->hasfile('main_image'))
@@ -84,7 +64,7 @@ class AItemsListController extends Controller
 
 				foreach ($sizes as $size) {
 					$image = Image::make($file);
-					$path = "images/branch-products/{$branchID}/{$size}x{$size}/";
+					$path = "images/vendors/{$vendorID}/items/{$size}x{$size}/";
 
 					if (!File::isDirectory($path)) {
 						File::makeDirectory($path, 0755, true, true);
@@ -103,7 +83,6 @@ class AItemsListController extends Controller
 
 		$item->category_id = $request->input('category');
 		$item->vendor_id = $vendorID;
-		$item->branch_id = $branchID;
 		$item->name = $request->input('name');
 		$item->discription = $request->input('description');
 		$item->discount = $request->input('discount');
@@ -123,11 +102,12 @@ class AItemsListController extends Controller
 		$action = $request->input('action');
 
 		if ($action === 'saveAndAddMore') {
-			return redirect()->back()
+			return redirect()
+				->back()
 				->withInput([
 					'category' => $request->input('category'),
 				])
-				->with('message', 'Item added successfully! Add another.');
+				->with('message', 'Item added successfully!');
 		}
 
 		return redirect("/admin/vendors/item-list/{$item->vendor_id}")
@@ -161,7 +141,6 @@ class AItemsListController extends Controller
 		]);
 
 		$item = Items_list::findOrFail($request->id);
-		$branchID = $item->branch_id;
 		$vendorID = $request->get('vendor');
 
 		if($request->hasfile('main_image'))
@@ -176,7 +155,7 @@ class AItemsListController extends Controller
 				foreach($sizes as $size)
 				{
 					$image = Image::make($file);
-					$path = "images/branch-products/{$branchID}/{$size}x{$size}/";
+					$path = "images/vendors/{$vendorID}/items/{$size}x{$size}/";
 
 					if (!File::isDirectory($path)) {
 						File::makeDirectory($path, 0755, true, true);
@@ -235,18 +214,6 @@ class AItemsListController extends Controller
 		$status = Items_list::all();
 		return view('admin.status', compact('status'));
 	}
-
-	// public function show($id)
-	// {
-	// 	$Items_list = Items_list::where('branch_id', $id)
-	// 		->get();
-
-	// 	return response()->json([
-	// 		'status' => 200,
-	// 		'data' => $Items_list,
-	// 		'message' => 'Branch items retrieved successfully!'
-	// 	]);
-	// }
 
 	public function destroy($id)
 	{

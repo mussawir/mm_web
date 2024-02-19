@@ -7,10 +7,10 @@
 <div class="card">
 	<div class="card-header">
 		@if ($message = Session::get('message'))
-		<div class="alert alert-success alert-dismissible">
-			<strong>{{ $message }}</strong>
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		</div>
+			<div class="alert alert-success alert-dismissible">
+				<strong>{{ $message }}</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
 		@endif
 		<div class="row gap-md-0 gap-4">
 			<div class="col-md-6">
@@ -43,8 +43,6 @@
 				<tr>
 					<th scope="col">S.No</th>
 					<th scope="col">Name</th>
-					<th scope="col">Branches</th>
-					<th scope="col">Vendors</th>
 					<th scope="col">Actions</th>
 				</tr>
 			</thead>
@@ -53,8 +51,6 @@
 				<tr>
 					<td>{{ $loop->iteration }}</td>
 					<td>{{ $city->name }}</td>
-					<td>{{ $city->branches->count() }}</td>
-					<td>{{ $city->vendors->count() }}</td>
 					<td>
 						<div class="dropdown">
 							<button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -79,7 +75,7 @@
 				</tr>
 				@empty
 				<tr class="fw-semibold lead my-0 alert alert-danger text-center">
-					<td colspan="5">
+					<td colspan="3">
 						No cities available.
 					</td>
 				</tr>

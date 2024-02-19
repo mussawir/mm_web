@@ -14,14 +14,4 @@ class City extends Model
 	protected $fillable = [
 		'name'
 	];
-
-	public function branches()
-	{
-		return $this->hasMany('App\Models\Branches');
-	}
-
-	public function vendors()
-	{
-		return $this->hasMany('App\Models\Vendor');
-	}
 }
