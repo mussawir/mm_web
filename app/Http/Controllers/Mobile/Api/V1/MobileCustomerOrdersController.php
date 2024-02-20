@@ -11,6 +11,7 @@ use App\Models\Items_list;
 use App\Models\OrderAddon;
 use App\Models\OrderDealOption;
 use App\Models\Vendor;
+use App\Models\CustomerOperator;
 use Illuminate\Support\Facades\DB;
 
 class MobileCustomerOrdersController extends Controller
@@ -55,8 +56,11 @@ class MobileCustomerOrdersController extends Controller
 		$orderType = 'Delivery';
 		$paymentMethod = $request->data['userobj']['paymentMethod'];
 
-		$commisionPercentage = Vendor::findOrFail($request->data['userobj']['vendorId'])->value('commission_percentage');
-		$ordermaster->operator_commission = $commisionPercentage * ($request->data['userobj']['orderAmount']/100);
+		$vendor = Vendor::findOrFail($request->data['userobj']['vendorId']);
+		$commissionPercentage = $vendor->commission_percentage;
+		$operatorId = $vendor->operator_id;
+		$ordermaster->operator_id = $operatorId;
+		$ordermaster->operator_commission = $commissionPercentage * ($request->data['userobj']['orderAmount']/100);
 
 		if ($orderType == 'Delivery')
 		{
@@ -80,6 +84,14 @@ class MobileCustomerOrdersController extends Controller
 		$ordermaster->status = 1;
 		
 		$ordermaster->save();
+
+		$cusOperHist = CustomerOperator::where('customer_id', $request->data['userobj']['customerid'])->where('operator_id', $operatorId)->first();
+		if(!$cusOperHist){
+			$cusOperHist = new CustomerOperator;
+			$cusOperHist->customer_id = $request->data['userobj']['customerid'];
+			$cusOperHist->operator_id = $operatorId;
+			$cusOperHist->save();
+		}
 		
 		foreach ($request->data['items'] as $record)
 		{
@@ -204,22 +216,7 @@ class MobileCustomerOrdersController extends Controller
 		]);
 	}
 	
-	// public function store(Request $request)
-	// {
-	// 	foreach ($request->all() as $record)
-	// 	{
-	// 		$Order = new OrderDetails();
-	// 		$Order->item_id = $record['id'];
-	// 		$Order->sub_total = $record['sub_total'];
-	// 		$Order->qty = $record['qty'];
-	// 		$Order->item_price = $record['price'];
-	// 		$Order->item_name = $record['name'];
-	// 		$Order->order_master_id = $request->orderMaster_id;
-	// 		$Order->main_image = $record['image'];
-	// 		$Order->save();
-	// 	}
-	// 	return response()->json(['status' => '200', 'Order Created Succesfully!']);
-	// }
+	
 
 	public function showOrders($customerId)
 	{

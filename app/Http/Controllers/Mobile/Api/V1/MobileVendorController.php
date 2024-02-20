@@ -42,13 +42,14 @@ class MobileVendorController extends Controller
 		foreach($operators as $operator){
 			$operatorLocation = json_decode($operator->details->operation_geo_location);
 			$operatorRadius = $operator->details->operation_radius;
-			$distance = $this->getDistance($latitude, $longitude, $operatorLocation->latitude, $operatorLocation->longitude);
-			if($distance > $operatorRadius){
-				continue;
+			if($operatorLocation && $operatorRadius){
+				$distance = $this->getDistance($latitude, $longitude, $operatorLocation->latitude, $operatorLocation->longitude);
+				if($distance > $operatorRadius){
+					continue;
+				}
+				$operator->distance = $distance;
+				$filteredOperators[] = $operator;
 			}
-			$operator->distance = $distance;
-
-			$filteredOperators[] = $operator;
 		}
 
 
