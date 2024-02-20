@@ -79,6 +79,32 @@ class MobileVendorController extends Controller
 		]);
 	}
 
+	public function checkInRange(Request $request)
+	{
+		$latitude = $request->input('latitude');
+		$longitude = $request->input('longitude');
+		$vendorId = $request->input('vendorId');
+
+		$operatorId = Vendor::find($vendorId)->operator_id;
+		$operator = OperatorMaster::find($operatorId);
+		$operatorLocation = json_decode($operator->details->operation_geo_location);
+		$operatorRadius = $operator->details->operation_radius;
+
+		$distance = $this->getDistance($latitude, $longitude, $operatorLocation->latitude, $operatorLocation->longitude);
+
+		if($distance < $operatorRadius){
+			return response()->json([
+				'status' => 200,
+				'message' => 'Vendor is in range.',
+			]);
+		}else{
+			return response()->json([
+				'status' => 500,
+				'message' => 'Vendor is out of range.',
+			]);
+		}
+	}
+
 	public function getVendorItems($id)
 	{
 		$vendor = Vendor::findOrFail($id);

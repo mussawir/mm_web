@@ -12,6 +12,7 @@ use App\Models\OrderAddon;
 use App\Models\OrderDealOption;
 use App\Models\Vendor;
 use App\Models\CustomerOperator;
+use App\Models\Customer;
 use Illuminate\Support\Facades\DB;
 
 class MobileCustomerOrdersController extends Controller
@@ -84,6 +85,12 @@ class MobileCustomerOrdersController extends Controller
 		$ordermaster->status = 1;
 		
 		$ordermaster->save();
+
+		// update customer address in customer table with order address
+		$customer = Customer::find($request->data['userobj']['customerid']);
+		$customer->address = $request->data['location']['address'];
+		$customer->geo_location = json_encode($request->data['location']['selectedCoords']);
+		$customer->save();
 
 		$cusOperHist = CustomerOperator::where('customer_id', $request->data['userobj']['customerid'])->where('operator_id', $operatorId)->first();
 		if(!$cusOperHist){
