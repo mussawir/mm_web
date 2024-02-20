@@ -212,5 +212,6 @@ Route::prefix('v1')->group(function () {
 		Route::get('/types/{isFood}', [MobileVendorController::class, 'getVendorTypes']);
 		Route::get('/delivery/{id}', [MobileVendorController::class, 'getVendorDeliveryDetails']);
 		Route::get('/details/{id}', [MobileVendorController::class, 'getVendorDetails']);
+		Route::post('/check/range' ,[MobileVendorController::class, 'checkInRange']);
 	});
 });
