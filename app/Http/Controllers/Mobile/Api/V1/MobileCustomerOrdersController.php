@@ -217,7 +217,7 @@ class MobileCustomerOrdersController extends Controller
                  
         $response = curl_exec($ch);
 		return response()->json([
-			'status' => '200',
+			'status' => 200,
 			'data' => $request->data['userobj'],
 			'message' => $response
 		]);
