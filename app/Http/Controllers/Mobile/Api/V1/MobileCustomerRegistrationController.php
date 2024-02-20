@@ -73,7 +73,13 @@ public function login(Request $request)
     if($customer->pin != $pin){
         return response()->json(['status' => 500, 'message' => 'Wrong PIN.']);
     }
-    return response()->json(['status' => 200,'data' => $customer->id,'message' => 'Login Succesfully!.']);
+    $data = [
+        'id' => $customer->id,
+        'name' => $customer->name,
+        'address' => $customer->address,
+        'geoLocation' => json_decode($customer->geo_location)
+    ];
+    return response()->json(['status' => 200,'data' => $data,'message' => 'Login Succesfully!.']);
 }
 	
 	
