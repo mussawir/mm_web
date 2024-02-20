@@ -35,6 +35,7 @@ public function store(Request $request)
 {
     $phone_number = $request->get(trim('phone_number'));
     $name = $request->get('name');
+    $pin = $request->get('pin');
 
     $customer = Customer::where("phone_number", $phone_number)->first();
     if($customer){
@@ -44,6 +45,7 @@ public function store(Request $request)
     $customer = new Customer;
     $customer->phone_number = $phone_number;
     $customer->name = $name;
+    $customer->pin = $pin;
     $customer->verified_customer = 0;
     $customer->save();
 
@@ -55,6 +57,23 @@ public function store(Request $request)
     $createOtp->customer_id	  = $customer->id;
     $createOtp->save();
     return response()->json(['status' => 200,'message' => 'Otp number']);
+}
+
+public function login(Request $request)
+{
+    $phone_number = $request->get(trim('phone_number'));
+    $pin = $request->get('pin');
+
+    $customer = Customer::where("phone_number", $phone_number)->first();
+
+    if(!$customer){
+        return response()->json(['status' => 404, 'message' => 'Customer not found.']);
+    }
+
+    if($customer->pin != $pin){
+        return response()->json(['status' => 500, 'message' => 'Wrong PIN.']);
+    }
+    return response()->json(['status' => 200,'data' => $customer->id,'message' => 'Login Succesfully!.']);
 }
 	
 	
