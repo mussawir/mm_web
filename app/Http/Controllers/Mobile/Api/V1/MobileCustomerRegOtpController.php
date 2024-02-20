@@ -74,14 +74,14 @@ class MobileCustomerRegOtpController extends Controller
 	  	$customer = Customer::where("phone_number", "=", trim($phone_number))->first();  
 
 		if($customer){      
-			$digits = 4;
-        	$otp =  rand(pow(10, $digits-1), pow(10, $digits)-1);
-			$result = CustRegOtp::updateOrCreate(
-				['customer_id' => $customer->id],
-				['otp_number' => $otp],
+			// $digits = 4;
+        	// $otp =  rand(pow(10, $digits-1), pow(10, $digits)-1);
+			// $result = CustRegOtp::updateOrCreate(
+			// 	['customer_id' => $customer->id],
+			// 	['otp_number' => $otp],
 
-			);
-			return response()->json(['status' => 200, 'message' => 'Succesfully sent OTP.']);
+			// );
+			return response()->json(['status' => 200, 'message' => 'Already registered Login using PIN']);
 		}else{
 			return response()->json(['status' => 500,'message' => 'Not Match Number!.']);       
 		}
