@@ -39,13 +39,17 @@ class OperatorController extends Controller
 			'name' => 'required|string|min:3',
 			'email' => 'required|email|unique:operator_master,email',
 			'phone' => 'required|numeric|unique:operator_master,phone',
-			'address' => 'required|string',
+			'address_address' => 'required|string',
 			'commission_percentage' => 'required|numeric|min:2|max:20',
 			'city' => 'required',
 			'area_name' => 'required|string',
 			'operation_radius' => 'required',
 			'operational_area' => 'required',
 		]);
+
+		$latitude = floatval($request->input('address_latitude'));
+		$longitude = floatval($request->input('address_longitude'));
+		$selectedCoords = json_encode(['latitude' => $latitude, 'longitude' => $longitude]);
 
 		$operator = new OperatorMaster;
 
@@ -60,11 +64,12 @@ class OperatorController extends Controller
 
 			$operatorDetails->operator_id = $operator->id;
 			$operatorDetails->city_id = $request->get('city');
-			$operatorDetails->address = $request->get('address');
+			$operatorDetails->address = $request->get('address_address');
 			$operatorDetails->commission_percentage = $request->get('commission_percentage');
 			$operatorDetails->area_name = $request->get('area_name');
 			$operatorDetails->operation_radius = $request->get('operation_radius');
 			$operatorDetails->operational_area = $request->get('operational_area');
+			$operatorDetails->operation_geo_location = $selectedCoords;
 
 			$operatorDetails->save();
 
