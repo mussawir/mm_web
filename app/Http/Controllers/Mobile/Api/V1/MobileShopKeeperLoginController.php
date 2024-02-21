@@ -34,9 +34,13 @@ class MobileShopKeeperLoginController extends Controller
 			$user = Auth::guard('admin')->user();
 
 			if ($user->role == 2) {
+				$data = [
+					'vendor_id' => $user->user_id,
+					'fcm_token' => $user->fcm_token
+				];
 				return response()->json([
 					'status' => 200,
-					'data' => $user,
+					'data' => $data,
 					'message' => 'User login successfully!'
 				]);
 			} else {
@@ -103,7 +107,7 @@ class MobileShopKeeperLoginController extends Controller
 		$fcmToken = $request->input('fcm_token');
 	
 		$existingToken = DB::table('admins')
-			->where('vendor_id', $id)
+			->where('user_id', $id)
 			->value('fcm_token');
 	
 		if ($fcmToken === $existingToken) {
@@ -114,7 +118,7 @@ class MobileShopKeeperLoginController extends Controller
 		}
 	
 		$affectedRows = DB::table('admins')
-			->where('vendor_id', $id)
+			->where('user_id', $id)
 			->update(['fcm_token' => $fcmToken]);
 	
 		if ($affectedRows > 0) {
