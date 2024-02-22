@@ -5,7 +5,7 @@
 				<img src="{{ asset('/assets/images/avatars/fastfood.png') }}" class="navbar-brand-img" width="40" height="40" alt="Brand Logo">
 			</span>
 			<span class="app-brand-text demo menu-text fw-bolder ms-2">
-				Odrde
+				MzaMax
 			</span>
 		</a>
 		<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">

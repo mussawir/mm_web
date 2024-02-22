@@ -280,7 +280,7 @@ Route::controller(FrontController::class)->group(function () {
 	# Added by Sohail Asghar [25-Sept-2023]
 	Route::get('/load-deals-and-categories/{branch}', 'loadDealsAndCategories')
 		->name('load.deals.categories');
-	Route::get('/load-vendors/{branch}', 'loadVendors')->name('load.vendors');
+	Route::post('/load-vendors', 'loadVendors')->name('load.vendors');
 	Route::post('/save-selected-branch', 'saveSelectedBranch')
 		->name('save.selectedBranch');
 });

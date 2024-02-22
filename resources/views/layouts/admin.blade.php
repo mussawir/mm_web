@@ -6,9 +6,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-		<title>Order Delivery - Dashboard</title>
-		<meta name="description" content="Fast Food">
-		<meta name="author" content="Ali Mussawir">
+		<title>MzaMax</title>
 
 		{{-- Favicon --}}
 		<link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">

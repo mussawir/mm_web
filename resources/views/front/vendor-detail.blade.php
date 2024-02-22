@@ -138,7 +138,7 @@
 					>
 						<div
 							class="vstack position-relative card-img-bg"
-							style="background-image: url('{{ "/images/deal-banners/{$deal->branch_id}/500x500/{$deal->banner}" }}');"
+							style="background-image: url('{{ "/images/vendors/{$deal->vendor_id}/deals/500x500/{$deal->banner}" }}');"
 						>
 						</div>
 						<div class="card-body vstack justify-content-end">
@@ -264,7 +264,7 @@
 							<div class="d-flex flex-column product-tile__right-side-wrapper no-shrink ml-st gap-1">
 								<picture class="product-tile__image">
 									@php
-										$img150 = asset("/images/branch-products/{$item->branch_id}/150x150/{$item->main_image}");
+										$img150 = asset("/images/vendors/{$item->vendor_id}/items/150x150/{$item->main_image}");
 									@endphp
 									<div class="lazy-loaded-dish-photo" style="background-image: url({{ $img150 }});"></div>
 								</picture>
@@ -407,7 +407,7 @@
 					$('#addToCartModal .product-information-title').html(data.item.name);
 					$('#addToCartModal .product-description').html(data.item.discription);
 					$('#addToCartModal .product-price').html(currency + data.item.price);
-					$('#addToCartModal .product-information-image').attr('src', '/images/branch-products/' + data.item.branch_id + '/500x500/' + data.item.main_image);
+					$('#addToCartModal .product-information-image').attr('src', '/images/vendors/' + data.item.vendor_id + '/items/500x500/' + data.item.main_image);
 
 					if (data.item.addons.length) {
 						// Clear existing addons
