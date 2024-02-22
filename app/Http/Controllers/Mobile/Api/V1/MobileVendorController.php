@@ -7,23 +7,23 @@ use App\Models\Vendor;
 use App\Models\VendorType;
 use App\Models\OperatorMaster;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class MobileVendorController extends Controller
 {
 	private function getDistance($lat1, $lon1, $lat2, $lon2) {
-        $earthRadius = 6371; // in kilometers
+		$earthRadius = 6371; // in kilometers
 
-        $dLat = deg2rad($lat2 - $lat1);
-        $dLon = deg2rad($lon2 - $lon1);
+		$dLat = deg2rad($lat2 - $lat1);
+		$dLon = deg2rad($lon2 - $lon1);
 
-        $a = sin($dLat / 2) * sin($dLat / 2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon / 2) * sin($dLon / 2);
-        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+		$a = sin($dLat / 2) * sin($dLat / 2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon / 2) * sin($dLon / 2);
+		$c = 2 * atan2(sqrt($a), sqrt(1 - $a));
 
-        $distance = $earthRadius * $c;
+		$distance = $earthRadius * $c;
 
-        return $distance;
-    }
+		return $distance;
+	}
+
 	public function index(Request $request)
 	{
 		// users location coordinates
@@ -33,29 +33,29 @@ class MobileVendorController extends Controller
 		// user selected vendor type
 		$vendorType = $request->input('vendorType');
 
-
 		// fetching all operators
 		$operators = OperatorMaster::with('details')->get();
 
 		// filtering operators based on distance
 		$filteredOperators=[];
-		foreach($operators as $operator){
+		foreach($operators as $operator) {
 			$operatorLocation = json_decode($operator->details->operation_geo_location);
 			$operatorRadius = $operator->details->operation_radius;
-			if($operatorLocation && $operatorRadius){
+
+			if($operatorLocation && $operatorRadius) {
 				$distance = $this->getDistance($latitude, $longitude, $operatorLocation->latitude, $operatorLocation->longitude);
-				if($distance > $operatorRadius){
+
+				if($distance > $operatorRadius) {
 					continue;
 				}
+
 				$operator->distance = $distance;
 				$filteredOperators[] = $operator;
 			}
 		}
 
-
 		// Extracting operator IDs from the filteredOperators array
 		$operatorIds = array_column($filteredOperators, 'id');
-
 
 		// fetching vendors based on operator ids and vendor type
 		$vendors = Vendor::whereIn('operator_id', $operatorIds)->where('vendor_type_id', $vendorType)->get();
@@ -92,12 +92,12 @@ class MobileVendorController extends Controller
 
 		$distance = $this->getDistance($latitude, $longitude, $operatorLocation->latitude, $operatorLocation->longitude);
 
-		if($distance < $operatorRadius){
+		if($distance < $operatorRadius) {
 			return response()->json([
 				'status' => 200,
 				'message' => 'Vendor is in range.',
 			]);
-		}else{
+		} else {
 			return response()->json([
 				'status' => 500,
 				'message' => 'Vendor is out of range.',
@@ -158,12 +158,11 @@ class MobileVendorController extends Controller
 	public function getVendorTypes($isFood)
 	{
 		// using 1 for food types 0 for general and 2 for fetching both
-		if($isFood == '2'){
+		if($isFood == '2') {
 			$types = VendorType::get();
-		}else{
+		} else {
 			$types = VendorType::where('is_food', $isFood)->get();
 		}
-		
 
 		return response()->json([
 			'status' => 200,

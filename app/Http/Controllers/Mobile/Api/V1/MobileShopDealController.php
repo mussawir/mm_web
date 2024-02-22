@@ -19,26 +19,12 @@ class MobileShopDealController extends Controller
 			->get();
 
 		$deals = $deals->map(function ($deal) {
-			$dealBannerPath = "images/deal-banners/{$deal->branch_id}/250x250/{$deal->banner}";
+			$dealBannerPath = "images/vendors/{$deal->vendor_id}/deals/250x250/{$deal->banner}";
 			$deal->banner = $dealBannerPath;
 
 			$deal->items = $deal->items->map (function ($dealItem) {
 				$dealItem->item->image = 'Sad';
 			});
-
-			// $deal->items->transform(function ($dealItem) {
-			// 	$imgPath = "images/branch-categories/{$dealItem->item->branch_id}/150x150/{$dealItem->item->image}";
-			// 	$dealItem->item->image = $imgPath;
-
-			// 	$dealItem->dealOptions->transform(function ($dealOption) {
-			// 		$itemImage = "images/branch-products/";
-			// 		$dealOption->item->item_image = $itemImage;
-
-			// 		return $dealOption;
-			// 	});
-
-			// 	return $dealItem;
-			// });
 
 			return $deal;
 		});
@@ -184,13 +170,12 @@ class MobileShopDealController extends Controller
 		$deal->banner = $banner;
 		$deal->status = 1;
 		$deal->save();
-		if($deal)
-		{
+
+		if($deal) {
 			DealDetail::where('deal_id', $deal->id)->delete();
 			$items = json_decode($request->input('itemsWithVariations',true));
 			DealOption::where('deal_id', $deal->id)->delete();
-			
-			
+
 			foreach($items as $item)
 			{
 				$quantity = $item->quantity;
@@ -203,14 +188,11 @@ class MobileShopDealController extends Controller
 					$dealDetails->item_type_name = $item->category->name;
 					$dealDetails->quantity = $quantity;
 
-
 					$dealDetails->save();
-
 
 					if (is_array($item->items) && count($item->items))
 					{
-						
-						
+
 						foreach ($item->items as $dealOption)
 						{
 							$dealOptions = new DealOption;

@@ -82,7 +82,7 @@ Route::prefix('v1')->group(function () {
 	Route::get('/getcatitems/{categoryId}/{vendorId}',[MobileShopsItemsListController::class,'getItemsByCategory']);
 	Route::get('/getcatitems/{categoryId}',[MobileShopsItemsListController::class,'getItemsByCat']);
 
-	Route::post('/favourite/shop',[MobileShopsItemsListController::class,'favouriteStore']);
+	// Route::post('/favourite/shop',[MobileShopsItemsListController::class,'favouriteStore']);
 	// Route::get('/favourite/shop/list/{id}',[MobileShopsListController::class,'favouriteStoreList']);
 
 	// create order for login users
