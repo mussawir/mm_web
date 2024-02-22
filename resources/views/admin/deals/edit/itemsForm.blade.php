@@ -322,6 +322,7 @@
 			var vendor = @json($vendorID);
 
 			subCategories.innerHTML = '';
+			itemsList.innerHTML = '';
 
 			const defaultOption = document.createElement('option');
 			defaultOption.value = "";
@@ -351,8 +352,9 @@
 			const categoryId = subCategories.value;
 			if (categoryId)
 			{
+				var vendor = @json($vendorID);
 				// Make an AJAX request to fetch the items of the selected category
-				fetch(`/api/v1/getcatitems/${categoryId}`)
+				fetch(`/api/v1/getcatitems/${categoryId}/${vendor}`)
 				.then(response => response.json())
 				.then(data => {
 					// Populate the items list inside the modal with the received data
