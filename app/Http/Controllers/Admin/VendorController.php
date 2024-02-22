@@ -284,6 +284,14 @@ class VendorController extends Controller
 	public function destroy($id)
 	{
 		$vendor = Vendor::findOrFail($id);
+		$vendorDeals = $vendor->deals;
+		$vendorItems = $vendor->items;
+
+		if ($vendorDeals->count() || $vendorItems->count()) {
+			return redirect()->route('vendors.index')
+			->with('message', 'Vendor deals and items set not empty!');
+		}
+		
 		$vendor->delete();
 
 		return redirect()->route('vendors.index')

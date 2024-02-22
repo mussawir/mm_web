@@ -4425,6 +4425,10 @@ button {
     color: #fff;
 }
 
+.pac-container {
+    z-index: 1055 !important;
+}
+
 @media (prefers-reduced-motion: no-preference) {
     .bds-c-quantity-stepper__quantity.bds-c-quantity-stepper__quantity--decrementing {
         animation: quantity-decrement 150ms cubic-bezier(0.22, 0.1, 0.1, 1);

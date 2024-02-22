@@ -95,6 +95,7 @@
 
 		{{-- Global Init --}}
 		<script src="{{ asset('/assets/js/custom.js') }}"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize" async defer></script>
 		<script type="text/javascript">
 			$(".increase-quantity").click(function (e) {
 				e.preventDefault();
@@ -172,31 +173,31 @@
 
 			document.addEventListener('DOMContentLoaded', () => {
 				const selectedOption = localStorage.getItem('selectedOption');
-				const selectedCity = localStorage.getItem('selectedCity');
-				const selectedBranch = localStorage.getItem('selectedBranch');
-				const cityName = localStorage.getItem('cityName');
-				const branchName = localStorage.getItem('branchName');
+				// const selectedCity = localStorage.getItem('selectedCity');
+				// const selectedBranch = localStorage.getItem('selectedBranch');
+				// const cityName = localStorage.getItem('cityName');
+				// const branchName = localStorage.getItem('branchName');
 
-				const sessionBranch = @js(session('selectedBranch'));
+				// const sessionBranch = @js(session('selectedBranch'));
 				const deliveryType = document.querySelectorAll('input[name="deliveryPickupOption"]');
 
-				if (selectedBranch && (!sessionBranch)) {
-					saveSelectedBranchToSession(selectedBranch);
-				}
+				// if (selectedBranch && (!sessionBranch)) {
+				// 	saveSelectedBranchToSession(selectedBranch);
+				// }
 
 				// Add an event listener to the button to open the modal
 				openModalButton.addEventListener('click', () => {
 					myModal.show();
-					fetchCities(selectedCity);
+					// fetchCities(selectedCity);
 				});
 
 				if (selectedOption === 'pickup')
 				{
-					cardTitle.textContent = 'Please select area';
+					cardTitle.textContent = 'Your location';
 				}
 				else if (selectedOption === 'delivery')
 				{
-					cardTitle.textContent = 'Please select area';
+					cardTitle.textContent = 'Your location';
 				}
 				else if (this.value === 'dine-in')
 				{
@@ -210,10 +211,10 @@
 				else
 				{
 					myModal.show();
-					fetchCities(selectedCity);
+					// fetchCities(selectedCity);
 				}
 
-				updateButtonText(selectedOption, cityName, branchName);
+				updateButtonText(selectedOption);
 				updateSaveButtonState();
 
 				deliveryType.forEach(type => {
@@ -231,214 +232,79 @@
 			function saveOption()
 			{
 				const selectedOption = document.querySelector('input[name="deliveryPickupOption"]:checked');
+
 				if (selectedOption)
 				{
-					localStorage.setItem('selectedOption', selectedOption.value);
+					// localStorage.setItem('selectedOption', selectedOption.value);
 
-					const selectedCity = document.getElementById('citySelect');
-					const selectedBranch = document.getElementById('branchSelect');
+					// const selectedCity = document.getElementById('citySelect');
+					// const selectedBranch = document.getElementById('branchSelect');
 
-					const storedCity = localStorage.getItem('selectedCity');
-					const storedBranch = localStorage.getItem('selectedBranch');
+					// const storedCity = localStorage.getItem('selectedCity');
+					// const storedBranch = localStorage.getItem('selectedBranch');
 
-					if (selectedCity.value === storedCity && selectedBranch.value === storedBranch && selectedOption.value !== 'dine-in')
-					{
-						myModal.hide();
-					}
-					else
-					{
-						if (selectedOption.value === 'dine-in')
-						{
+					const locationCoords = localStorage.getItem('locationCoords');
+
+					if (locationCoords) {
+						// myModal.hide();
+						if (selectedOption.value === 'dine-in') {
 							window.location.href = '/reservation';
 						}
 
-						const cartItemCount = @json($cartItemCount);
-						let shouldChange = false;
-
-						if (cartItemCount > 0)
-						{
-							shouldChange = window.confirm("This will clear your cart. Are you sure you want to proceed?");
-						}
-
-						if (shouldChange)
-						{
-							// Clear the cart when the branch changes
-							clearCart();
-						}
-
 						localStorage.setItem('selectedOption', selectedOption.value);
-						localStorage.setItem('selectedCity', selectedCity.value);
-						localStorage.setItem('selectedBranch', selectedBranch.value);
-						localStorage.setItem('cityName', selectedCity.options[selectedCity.selectedIndex].textContent);
-						localStorage.setItem('branchName', selectedBranch.options[selectedBranch.selectedIndex].textContent);
-
-						saveSelectedBranchToSession(selectedBranch.value);
 
 						fetchVendorsForBranch();
 
-						updateButtonText(selectedOption.value, selectedCity.options[selectedCity.selectedIndex].textContent, selectedBranch.options[selectedBranch.selectedIndex].textContent);
+						updateButtonText(selectedOption.value);
 
 						myModal.hide();
+					} else {
+						// const cartItemCount = @json($cartItemCount);
+						// let shouldChange = false;
+
+						// if (cartItemCount > 0) {
+						// 	shouldChange = window.confirm("This will clear your cart. Are you sure you want to proceed?");
+						// }
+
+						// if (shouldChange) {
+						// 	// Clear the cart when the branch changes
+						// 	clearCart();
+						// }
+
+						
+						// localStorage.setItem('selectedCity', selectedCity.value);
+						// localStorage.setItem('selectedBranch', selectedBranch.value);
+						// localStorage.setItem('cityName', selectedCity.options[selectedCity.selectedIndex].textContent);
+						// localStorage.setItem('branchName', selectedBranch.options[selectedBranch.selectedIndex].textContent);
+
+						// saveSelectedBranchToSession(selectedBranch.value);
+
+						// fetchVendorsForBranch();
+
+						// updateButtonText(selectedOption.value, selectedCity.options[selectedCity.selectedIndex].textContent, selectedBranch.options[selectedBranch.selectedIndex].textContent);
+
+						// myModal.hide();
 					}
 				}
-			}
-
-			function fetchCityBranchCount() {
-				return fetch(`/api/v1/city/branch/count`)
-					.then(response => response.json())
-					.then(data => data.data)
-					.catch(error => {
-						console.error('Error fetching count:', error);
-					});
-			}
-
-			function fetchCities(selectedCity) {
-				fetch(`/api/v1/city/list`)
-				.then(response => response.json())
-				.then(data => {
-					citySelect.innerHTML = '';
-
-					const defaultOption = document.createElement('option');
-					defaultOption.value = "";
-					defaultOption.textContent = "Select City";
-					citySelect.appendChild(defaultOption);
-
-					data.data.forEach(city => {
-						const option = document.createElement('option');
-						option.value = city.id;
-						option.textContent = city.name;
-						if (selectedCity && selectedCity == city.id)
-						{
-							option.selected = true;
-						}
-						citySelect.appendChild(option);
-					});
-
-					if (selectedCity)
-					{
-						fetchBranches();
-					}
-				})
-				.catch(error => {
-					console.error('Error fetching cities:', error);
-				});
-			}
-
-			function fetchBranches() {
-				const cityId = citySelect.value;
-
-				const selectedBranch = localStorage.getItem('selectedBranch');
-
-				if (cityId)
-				{
-					// Fetch branches for the selected city
-					fetch(`/api/v1/city/branches/list/${cityId}`)
-					.then(response => response.json())
-					.then(data => {
-						branchContainer.style.display = 'block';
-						branchSelect.innerHTML = '';
-
-						const defaultOption = document.createElement('option');
-						defaultOption.value = "";
-						defaultOption.textContent = "Select Area";
-						branchSelect.appendChild(defaultOption);
-
-						// Populate the branch select with new branch options
-						data.data.forEach(branch => {
-							const option = document.createElement('option');
-							option.value = branch.id;
-							if (selectedBranch && selectedBranch == branch.id)
-							{
-								option.selected = true;
-								saveButton.disabled = false;
-							}
-							option.textContent = branch.name;
-							branchSelect.appendChild(option);
-						});
-					})
-					.catch(error => {
-						console.error('Error fetching branches:', error);
-					});
-				}
-				else
-				{
-					branchContainer.style.display = 'none';
-				}
-			}
-
-			function updateSaveButtonState() {
-				const selectedOption = document.querySelector('input[name="deliveryPickupOption"]:checked');
-
-				const selectedBranch = branchSelect.value;
-
-				if (selectedOption && selectedBranch) {
-					saveButton.disabled = false;
-				} else {
-					saveButton.disabled = true;
-				}
-			}
-
-			// Event listener for the branch select change
-			branchSelect.addEventListener('change', () => {
-				updateSaveButtonState();
-			});
-
-			function saveSelectedBranchToSession(selectedBranch) {
-				if (selectedBranch)
-				{
-					$.ajax({
-						type: 'POST',
-						url: '{{ route('save.selectedBranch') }}',
-						headers: {
-							'X-CSRF-TOKEN': "{{ csrf_token() }}"
-						},
-						data: {
-							selectedBranch: selectedBranch
-						},
-						success: function(response) {
-							if (response.data == true) {
-								fetchVendorsForBranch();
-							}
-						},
-						error: function(error) {
-							console.error('Error saving selected branch:', error);
-						}
-					});
-				}
-			}
-
-			function clearCart() {
-				fetch('/clear-cart', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'X-CSRF-TOKEN': '{{ csrf_token() }}',
-					},
-				})
-				.then(response => {
-					if (response.ok) {
-						alert ('Cart cleared successfully.')
-						window.location.href = '/';
-					}
-					else {
-						// Handle errors if clearing the cart fails
-					}
-				})
-				.catch(error => {
-					console.error('Error clearing the cart:', error);
-				});
 			}
 
 			function fetchVendorsForBranch() {
-				const selectedBranch = branchSelect.value || localStorage.getItem('selectedBranch');
+				// const selectedBranch = localStorage.getItem('selectedBranch');
+				const locationCoords = localStorage.getItem('locationCoords');
 
-				if (!selectedBranch) {
+				if (!locationCoords) {
 					return;
 				}
 
 				$.ajax({
-					url: `/load-vendors/${selectedBranch}`,
-					type: 'GET',
+					url: `/load-vendors/`,
+					type: 'POST',
+					headers: {
+						'X-CSRF-TOKEN': "{{ csrf_token() }}"
+					},
+					data: {
+						locationCoords: locationCoords
+					},
 					success: function(response) {
 						updateVendorsView(response.vendors);
 					},
@@ -652,44 +518,190 @@
 				return badge;
 			}
 
+			// function fetchCityBranchCount() {
+			// 	return fetch(`/api/v1/city/branch/count`)
+			// 		.then(response => response.json())
+			// 		.then(data => data.data)
+			// 		.catch(error => {
+			// 			console.error('Error fetching count:', error);
+			// 		});
+			// }
+
+			// function fetchCities(selectedCity) {
+			// 	fetch(`/api/v1/city/list`)
+			// 	.then(response => response.json())
+			// 	.then(data => {
+			// 		citySelect.innerHTML = '';
+
+			// 		const defaultOption = document.createElement('option');
+			// 		defaultOption.value = "";
+			// 		defaultOption.textContent = "Select City";
+			// 		citySelect.appendChild(defaultOption);
+
+			// 		data.data.forEach(city => {
+			// 			const option = document.createElement('option');
+			// 			option.value = city.id;
+			// 			option.textContent = city.name;
+			// 			if (selectedCity && selectedCity == city.id)
+			// 			{
+			// 				option.selected = true;
+			// 			}
+			// 			citySelect.appendChild(option);
+			// 		});
+
+			// 		if (selectedCity)
+			// 		{
+			// 			fetchBranches();
+			// 		}
+			// 	})
+			// 	.catch(error => {
+			// 		console.error('Error fetching cities:', error);
+			// 	});
+			// }
+
+			// function fetchBranches() {
+			// 	const cityId = citySelect.value;
+
+			// 	const selectedBranch = localStorage.getItem('selectedBranch');
+
+			// 	if (cityId)
+			// 	{
+			// 		// Fetch branches for the selected city
+			// 		fetch(`/api/v1/city/branches/list/${cityId}`)
+			// 		.then(response => response.json())
+			// 		.then(data => {
+			// 			branchContainer.style.display = 'block';
+			// 			branchSelect.innerHTML = '';
+
+			// 			const defaultOption = document.createElement('option');
+			// 			defaultOption.value = "";
+			// 			defaultOption.textContent = "Select Area";
+			// 			branchSelect.appendChild(defaultOption);
+
+			// 			// Populate the branch select with new branch options
+			// 			data.data.forEach(branch => {
+			// 				const option = document.createElement('option');
+			// 				option.value = branch.id;
+			// 				if (selectedBranch && selectedBranch == branch.id)
+			// 				{
+			// 					option.selected = true;
+			// 					saveButton.disabled = false;
+			// 				}
+			// 				option.textContent = branch.name;
+			// 				branchSelect.appendChild(option);
+			// 			});
+			// 		})
+			// 		.catch(error => {
+			// 			console.error('Error fetching branches:', error);
+			// 		});
+			// 	}
+			// 	else
+			// 	{
+			// 		branchContainer.style.display = 'none';
+			// 	}
+			// }
+
+			function updateSaveButtonState() {
+				const selectedOption = document.querySelector('input[name="deliveryPickupOption"]:checked');
+
+				// const selectedBranch = branchSelect.value;
+
+				// if (selectedOption && selectedBranch) {
+				// 	saveButton.disabled = false;
+				// } else {
+				// 	saveButton.disabled = true;
+				// }
+			}
+
+			// Event listener for the branch select change
+			// branchSelect.addEventListener('change', () => {
+			// 	updateSaveButtonState();
+			// });
+
+			// function saveSelectedBranchToSession(selectedBranch) {
+			// 	if (selectedBranch)
+			// 	{
+			// 		$.ajax({
+			// 			type: 'POST',
+			// 			url: '{{ route('save.selectedBranch') }}',
+			// 			headers: {
+			// 				'X-CSRF-TOKEN': "{{ csrf_token() }}"
+			// 			},
+			// 			data: {
+			// 				selectedBranch: selectedBranch
+			// 			},
+			// 			success: function(response) {
+			// 				if (response.data == true) {
+			// 					fetchVendorsForBranch();
+			// 				}
+			// 			},
+			// 			error: function(error) {
+			// 				console.error('Error saving selected branch:', error);
+			// 			}
+			// 		});
+			// 	}
+			// }
+
+			// function clearCart() {
+			// 	fetch('/clear-cart', {
+			// 		method: 'POST',
+			// 		headers: {
+			// 			'Content-Type': 'application/json',
+			// 			'X-CSRF-TOKEN': '{{ csrf_token() }}',
+			// 		},
+			// 	})
+			// 	.then(response => {
+			// 		if (response.ok) {
+			// 			alert ('Cart cleared successfully.')
+			// 			window.location.href = '/';
+			// 		}
+			// 		else {
+			// 			// Handle errors if clearing the cart fails
+			// 		}
+			// 	})
+			// 	.catch(error => {
+			// 		console.error('Error clearing the cart:', error);
+			// 	});
+			// }
+
 			// Event listener for the city change
-			citySelect.addEventListener('change', fetchBranches);
+			// citySelect.addEventListener('change', fetchBranches);
 
 			// Event listener for the radio buttons
 			document.querySelectorAll('input[name="deliveryPickupOption"]').forEach(radio => {
 				radio.addEventListener('change', function() {
 					if (this.value === 'pickup') {
-						cardTitle.textContent = 'Please select area';
+						cardTitle.textContent = 'Your location';
 					} else if (this.value === 'delivery') {
-						cardTitle.textContent = 'Please select area';
+						cardTitle.textContent = 'Your location';
 					} else if (this.value === 'dine-in') {
 						cardTitle.textContent = 'Go to reservation page';
 					}
 				});
 			});
 
-			function updateButtonText(selectedOption, cityName, branchName)
+			function updateButtonText(selectedOption)
 			{
 				const button = document.querySelector('.location');
 				const changeBranchLocationSpan = document.querySelector('.change-branch-location');
 				const branchCitySpan = document.querySelector('.branch-city');
 
-				const cityBranchCountPromise = fetchCityBranchCount();
+				// const cityBranchCountPromise = fetchCityBranchCount();
 
-				cityBranchCountPromise.then(cityBranchCount => {
-					if (cityBranchCount.cityCount == 1 || cityBranchCount.branchCount == 1) {
-						changeBranchLocationSpan.textContent = cityName;
-						branchCitySpan.textContent = branchName;
-					} else {
-						if (selectedOption === 'pickup') {
-						changeBranchLocationSpan.textContent = 'Change Area';
-						branchCitySpan.textContent = branchName;
-						} else {
-							changeBranchLocationSpan.textContent = 'Change Location';
-							branchCitySpan.textContent = cityName;
-						}
-					}
-				});
+				// cityBranchCountPromise.then(cityBranchCount => {
+				// 	if (cityBranchCount.cityCount == 1 || cityBranchCount.branchCount == 1) {
+				// 		changeBranchLocationSpan.textContent = cityName;
+				// 		branchCitySpan.textContent = branchName;
+				// 	} else {
+				// 		if (selectedOption === 'pickup') {
+				// 		changeBranchLocationSpan.textContent = 'Change Area';
+				// 		branchCitySpan.textContent = branchName;
+				// 		} else {
+				// 			changeBranchLocationSpan.textContent = 'Change Location';
+				// 			branchCitySpan.textContent = cityName;
+				// 		}
+				// 	}
+				// });
 			}
 		</script>
 		@yield('js')
