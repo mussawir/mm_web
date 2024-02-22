@@ -201,6 +201,7 @@
 	</div>
 </div>
 @endsection
+
 @section('js')
 <script>
 	$(document).ready(function() {
@@ -316,14 +317,14 @@
 			var vendor = @json($vendor);
 
 			subCategories.innerHTML = '';
+			itemsList.innerHTML = '';
 
 			const defaultOption = document.createElement('option');
 			defaultOption.value = "";
 			defaultOption.textContent = "Select Sub Category";
 			subCategories.appendChild(defaultOption);
 
-			if (category)
-			{
+			if (category) {
 				// Fetch sub categories of main category
 				fetch(`/api/v1/category/subcategories/${category}/${vendor}`)
 				.then(response => response.json())
@@ -343,10 +344,10 @@
 
 		subCategories.addEventListener('change', () => {
 			const categoryId = subCategories.value;
-			if (categoryId)
-			{
+			if (categoryId) {
+				let vendor = @json($vendor);
 				// Make an AJAX request to fetch the items of the selected category
-				fetch(`/api/v1/getcatitems/${categoryId}`)
+				fetch(`/api/v1/getcatitems/${categoryId}/${vendor}`)
 				.then(response => response.json())
 				.then(data => {
 					// Populate the items list inside the modal with the received data
