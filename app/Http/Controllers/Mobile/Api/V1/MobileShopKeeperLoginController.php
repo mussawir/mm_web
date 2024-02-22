@@ -10,22 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class MobileShopKeeperLoginController extends Controller
 {
-	public function login(Request $request)
-	{
-		if(Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password]))
-		{
-			$user = Auth::guard('admin')->user();
-			return response()->json([
-				'status'=>200,
-				'data' => $user,
-				'message'=>'User login successfully!'
-			]);
-		}
-		else
-		{
-			return response()->json(['data'=>'Unauthorized'], 404);
-		}
-	}
 
 	public function vendorLogin(Request $request)
 	{

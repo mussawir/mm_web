@@ -52,9 +52,7 @@ class MobileCustomerOrdersController extends Controller
 		$ordermaster->order_address = $request->data['location']['address'];
 		$ordermaster->order_geo_location = json_encode($request->data['location']['selectedCoords']);
 		$ordermaster->further_instructions = $request->data['location']['instructions'];
-		// $orderType = $request->data['userobj']['orderType'];
-		// for not using static order type have to decide app flow
-		$orderType = 'Delivery';
+		$orderType = $request->data['userobj']['orderType'];
 		$paymentMethod = $request->data['userobj']['paymentMethod'];
 
 		$vendor = Vendor::findOrFail($request->data['userobj']['vendorId']);

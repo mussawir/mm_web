@@ -54,8 +54,7 @@ Route::prefix('v1')->group(function () {
 	//Route::get('/subarea/list',[MobileAreandSubAreaController::class,'show']); nr
 	//Route::get('/shop/categories/{id}',[MobileAreandSubAreaController::class,'getCategories']);
 	// Route::get('/shops/list',[MobileShopsListController::class, 'index']);
-	# Added by Sohail Asghar on 25-May-2023
-	Route::post('/admin/login', [MobileShopKeeperLoginController::class, 'login']);
+	
 	Route::post('/vendor/login', [MobileShopKeeperLoginController::class, 'vendorLogin']);
 	// Route::get('/shops/list/{id}/{cid}/{sid}',[MobileShopsListController::class, 'show']);
 	// Route::get('/items/list/{id}',[MobileShopsItemsListController::class, 'show']);

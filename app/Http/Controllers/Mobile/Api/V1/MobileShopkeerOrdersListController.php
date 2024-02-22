@@ -255,7 +255,6 @@ class MobileShopkeerOrdersListController extends Controller
 
 		$customer = $orderDetails->first()->orderMaster->customer->name ?? '';
 		$customerPhone = $orderDetails->first()->orderMaster->customer->phone_number ?? '';
-		$branch = $orderDetails->first()->orderMaster->branch->name;
 		$orderDate = $orderDetails->first()->orderMaster->created_at->format('M d Y');
 		$grandTotal = $orderDetails->first()->orderMaster->grand_total;
 		$orderType = $orderDetails->first()->orderMaster->order_type;
@@ -265,7 +264,6 @@ class MobileShopkeerOrdersListController extends Controller
 		$orderDetailsArray['orderInfo'] = [
 			'customer' => $customer,
 			'phoneNumber' => $customerPhone,
-			'branch' => $branch,
 			'orderDate' => $orderDate,
 			'grandTotal' => $grandTotal,
 			'orderType' => $orderType,
