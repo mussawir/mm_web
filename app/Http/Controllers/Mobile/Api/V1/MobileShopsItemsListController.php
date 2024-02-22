@@ -7,7 +7,6 @@ use App\Models\Category;
 use App\Models\Currency;
 use Illuminate\Http\Request;
 use App\Models\Items_list;
-use App\Models\Favourite_Shop;
 use Illuminate\Support\Facades\DB;
 
 class MobileShopsItemsListController extends Controller
@@ -25,19 +24,19 @@ class MobileShopsItemsListController extends Controller
 		]);
 	}
 
-	public function favouriteStore(Request $request)
-	{
-		$Favourite_Shop = new Favourite_Shop;
-		$Favourite_Shop->shop_id = $request->input('shop_id');
-		$Favourite_Shop->customer_id = $request->input('customer_id');
-		$Favourite_Shop->save();
+	// public function favouriteStore(Request $request)
+	// {
+	// 	$Favourite_Shop = new Favourite_Shop;
+	// 	$Favourite_Shop->shop_id = $request->input('shop_id');
+	// 	$Favourite_Shop->customer_id = $request->input('customer_id');
+	// 	$Favourite_Shop->save();
 
-		return response()->json([
-			'status' => 200,
-			'data' => $Favourite_Shop,
-			'message' => 'Shop categories retrieved successfully!'
-		]);
-	}
+	// 	return response()->json([
+	// 		'status' => 200,
+	// 		'data' => $Favourite_Shop,
+	// 		'message' => 'Shop categories retrieved successfully!'
+	// 	]);
+	// }
 
 	public function showCategory($areasubarea)
 	{
@@ -62,7 +61,7 @@ class MobileShopsItemsListController extends Controller
 			->get();
 
 		$items = $items->map(function ($item) {
-			$imagePath = "images/branch-products/{$item->branch_id}/150x150/{$item->main_image}";
+			$imagePath = "images/vendors/{$item->vendor_id}/items/150x150/{$item->main_image}";
 			$item->main_image = $imagePath;
 
 			return $item;
@@ -110,7 +109,7 @@ class MobileShopsItemsListController extends Controller
 			->get();
 		
 		$parentCategories = $parentCategories->map(function ($category) {
-			$imagePath = "images/branch-categories/{$category->branch_id}/150x150/{$category->image}";
+			$imagePath = "images/categories/150x150/{$category->image}";
 			$category->image = $imagePath;
 
 			return $category;
@@ -130,7 +129,7 @@ class MobileShopsItemsListController extends Controller
 			->get();
 		
 		$parentCategories = $parentCategories->map(function ($category) {
-			$imagePath = "images/branch-categories/{$category->branch_id}/150x150/{$category->image}";
+			$imagePath = "images/categories/150x150/{$category->image}";
 			$category->image = $imagePath;
 
 			return $category;
@@ -199,86 +198,86 @@ class MobileShopsItemsListController extends Controller
 		]);
 	}
 
-	public function shopAddItem(Request $request, $shop_id)
-	{
-		$get_image_name = $_FILES['file_attachment']['name'] ?? null;
-		if($get_image_name)
-		{
-			$target_dir = "images/branch-products/".$shop_id . "/";
-			if (!file_exists($target_dir))
-			{
-				mkdir($target_dir, 0777);
-			}
+	// public function shopAddItem(Request $request, $shop_id)
+	// {
+	// 	$get_image_name = $_FILES['file_attachment']['name'] ?? null;
+	// 	if($get_image_name)
+	// 	{
+	// 		$target_dir = "images/branch-products/".$shop_id . "/";
+	// 		if (!file_exists($target_dir))
+	// 		{
+	// 			mkdir($target_dir, 0777);
+	// 		}
 
-			$target_file =$target_dir . basename($_FILES["file_attachment"]["name"]);
-			$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+	// 		$target_file =$target_dir . basename($_FILES["file_attachment"]["name"]);
+	// 		$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-			// Check if file already exists
-			if (file_exists($target_file))
-			{
-				echo json_encode(
-					array(
-						"status" => 0,
-						"data" => array(),
-						"msg" => "Sorry, file already exists."
-					)
-				);
-				die();
-			}
+	// 		// Check if file already exists
+	// 		if (file_exists($target_file))
+	// 		{
+	// 			echo json_encode(
+	// 				array(
+	// 					"status" => 0,
+	// 					"data" => array(),
+	// 					"msg" => "Sorry, file already exists."
+	// 				)
+	// 			);
+	// 			die();
+	// 		}
 
-			// Check file size
-			if ($_FILES["file_attachment"]["size"] > 50000000)
-			{
-				echo json_encode(
-					array(
-						"status" => 0,
-						"data" => array(),
-						"msg" => "Sorry, your file is too large."
-					)
-				);
-				die();
-			}
+	// 		// Check file size
+	// 		if ($_FILES["file_attachment"]["size"] > 50000000)
+	// 		{
+	// 			echo json_encode(
+	// 				array(
+	// 					"status" => 0,
+	// 					"data" => array(),
+	// 					"msg" => "Sorry, your file is too large."
+	// 				)
+	// 			);
+	// 			die();
+	// 		}
 
-			if (move_uploaded_file($_FILES["file_attachment"]["tmp_name"], $target_file))
-			{
-				json_encode(
-					array(
-						"status" => 1,
-						"data" => array(),
-						"msg" => "File uploaded successfully"
-					)
-				);
-			}
-			else
-			{
-				echo json_encode(
-					array(
-						"status" => 0,
-						"data" => array(),
-						"msg" => "Sorry, there was an error uploading your file."
-					)
-				);
-			}
-		}
+	// 		if (move_uploaded_file($_FILES["file_attachment"]["tmp_name"], $target_file))
+	// 		{
+	// 			json_encode(
+	// 				array(
+	// 					"status" => 1,
+	// 					"data" => array(),
+	// 					"msg" => "File uploaded successfully"
+	// 				)
+	// 			);
+	// 		}
+	// 		else
+	// 		{
+	// 			echo json_encode(
+	// 				array(
+	// 					"status" => 0,
+	// 					"data" => array(),
+	// 					"msg" => "Sorry, there was an error uploading your file."
+	// 				)
+	// 			);
+	// 		}
+	// 	}
 
-		$shop_logo_url = ($get_image_name) ? '/images/branch-products/'. $shop_id . '/'. $get_image_name : '';
-		$shop_additem = new Items_list;
-		$shop_additem->branch_id = $request->input('shop_id');
-		$shop_additem->category_id = $request->input('category');
-		$shop_additem->name = $request->input('name');
-		$shop_additem->discription = $request->input('discription');
-		$shop_additem->price = $request->input('price');
-		$shop_additem->discount = $request->input('discount');
-		$shop_additem->main_image = $shop_logo_url;
-		$shop_additem->is_addon = $request->input('is_addon');
-		$shop_additem->save();
+	// 	$shop_logo_url = ($get_image_name) ? '/images/branch-products/'. $shop_id . '/'. $get_image_name : '';
+	// 	$shop_additem = new Items_list;
+	// 	$shop_additem->branch_id = $request->input('shop_id');
+	// 	$shop_additem->category_id = $request->input('category');
+	// 	$shop_additem->name = $request->input('name');
+	// 	$shop_additem->discription = $request->input('discription');
+	// 	$shop_additem->price = $request->input('price');
+	// 	$shop_additem->discount = $request->input('discount');
+	// 	$shop_additem->main_image = $shop_logo_url;
+	// 	$shop_additem->is_addon = $request->input('is_addon');
+	// 	$shop_additem->save();
 
-		return response()->json([
-			'status' => 200,
-			'data' => $shop_additem,
-			'message' => 'Item added successfully!',
-		]);
-	}
+	// 	return response()->json([
+	// 		'status' => 200,
+	// 		'data' => $shop_additem,
+	// 		'message' => 'Item added successfully!',
+	// 	]);
+	// }
 
 	public function getItem($item)
 	{
@@ -291,94 +290,94 @@ class MobileShopsItemsListController extends Controller
 		]);
 	}
 
-	public function update(Request $request, $id, $shop_id)
-	{
-		if(!empty($_FILES['file_attachment']['name']))
-		{
-			$image_name = $_FILES['file_attachment']['name'];
+	// public function update(Request $request, $id, $shop_id)
+	// {
+	// 	if(!empty($_FILES['file_attachment']['name']))
+	// 	{
+	// 		$image_name = $_FILES['file_attachment']['name'];
 
-			$target_dir = "images/branch-products/". $shop_id . "/";
+	// 		$target_dir = "images/branch-products/". $shop_id . "/";
 
-			if (!file_exists($target_dir))
-			{
-				mkdir($target_dir, 0777);
-			}
+	// 		if (!file_exists($target_dir))
+	// 		{
+	// 			mkdir($target_dir, 0777);
+	// 		}
 
-			$target_file = $target_dir . basename($_FILES["file_attachment"]["name"]);
-			$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+	// 		$target_file = $target_dir . basename($_FILES["file_attachment"]["name"]);
+	// 		$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
-			// Check if file already exists
-			if (file_exists($target_file))
-			{
-				echo json_encode(
-					array(
-						"status" => 0,
-						"data" => array(),
-						"msg" => "Sorry, file already exists."
-					)
-				);
-				die();
-			}
+	// 		// Check if file already exists
+	// 		if (file_exists($target_file))
+	// 		{
+	// 			echo json_encode(
+	// 				array(
+	// 					"status" => 0,
+	// 					"data" => array(),
+	// 					"msg" => "Sorry, file already exists."
+	// 				)
+	// 			);
+	// 			die();
+	// 		}
 
-			// Check file size
-			if ($_FILES["file_attachment"]["size"] > 50000000)
-			{
-				echo json_encode(
-					array(
-						"status" => 0,
-						"data" => array(),
-						"msg" => "Sorry, your file is too large."
-					)
-				);
-				die();
-			}
+	// 		// Check file size
+	// 		if ($_FILES["file_attachment"]["size"] > 50000000)
+	// 		{
+	// 			echo json_encode(
+	// 				array(
+	// 					"status" => 0,
+	// 					"data" => array(),
+	// 					"msg" => "Sorry, your file is too large."
+	// 				)
+	// 			);
+	// 			die();
+	// 		}
 
-			if (move_uploaded_file($_FILES["file_attachment"]["tmp_name"], $target_file))
-			{
-				json_encode(
-					array(
-						"status" => 1,
-						"data" => array(),
-						"msg" => "The file " . basename( $_FILES["file_attachment"]["name"]) . " has been uploaded."
-					)
-				);
-			}
-			else
-			{
-				echo json_encode(
-					array(
-						"status" => 0,
-						"data" => array(),
-						"msg" => "Sorry, there was an error uploading your file."
-					)
-				);
-			}
+	// 		if (move_uploaded_file($_FILES["file_attachment"]["tmp_name"], $target_file))
+	// 		{
+	// 			json_encode(
+	// 				array(
+	// 					"status" => 1,
+	// 					"data" => array(),
+	// 					"msg" => "The file " . basename( $_FILES["file_attachment"]["name"]) . " has been uploaded."
+	// 				)
+	// 			);
+	// 		}
+	// 		else
+	// 		{
+	// 			echo json_encode(
+	// 				array(
+	// 					"status" => 0,
+	// 					"data" => array(),
+	// 					"msg" => "Sorry, there was an error uploading your file."
+	// 				)
+	// 			);
+	// 		}
 
-			$shop_logo_url = '/images/branch-products/' . $shop_id . '/'. $image_name;
-			$update_item = Items_list::where('id', $id)
-				->update([
-					'name' => $request->input('name'),
-					'discription' => $request->input('discription'),
-					'discount' => $request->input('discount'),
-					'price' => $request->input('price'),
-					'main_image' => $shop_logo_url
-				]);
-		}
-		else
-		{
-			$update_item = Items_list::where('id', $id)
-				->update([
-					'name' => $request->input('name'),
-					'discription' => $request->input('discription'),
-					'discount' => $request->input('discount'),
-					'price' => $request->input('price')
-				]);
-		}
-		return response()->json([
-			'status' => 200,
-			'message' => 'Item updated successfully!'
-		]);
-	}
+	// 		$shop_logo_url = '/images/branch-products/' . $shop_id . '/'. $image_name;
+	// 		$update_item = Items_list::where('id', $id)
+	// 			->update([
+	// 				'name' => $request->input('name'),
+	// 				'discription' => $request->input('discription'),
+	// 				'discount' => $request->input('discount'),
+	// 				'price' => $request->input('price'),
+	// 				'main_image' => $shop_logo_url
+	// 			]);
+	// 	}
+	// 	else
+	// 	{
+	// 		$update_item = Items_list::where('id', $id)
+	// 			->update([
+	// 				'name' => $request->input('name'),
+	// 				'discription' => $request->input('discription'),
+	// 				'discount' => $request->input('discount'),
+	// 				'price' => $request->input('price')
+	// 			]);
+	// 	}
+	// 	return response()->json([
+	// 		'status' => 200,
+	// 		'message' => 'Item updated successfully!'
+	// 	]);
+	// }
 
 	public function cloneItem(Request $request, $shop_id)
 	{
