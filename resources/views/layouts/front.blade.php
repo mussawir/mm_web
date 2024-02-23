@@ -686,22 +686,26 @@
 				const button = document.querySelector('.location');
 				const placeSpan = document.querySelector('.place');
 
-				const cityBranchCountPromise = fetchCityBranchCount();
+				const placeName = localStorage.getItem('address');
 
-				cityBranchCountPromise.then(cityBranchCount => {
-					if (cityBranchCount.cityCount == 1 || cityBranchCount.branchCount == 1) {
-						changeBranchLocationSpan.textContent = cityName;
-						branchCitySpan.textContent = branchName;
-					} else {
-						if (selectedOption === 'pickup') {
-						changeBranchLocationSpan.textContent = 'Change Area';
-						branchCitySpan.textContent = branchName;
-						} else {
-							changeBranchLocationSpan.textContent = 'Change Location';
-							branchCitySpan.textContent = cityName;
-						}
-					}
-				});
+				placeSpan.textContent = placeName || '';
+
+				// const cityBranchCountPromise = fetchCityBranchCount();
+
+				// cityBranchCountPromise.then(cityBranchCount => {
+				// 	if (cityBranchCount.cityCount == 1 || cityBranchCount.branchCount == 1) {
+				// 		changeBranchLocationSpan.textContent = cityName;
+				// 		branchCitySpan.textContent = branchName;
+				// 	} else {
+				// 		if (selectedOption === 'pickup') {
+				// 		changeBranchLocationSpan.textContent = 'Change Area';
+				// 		branchCitySpan.textContent = branchName;
+				// 		} else {
+				// 			changeBranchLocationSpan.textContent = 'Change Location';
+				// 			branchCitySpan.textContent = cityName;
+				// 		}
+				// 	}
+				// });
 			}
 		</script>
 		@yield('js')
