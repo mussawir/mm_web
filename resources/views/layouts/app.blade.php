@@ -9,7 +9,7 @@
 
 		{{-- CSRF Token --}}
 		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<title>Fast Food Network</title>
+		<title>Maza Max</title>
 
 		{{-- Favicon --}}
 		<link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">

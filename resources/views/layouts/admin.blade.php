@@ -6,6 +6,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<title>MzaMax</title>
 
 		{{-- Favicon --}}
@@ -98,7 +99,7 @@
 					url: "/admin/settings/update-category-order",
 					method: "POST",
 					data: {
-						_token: '{{ csrf_token() }}',
+						_token: $('meta[name="csrf-token"]').attr("content"),
 						order: order,
 					},
 					success: function (response) {
@@ -126,7 +127,7 @@
 					url: "/admin/settings/update-item-order",
 					method: "POST",
 					data: {
-						_token: '{{ csrf_token() }}',
+						_token: $('meta[name="csrf-token"]').attr("content"),
 						order: order,
 					},
 					success: function (response) {

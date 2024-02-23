@@ -28,6 +28,7 @@ class AdminDashboardController extends Controller
 		if ($user->role == 1) {
 			$orders = OrderMaster::with(['customer', 'vendor'])
 			->where('status', 1)
+			->where('operator_id', $user->user_id)
 			->latest()
 			->paginate(25);
 

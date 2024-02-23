@@ -273,7 +273,7 @@
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					'X-CSRF-TOKEN': '{{ csrf_token() }}',
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content"),
 				},
 				body: JSON.stringify({
 					receivedPayment: payment,

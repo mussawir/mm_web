@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin\AItemsListController;
 use App\Http\Controllers\ShopRegistrationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\AdminDashboardController;
-use App\Http\Controllers\Admin\BranchesController;
+// use App\Http\Controllers\Admin\BranchesController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\DealController;
@@ -118,19 +118,19 @@ Route::group(['middleware' => 'auth:admin'], function () {
 		// Admin Items List Routes End
 
 		// Admin Branch Routes Start
-		Route::controller(BranchesController::class)->group(function () {
-			Route::get('/branches', 'index')->name('branches.index');
-			Route::get('/branches/create', 'create')->name('branches.create');
-			Route::post('/branches', 'store')->name('branches.store');
-			Route::get('/branches/{id}', 'show')->name('branches.show');
-			Route::get('/branches/{id}/edit', 'edit')->name('branches.edit');
-			Route::put('/branches/{id}', 'update')->name('branches.update');
-			Route::delete('/branches/{id}', 'destroy')->name('branches.destroy');
-			Route::get('/branch/orders/{id}', 'getBranchOrders')
-				->name('branches.orders');
-			Route::get('/branch/vendors/{id}', 'getBranchVendors')
-				->name('branches.vendors');
-		});
+		// Route::controller(BranchesController::class)->group(function () {
+		// 	Route::get('/branches', 'index')->name('branches.index');
+		// 	Route::get('/branches/create', 'create')->name('branches.create');
+		// 	Route::post('/branches', 'store')->name('branches.store');
+		// 	Route::get('/branches/{id}', 'show')->name('branches.show');
+		// 	Route::get('/branches/{id}/edit', 'edit')->name('branches.edit');
+		// 	Route::put('/branches/{id}', 'update')->name('branches.update');
+		// 	Route::delete('/branches/{id}', 'destroy')->name('branches.destroy');
+		// 	Route::get('/branch/orders/{id}', 'getBranchOrders')
+		// 		->name('branches.orders');
+		// 	Route::get('/branch/vendors/{id}', 'getBranchVendors')
+		// 		->name('branches.vendors');
+		// });
 		// Admin Branch Routes End
 
 		// Admin User Routes Start

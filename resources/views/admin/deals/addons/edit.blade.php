@@ -126,7 +126,7 @@
 			url: "{{ route('deal.loadItems', $deal) }}",
 			type: 'POST',
 			headers: {
-				'X-CSRF-TOKEN': "{{ csrf_token() }}"
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
 			},
 			data: {
 				categories: categories,
@@ -175,7 +175,7 @@
 			url: "{{ route('deal.loadAddOns', $deal) }}",
 			type: 'POST',
 			headers: {
-				'X-CSRF-TOKEN': "{{ csrf_token() }}"
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
 			},
 			data: {
 				categories: categories,

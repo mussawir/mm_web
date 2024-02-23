@@ -23,7 +23,11 @@ class VendorController extends Controller
 
 	public function index()
 	{
-		$vendors = Vendor::latest()->get();
+		$user = Auth::user();
+
+		$vendors = Vendor::latest()
+			->where('operator_id', $user->user_id)
+			->get();
 		return view('admin.vendors.index', compact('vendors'));
 	}
 
