@@ -2,15 +2,13 @@
 	<button class="back-to-top" id="myBtn" title="Go to top">
 		<i class="fa-solid fa-chevron-up small"></i>
 	</button>
-
 	<div class="container">
 		<hr>
-
 		<div class="row">
 			<div class="col-lg-6 col-xs-12">
 				<a href="{{ route('home') }}" class="d-flex align-items-center gap-2">
-					<img src="{{ asset('assets/images/avatars/fastfood.png') }}" width="40" alt="Order Delivery" style="filter:grayscale(1)">
-					<p class="ml-2 mb-0 fs-6 fw-bold">Order Delivery</p>
+					<img src="{{ asset('assets/images/avatars/fastfood.png') }}" width="40" alt="Maza Max" style="filter:grayscale(1)">
+					<p class="ml-2 mb-0 fs-6 fw-bold">Maza Max</p>
 				</a>
 			</div>
 			<div class="col-lg-3"></div>
@@ -45,7 +43,7 @@
 
 		<div class="row">
 			<div class="col-lg-3">
-				<p class="text-secondary">© {{ now()->format('Y') }} FastFood</p>
+				<p class="text-secondary">© {{ now()->format('Y') }} MazaMax</p>
 			</div>
 			<div class="col-lg-3">
 				<ul class="direction-column">
@@ -56,12 +54,12 @@
 					</li>
 					<li>
 						<a href="javascript:void(0)">
-							<p>Refunds with FastFood</p>
+							<p>Refunds with MazaMax</p>
 						</a>
 					</li>
 					<li class="d-flex">
 						<a href="javascript:void(0)">
-							<p>FastFood User Account Terms and Conditions</p>
+							<p>MazaMax User Account Terms and Conditions</p>
 						</a>
 					</li>
 					<li class="d-flex">
@@ -73,7 +71,7 @@
 					<li class="d-flex">
 						<a href="javascript:void(0)">
 							<p>Security</p>
-							<p>Download FastFood Apps</p>
+							<p>Download MazaMax Apps</p>
 						</a>
 					</li>
 					<li class="d-flex">

@@ -3,11 +3,12 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
 
-		<title>@yield('title', 'Fast Food')</title>
+		<title>@yield('title', 'Maza Max')</title>
 
 		@laravelPWA
 
@@ -124,7 +125,7 @@
 						url: "{{ route('cart.update') }}",
 						method: "POST",
 						data: {
-							_token: '{{ csrf_token() }}',
+							_token: $('meta[name="csrf-token"]').attr("content"),
 							id: id,
 							type: type,
 							quantity: newQuantity
@@ -148,7 +149,7 @@
 						url: "{{ route('cart.remove') }}",
 						method: "POST",
 						data: {
-							_token: "{{ csrf_token() }}",
+							_token: $('meta[name="csrf-token"]').attr("content"),
 							id: ele.parents('div').attr('data-id'),
 							type: ele.parents('div').attr('data-type')
 						},
@@ -297,10 +298,10 @@
 				}
 
 				$.ajax({
-					url: `/load-vendors/`,
-					type: 'POST',
+					url: `/load-vendors`,
+					method: "POST",
 					headers: {
-						'X-CSRF-TOKEN': "{{ csrf_token() }}"
+						"X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
 					},
 					data: {
 						locationCoords: locationCoords
@@ -625,7 +626,7 @@
 			// 			type: 'POST',
 			// 			url: '{{ route('save.selectedBranch') }}',
 			// 			headers: {
-			// 				'X-CSRF-TOKEN': "{{ csrf_token() }}"
+			// 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
 			// 			},
 			// 			data: {
 			// 				selectedBranch: selectedBranch
@@ -647,7 +648,7 @@
 			// 		method: 'POST',
 			// 		headers: {
 			// 			'Content-Type': 'application/json',
-			// 			'X-CSRF-TOKEN': '{{ csrf_token() }}',
+			// 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content"),
 			// 		},
 			// 	})
 			// 	.then(response => {
@@ -683,25 +684,24 @@
 			function updateButtonText(selectedOption)
 			{
 				const button = document.querySelector('.location');
-				const changeBranchLocationSpan = document.querySelector('.change-branch-location');
-				const branchCitySpan = document.querySelector('.branch-city');
+				const placeSpan = document.querySelector('.place');
 
-				// const cityBranchCountPromise = fetchCityBranchCount();
+				const cityBranchCountPromise = fetchCityBranchCount();
 
-				// cityBranchCountPromise.then(cityBranchCount => {
-				// 	if (cityBranchCount.cityCount == 1 || cityBranchCount.branchCount == 1) {
-				// 		changeBranchLocationSpan.textContent = cityName;
-				// 		branchCitySpan.textContent = branchName;
-				// 	} else {
-				// 		if (selectedOption === 'pickup') {
-				// 		changeBranchLocationSpan.textContent = 'Change Area';
-				// 		branchCitySpan.textContent = branchName;
-				// 		} else {
-				// 			changeBranchLocationSpan.textContent = 'Change Location';
-				// 			branchCitySpan.textContent = cityName;
-				// 		}
-				// 	}
-				// });
+				cityBranchCountPromise.then(cityBranchCount => {
+					if (cityBranchCount.cityCount == 1 || cityBranchCount.branchCount == 1) {
+						changeBranchLocationSpan.textContent = cityName;
+						branchCitySpan.textContent = branchName;
+					} else {
+						if (selectedOption === 'pickup') {
+						changeBranchLocationSpan.textContent = 'Change Area';
+						branchCitySpan.textContent = branchName;
+						} else {
+							changeBranchLocationSpan.textContent = 'Change Location';
+							branchCitySpan.textContent = cityName;
+						}
+					}
+				});
 			}
 		</script>
 		@yield('js')
