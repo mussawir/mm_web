@@ -195,7 +195,7 @@ class MobileCustomerOrdersController extends Controller
 		$data = [
             "registration_ids" => (array) $existingToken,
             "notification" => [
-                "title" => 'OdrDe',
+                "title" => 'Mazaa Max - New Order',
                 "body" => "You have a new order",
             ]
         ];
