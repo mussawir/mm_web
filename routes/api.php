@@ -98,12 +98,12 @@ Route::prefix('v1')->group(function () {
 
 	// Bhejdo Rider Side Apis
 	Route::get('/rider/list',[MobileRiderController::class, 'index']);
-	Route::get('/rider/order/list/{riderId}', [MobileRiderController::class, 'getOrderList']);
+	Route::get('/rider/order/list/{riderId}/{operatorId}', [MobileRiderController::class, 'getOrderList']);
 	Route::get('/rider/order/picked/{orderId}/{riderId}', [MobileRiderController::class, 'orderPicked']);
 	Route::get('/rider/order/delivered/{id}', [MobileRiderController::class, 'orderDelivered']);
 	Route::post('/rider/order/returned', [MobileRiderController::class, 'orderReturned']);
-	Route::get('/rider/order/list/delivered/{riderId}', [MobileRiderController::class, 'orderDeliveredList']);
-	Route::get('/rider/order/list/returned/{riderId}', [MobileRiderController::class, 'orderReturnShow']);
+	Route::get('/rider/order/delivered/list/{riderId}', [MobileRiderController::class, 'orderDeliveredList']);
+	Route::get('/rider/order/returned/list/{riderId}', [MobileRiderController::class, 'orderReturnShow']);
 	Route::post('/rider/registration', [MobileRiderController::class, 'riderReg']);
 	Route::post('/rider/login',[MobileRiderController::class, 'riderLogin']);
 

@@ -21,9 +21,15 @@ class MobileRiderController extends Controller
 		if(Auth::guard('rider')->attempt(['phone_number' => $request->phone, 'password' => $request->password]))
 		{
 			$user = Auth::guard('rider')->user();
+			$data = [
+				'id' => $user->id,
+				'first_name' => $user->first_name,
+				'last_name' => $user->last_name,
+				'operator_id' => $user->operator_id,
+			];
 			return response()->json([
 				'status'=>200,
-				'data' => $user,
+				'data' => $data,
 				'message'=>'Rider login successfully!'
 			]);
 		}
@@ -34,7 +40,7 @@ class MobileRiderController extends Controller
 
 	}
 
-	public function getOrderList($riderId) {
+	public function getOrderList($riderId, $operatorId) {
 
 		$orders = [];
 
@@ -43,7 +49,8 @@ class MobileRiderController extends Controller
 		->get();
 
 		if($orders->count() == 0) {
-			$orders = OrderMaster::where('order_type', 1)
+			$orders = OrderMaster::where('operator_id', $operatorId)
+			->where('order_type', 1)
 			->where('status',3)
 			->orderBy('id', 'DESC')
 			->latest()
