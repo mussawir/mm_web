@@ -7,7 +7,7 @@
 		<div class="row">
 			<div class="col-lg-6 col-xs-12">
 				<a href="{{ route('home') }}" class="d-flex align-items-center gap-2">
-					<img src="{{ asset('assets/images/avatars/fastfood.png') }}" width="40" alt="Maza Max" style="filter:grayscale(1)">
+					<img src="{{ asset('assets/images/avatars/mazamax.svg') }}" width="40" alt="Maza Max" style="filter:grayscale(1)">
 					<p class="ml-2 mb-0 fs-6 fw-bold">Maza Max</p>
 				</a>
 			</div>

@@ -7,7 +7,7 @@
 						{{-- SVG Logo and SVG Logo Text --}}
 						{{-- <svg></svg> --}}
 						{{-- <svg></svg> --}}
-						<img src="/assets/images/avatars/fastfood.png" width="32" alt="Brand Logo">
+						<img src="/assets/images/avatars/mazamax.svg" width="32" alt="Brand Logo">
 						<span class="fw-bold fs-6">Maza Max</span>
 					</span>
 				</a>
