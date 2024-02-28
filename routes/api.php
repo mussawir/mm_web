@@ -198,8 +198,8 @@ Route::prefix('v1')->group(function () {
 	# Operator app routes
 	Route::post('/operator/login', [MobileOperatorController::class, 'operatorLogin']);
 	Route::post('/operator/dashboard/stats', [MobileOperatorController::class, 'dashboardStats']);
-	Route::get('/operator/num/vendors', [MobileOperatorController::class, 'numberOfVendors']);
-	Route::get('/operator/vendors/list', [MobileOperatorController::class, 'vendorsList']);
+	Route::get('/operator/num/vendors/{operatorId}', [MobileOperatorController::class, 'numberOfVendors']);
+	Route::get('/operator/vendors/list/{operatorId}', [MobileOperatorController::class, 'vendorsList']);
 	Route::post('/operator/dashboard/vendor/stats', [MobileOperatorController::class, 'vendorStats']);
 
 	# Added by Sohail Asghar [22-DEC-2023]

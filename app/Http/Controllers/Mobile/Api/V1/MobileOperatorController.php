@@ -43,8 +43,9 @@ public function dashboardStats(Request $request)
 {
     $startDate = Carbon::parse($request->input('startDate'))->format('Y-m-d');
     $endDate = $request->input('endDate') ? Carbon::parse($request->input('endDate'))->format('Y-m-d') : null;
+    $operatorId = $request->input('operatorId');
 
-    $query = OrderMaster::whereDate('created_at', '>=', $startDate);
+    $query = OrderMaster::where('operator_id', $operatorId)->whereDate('created_at', '>=', $startDate);
     
 
     if ($endDate) {
@@ -94,10 +95,10 @@ public function dashboardStats(Request $request)
 
 
 
-    public function numberOfVendors()
+    public function numberOfVendors($operatorId)
     {
 
-        $numberOfVendors = Vendor::count();
+        $numberOfVendors = Vendor::where('operator_id', $operatorId)->count();
         return response()->json([
             'status' => 200,
             'data' => $numberOfVendors,
@@ -106,9 +107,9 @@ public function dashboardStats(Request $request)
 
     }
 
-    public function vendorsList()
+    public function vendorsList($operatorId)
     {
-        $vendors = Vendor::get();
+        $vendors = Vendor::where('operator_id', $operatorId)->get();
 
         return response()->json([
             'status' => 200,
