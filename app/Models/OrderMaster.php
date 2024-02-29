@@ -23,6 +23,7 @@ class OrderMaster extends Model
 		'order_type',
 		'rider_id',
 		'operator_commission',
+		'admin_commission',
 		'created_at',
 		'updated_at',
 		'cancelation_reason',
