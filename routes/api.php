@@ -20,6 +20,7 @@ use App\Http\Controllers\Mobile\Api\V1\MobileShopReservationController;
 use App\Http\Controllers\Mobile\Api\V1\MobileShopsCategoryController;
 use App\Http\Controllers\Mobile\Api\V1\MobileVendorController;
 use App\Http\Controllers\Mobile\Api\V1\MobileOperatorController;
+use App\Http\Controllers\Mobile\Api\V1\MobileAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -212,5 +213,11 @@ Route::prefix('v1')->group(function () {
 		Route::get('/delivery/{id}', [MobileVendorController::class, 'getVendorDeliveryDetails']);
 		Route::get('/details/{id}', [MobileVendorController::class, 'getVendorDetails']);
 		Route::post('/check/range' ,[MobileVendorController::class, 'checkInRange']);
+	});
+
+	Route::prefix('admin')->group(function(){
+		Route::post('/login', [MobileAdminController::class, 'adminLogin']);
+		Route::post('/stats',[MobileAdminController::class,'adminStats']);
+		Route::get('/vendors/list',[MobileAdminController::class,'vendorsList']);
 	});
 });
