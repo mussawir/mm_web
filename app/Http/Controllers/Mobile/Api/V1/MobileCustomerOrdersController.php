@@ -12,6 +12,8 @@ use App\Models\OrderDealOption;
 use App\Models\Vendor;
 use App\Models\CustomerOperator;
 use App\Models\Customer;
+use App\Models\OperatorMaster;
+use App\Models\OperatorDues;
 use Illuminate\Support\Facades\DB;
 
 class MobileCustomerOrdersController extends Controller
@@ -60,6 +62,11 @@ class MobileCustomerOrdersController extends Controller
 		$ordermaster->operator_id = $operatorId;
 		$ordermaster->operator_commission = $commissionPercentage * ($request->data['userobj']['orderAmount']/100);
 
+
+		$adminCommissionRate = OperatorMaster::where('id', $operatorId)->first();
+		$adminCommissionRate = $adminCommissionRate->details->commission_percentage;
+		$ordermaster->admin_commission = $adminCommissionRate * ($request->data['userobj']['orderAmount']/100);
+
 		if ($orderType == 'Delivery')
 		{
 			$ordermaster->order_type = 1;
@@ -82,6 +89,16 @@ class MobileCustomerOrdersController extends Controller
 		$ordermaster->status = 1;
 		
 		$ordermaster->save();
+
+
+		// saving commission which admin will get on each order in operator_dues table
+
+		$operatorDues = new OperatorDues;
+		$operatorDues->order_id = $ordermaster->id;
+		$operatorDues->vendor_id = $vendor->id;
+		$operatorDues->operator_id = $operatorId;
+		$operatorDues->amount = $adminCommissionRate * ($request->data['userobj']['orderAmount']/100);
+		$operatorDues->save();
 
 		// update customer address in customer table with order address
 		$customer = Customer::find($request->data['userobj']['customerid']);

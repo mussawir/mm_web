@@ -219,5 +219,6 @@ Route::prefix('v1')->group(function () {
 		Route::post('/login', [MobileAdminController::class, 'adminLogin']);
 		Route::post('/stats',[MobileAdminController::class,'adminStats']);
 		Route::get('/vendors/list',[MobileAdminController::class,'vendorsList']);
+		Route::get('/operators/list',[MobileAdminController::class,'operatorsList']);
 	});
 });

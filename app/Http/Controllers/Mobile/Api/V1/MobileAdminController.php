@@ -95,4 +95,15 @@ class MobileAdminController extends Controller
         ]);
     }
 
+    public function operatorsList()
+    {
+        $operators = OperatorMaster::with('details')->get();
+
+        return response()->json([
+            'status' => 200,
+            'data' => $operators,
+            'message' => 'Operators List Fetched Successfully'
+        ]);
+    }
+
 }
