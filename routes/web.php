@@ -281,8 +281,8 @@ Route::controller(FrontController::class)->group(function () {
 	Route::get('/load-deals-and-categories/{branch}', 'loadDealsAndCategories')
 		->name('load.deals.categories');
 	Route::post('/load-vendors', 'loadVendors')->name('load.vendors');
-	Route::post('/save-selected-branch', 'saveSelectedBranch')
-		->name('save.selectedBranch');
+	Route::post('/save-selected-location', 'saveSelectedLocation')
+		->name('save.selectedLocation');
 });
 # Front End Routes End
 

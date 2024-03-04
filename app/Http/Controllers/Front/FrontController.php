@@ -14,56 +14,40 @@ class FrontController extends Controller
 {
 	public function index()
 	{
-		// $selectedBranch = (int) session('selectedBranch') ?? 0;
+		$selectedCoords = session('selectedCoords') ?? null;
 
-		// // $vendorTypes = VendorType::where('status', 1)->get();
+		$latitude = $selectedCoords->lat ?? 0;
+		$longitude = $selectedCoords->long ?? 0;
 
-		// $vendors = Vendor::where('branch_id', $selectedBranch)
-		// 	->with('vendorType')
-		// 	->latest()
-		// 	->get();
-
-
-		// Users location coordinates
-		// $latitude = $request->input('latitude');
-		// $longitude = $request->input('longitude');
-
-		// user selected vendor type
-		// $vendorType = $request->input('vendorType');
-
-		// fetching all operators
+		// Fetching all operators
 		$operators = OperatorMaster::with('details')->get();
 
 		// Filtering operators based on distance
 		$filteredOperators=[];
 
-		// foreach($operators as $operator) {
-		// 	$operatorLocation = json_decode($operator->details->operation_geo_location);
-		// 	$operatorRadius = $operator->details->operation_radius;
-		// 	if($operatorLocation && $operatorRadius){
-		// 		$distance = $this->getDistance($latitude, $longitude, $operatorLocation->latitude, $operatorLocation->longitude);
-		// 		if($distance > $operatorRadius){
-		// 			continue;
-		// 		}
-		// 		$operator->distance = $distance;
-		// 		$filteredOperators[] = $operator;
-		// 	}
-		// }
+		foreach($operators as $operator) {
+			$operatorLocation = json_decode($operator->details->operation_geo_location);
+			$operatorRadius = $operator->details->operation_radius;
+
+			if($operatorLocation && $operatorRadius) {
+				$distance = $this->getDistance($latitude, $longitude, $operatorLocation->latitude, $operatorLocation->longitude);
+
+				if( $distance > $operatorRadius ) {
+					continue;
+				}
+
+				$filteredOperators[] = $operator;
+			}
+		}
 
 		// Extracting operator IDs from the filteredOperators array
 		$operatorIds = array_column($filteredOperators, 'id');
-		$vendors = [];
-		// fetching vendors based on operator ids and vendor type
-		// $vendors = Vendor::whereIn('operator_id', $operatorIds)->where('vendor_type_id', $vendorType)->get();
 
-		// return response()->json([
-		// 	'status' => 200,
-		// 	'message' => 'Vendors retrieved successfully.',
-		// 	'data' => $vendors,
-		// 	'operators' => $filteredOperators
-		// ]);
+		$vendors = Vendor::whereIn('operator_id', $operatorIds)
+			->with('vendorType')
+			->get();
 
-		return view('home', compact('vendors', 'filteredOperators'));
+		return view('home', compact('vendors'));
 	}
 
 	public function vendorDetail(Request $request, $id)
@@ -186,17 +170,17 @@ class FrontController extends Controller
 		]);
 	}
 
-	public function saveSelectedBranch(Request $request)
+	public function saveSelectedLocation(Request $request)
 	{
-		$selectedBranch = $request->input('selectedBranch');
+		$selectedCoords = json_decode($request->input('selectedCoords'));
 
 		// Store the selected branch in the session
-		$request->session()->put('selectedBranch', $selectedBranch);
+		$request->session()->put('selectedCoords', $selectedCoords);
 
 		return response()->json([
 			'status' => 200,
 			'data' => true,
-			'message' => 'Selected branch saved to session.'
+			'message' => 'Selected location saved to session.'
 		]);
 	}
 
