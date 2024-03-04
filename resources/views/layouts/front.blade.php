@@ -8,7 +8,7 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
 
-		<title>@yield('title', 'Maza Max')</title>
+		<title>@yield('title', 'Mazaa Max')</title>
 
 		@laravelPWA
 
@@ -163,13 +163,7 @@
 		</script>
 		<script type="text/javascript">
 			let myModal = new bootstrap.Modal('#myModal');
-
 			let openModalButton = document.querySelector('.location');
-
-			let citySelect = document.getElementById('citySelect');
-			let branchSelect = document.getElementById('branchSelect');
-			let cityContainer = document.getElementById('cityContainer');
-			let branchContainer = document.getElementById('branchContainer');
 			let cardTitle = document.getElementById('cardTitle');
 			let saveButton = document.querySelector('.save-option');
 
@@ -183,27 +177,17 @@
 					saveSelectedLocationToSession(selectedCoords);
 				}
 
-				// Add an event listener to the button to open the modal
 				openModalButton.addEventListener('click', () => {
 					myModal.show();
-					// fetchCities(selectedCity);
 				});
 
-				if (selectedOption === 'pickup' || selectedOption === 'delivery')
-				{
+				if (selectedOption === 'pickup' || selectedOption === 'delivery') {
 					cardTitle.textContent = 'Your location';
 				}
-				else if (this.value === 'dine-in')
-				{
-					cardTitle.textContent = 'Go to reservation page';
-				}
 
-				if (selectedOption)
-				{
+				if (selectedOption && selectedCoords) {
 					myModal.hide();
-				}
-				else
-				{
+				} else {
 					myModal.show();
 				}
 
@@ -226,22 +210,14 @@
 				const selectedOption = document.querySelector('input[name="deliveryPickupOption"]:checked');
 
 				if (selectedOption) {
-					// localStorage.setItem('selectedOption', selectedOption.value);
-
 					const locationCoords = localStorage.getItem('locationCoords');
 
 					if (locationCoords) {
 						// myModal.hide();
-						if (selectedOption.value === 'dine-in') {
-							window.location.href = '/reservation';
-						}
-
 						localStorage.setItem('selectedOption', selectedOption.value);
 
 						saveSelectedLocationToSession(locationCoords);
-
 						updateButtonText(selectedOption.value);
-
 						myModal.hide();
 					} else {
 						// const cartItemCount = @json($cartItemCount);
@@ -255,26 +231,11 @@
 						// 	// Clear the cart when the branch changes
 						// 	clearCart();
 						// }
-
-						
-						// localStorage.setItem('selectedCity', selectedCity.value);
-						// localStorage.setItem('selectedBranch', selectedBranch.value);
-						// localStorage.setItem('cityName', selectedCity.options[selectedCity.selectedIndex].textContent);
-						// localStorage.setItem('branchName', selectedBranch.options[selectedBranch.selectedIndex].textContent);
-
-						// saveSelectedBranchToSession(selectedBranch.value);
-
-						// fetchVendorsForLocation();
-
-						// updateButtonText(selectedOption.value, selectedCity.options[selectedCity.selectedIndex].textContent, selectedBranch.options[selectedBranch.selectedIndex].textContent);
-
-						// myModal.hide();
 					}
 				}
 			}
 
 			function fetchVendorsForLocation() {
-				// const selectedBranch = localStorage.getItem('selectedBranch');
 				const locationCoords = localStorage.getItem('locationCoords');
 
 				if (!locationCoords) {
@@ -301,7 +262,6 @@
 
 			function updateVendorsView(vendors)
 			{
-				const dropdown = document.getElementById('options');
 				const vendorContent = document.getElementById('vendorContent');
 				vendorContent.innerHTML = '';
 
@@ -310,12 +270,7 @@
 						const vendorElement = document.createElement('div');
 						vendorElement.classList.add('vendor-title', 'col-12', 'col-lg-4', 'col-md-6', 'px-2');
 						vendorElement.dataset.vendorType = (vendor.vendor_type.is_food == '1') ? 'food' : 'general';
-
-						if (dropdown.value == vendorElement.dataset.vendorType) {
-							vendorElement.style.display = 'block';
-						} else {
-							vendorElement.style.display = 'none';
-						}
+						vendorElement.setAttribute('x-show', 'selectedTab === "' + vendorElement.dataset.vendorType + '"');
 
 						const vendorTitle = document.createElement('div');
 						vendorTitle.classList.add('overflow-hidden', 'mw-100', 'rounded-4', 'shadow-lg', 'm-3', 'position-relative', 'border', 'border-secondary-subtle');

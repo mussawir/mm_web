@@ -172,10 +172,11 @@ async function initialize() {
 
 		for (let i = 0; i < locationInputs.length; i++) {
 			const input = locationInputs[i];
+			const options = {
+				componentRestrictions: { country: "pk" },
+			};
 			const fieldKey = input.id.replace("-input", "");
-			// const isEdit = document.getElementById(fieldKey + "-latitude").value != '' && document.getElementById(fieldKey + "-longitude").value != '';
 			const isEdit = false;
-	
 			const latitude = parseFloat(pos.lat);
 			const longitude = parseFloat(pos.lng);
 
@@ -190,7 +191,7 @@ async function initialize() {
 
 			marker.setVisible(isEdit);
 
-			const autocomplete = new google.maps.places.Autocomplete(input);
+			const autocomplete = new google.maps.places.Autocomplete(input, options);
 			autocomplete.key = fieldKey;
 			autocompletes.push({input: input, map: map, marker: marker, autocomplete: autocomplete});
 		}
@@ -209,6 +210,7 @@ async function initialize() {
 					if (status === google.maps.GeocoderStatus.OK) {
 						const lat = results[0].geometry.location.lat();
 						const lng = results[0].geometry.location.lng();
+
 						setLocationCoordinates(place.name, lat, lng);
 					}
 				});
