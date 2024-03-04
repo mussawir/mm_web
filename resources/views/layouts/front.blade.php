@@ -238,11 +238,9 @@
 
 						localStorage.setItem('selectedOption', selectedOption.value);
 
-						fetchVendorsForLocation();
+						saveSelectedLocationToSession(locationCoords);
 
 						updateButtonText(selectedOption.value);
-
-						saveSelectedLocationToSession(locationCoords);
 
 						myModal.hide();
 					} else {
@@ -311,7 +309,7 @@
 					vendors.forEach(vendor => {
 						const vendorElement = document.createElement('div');
 						vendorElement.classList.add('vendor-title', 'col-12', 'col-lg-4', 'col-md-6', 'px-2');
-						vendorElement.dataset.vendorType = (vendor.vendor_type.is_food) ? 'food' : 'general';
+						vendorElement.dataset.vendorType = (vendor.vendor_type.is_food == '1') ? 'food' : 'general';
 
 						if (dropdown.value == vendorElement.dataset.vendorType) {
 							vendorElement.style.display = 'block';
@@ -568,9 +566,7 @@
 			// Event listener for the radio buttons
 			document.querySelectorAll('input[name="deliveryPickupOption"]').forEach(radio => {
 				radio.addEventListener('change', function() {
-					if (this.value === 'pickup') {
-						cardTitle.textContent = 'Your location';
-					} else if (this.value === 'delivery') {
+					if (this.value === 'pickup' || this.value === 'delivery') {
 						cardTitle.textContent = 'Your location';
 					} else if (this.value === 'dine-in') {
 						cardTitle.textContent = 'Go to reservation page';
@@ -586,23 +582,6 @@
 				const placeName = localStorage.getItem('address');
 
 				placeSpan.textContent = placeName || '';
-
-				// const cityBranchCountPromise = fetchCityBranchCount();
-
-				// cityBranchCountPromise.then(cityBranchCount => {
-				// 	if (cityBranchCount.cityCount == 1 || cityBranchCount.branchCount == 1) {
-				// 		changeBranchLocationSpan.textContent = cityName;
-				// 		branchCitySpan.textContent = branchName;
-				// 	} else {
-				// 		if (selectedOption === 'pickup') {
-				// 		changeBranchLocationSpan.textContent = 'Change Area';
-				// 		branchCitySpan.textContent = branchName;
-				// 		} else {
-				// 			changeBranchLocationSpan.textContent = 'Change Location';
-				// 			branchCitySpan.textContent = cityName;
-				// 		}
-				// 	}
-				// });
 			}
 		</script>
 		@yield('js')
