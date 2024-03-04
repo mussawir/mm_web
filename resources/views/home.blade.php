@@ -3,23 +3,42 @@
 @section('title', 'Homepage')
 
 @section('content')
-<div class="container-fluid p-0 mb-5">
-	<div class="hero-bannerMain">
-	</div>
-</div>
-<div class="container">
-	<div class="d-flex align-items-center gap-4 m-3">
-		<h3 class="cl-interaction-primary">Restaurants near you</h3>
-		<div>
-			<select class="form-select" id="options">
-				<option value="food" selected>Food</option>
-				<option value="general">General</option>
-			</select>
+{{-- <div class="container-fluid p-0 mb-5">
+	<div class="hero-bannerMain"></div>
+</div> --}}
+<div x-data="{ selectedTab: 'food' }" x-cloak class="container">
+	<div class="box-flex bds-c-navbar__bottom">
+		<div class="bds-c-tabs vertical-switcher-tabs">
+			<div class="bds-c-tabs__container">
+				<ul class="bds-c-tabs__list" role="tablist">
+					<li class="bds-c-tab" x-on:click="selectedTab = 'food'" :class="{ 'is-selected': selectedTab === 'food' }" role="presentation">
+						<button class="gap-1" role="tab">
+							<div class="bds-c-tab__icon">
+								<i class="fa-solid fa-drumstick-bite"></i>
+							</div>
+							<span class="bds-c-tab__label">
+								Food
+							</span>
+						</button>
+					</li>
+					<li class="bds-c-tab"  x-on:click="selectedTab = 'general'" :class="{ 'is-selected': selectedTab === 'general' }" role="presentation">
+						<button class="gap-1" role="tab">
+							<div class="bds-c-tab__icon">
+								<i class="fa-solid fa-shop"></i>
+							</div>
+							<span class="bds-c-tab__label" id="rlp-vertical-switcher__tab-1-label">
+								Shops
+							</span>
+						</button>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</div>
+
 	<div class="d-flex flex-wrap" id="vendorContent">
 		@forelse ($vendors as $vendor)
-			<div class="vendor-title col-12 col-lg-4 col-md-6 px-2" data-vendor-type="{{ $vendor->vendorType->is_food ? 'food' : 'general' }}">
+			<div x-show="selectedTab === '{{ $vendor->vendorType->is_food ? 'food' : 'general' }}'" class="vendor-title col-12 col-lg-4 col-md-6 px-2" data-vendor-type="{{ $vendor->vendorType->is_food ? 'food' : 'general' }}">
 				<div class="overflow-hidden mw-100 rounded-4 shadow-lg m-3 position-relative border border-secondary-subtle">
 					<a href="{{ route('vendor.detail', $vendor->id) }}">
 						<div class="rounded-3 position-relative">
@@ -104,35 +123,5 @@
 @endsection
 
 @push('scripts')
-<script>
-	document.addEventListener('DOMContentLoaded', function () {
-		const dropdown = document.getElementById('options');
-		const vendorContainer = document.getElementById('vendorContent');
-
-		function updateVendorList(selectedOption)
-		{
-			const vendors = vendorContainer.querySelectorAll('.vendor-title');
-
-			vendors.forEach(function (vendor) {
-				const vendorType = vendor.dataset.vendorType;
-
-				if (selectedOption == vendorType) {
-					vendor.style.display = 'block';
-				} else {
-					vendor.style.display = 'none';
-				}
-			});
-		}
-
-		dropdown.addEventListener('change', function () {
-			const selectedOption = dropdown.value;
-			updateVendorList(selectedOption);
-		});
-
-		let preSelectedOption = dropdown.value;
-		if (preSelectedOption) {
-			updateVendorList(preSelectedOption);
-		}
-	});
-</script>
+<script src="//unpkg.com/alpinejs" defer></script>
 @endpush

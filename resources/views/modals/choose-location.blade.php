@@ -4,7 +4,11 @@
 		<div class="modal-content">
 			<div class="modal-body d-flex justify-content-center">
 				<div class="vstack align-items-center">
-					<img class="bg-secondary-subtle p-2 rounded-pill" src="{{ asset('assets/images/avatars/mazamax.svg') }}" width="80" height="80" alt="Brand Logo">
+					<img
+						src="{{ asset('assets/images/avatars/mazamax.svg') }}"
+						class="img-fluid w-25"
+						alt="Mazaa Max"
+					/>
 					<div class="card-body w-75 mt-4">
 						<h5 class="card-title text-center" id="cardTitle">
 							Your location
@@ -33,25 +37,7 @@
 							<label class="btn btn-outline-primary rounded-pill" for="pickup">
 								Pickup
 							</label>
-							
-							<input
-								type="radio"
-								class="btn-check"
-								name="deliveryPickupOption"
-								id="dine-in"
-								value="dine-in"
-								autocomplete="off"
-							/>
-							<label class="btn btn-outline-primary rounded-pill" for="dine-in">
-								Dine In
-							</label>
 						</div>
-						{{-- <div id="cityContainer" class="mt-3">
-							<select id="citySelect" class="form-select my-4" aria-label="Select City"></select>
-						</div>
-						<div id="branchContainer" class="mt-3" style="display: none;">
-							<select id="branchSelect" class="form-select mb-2" aria-label="Select Area"></select>
-						</div> --}}
 						<div class="row mt-3">
 							<div class="col-md-12">
 								<label for="address_address" class="form-label">

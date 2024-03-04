@@ -7,8 +7,12 @@
 		<div class="row">
 			<div class="col-lg-6 col-xs-12">
 				<a href="{{ route('home') }}" class="d-flex align-items-center gap-2">
-					<img src="{{ asset('assets/images/avatars/mazamax.svg') }}" width="40" alt="Maza Max" style="filter:grayscale(1)">
-					<p class="ml-2 mb-0 fs-6 fw-bold">Maza Max</p>
+					<img
+						src="{{ asset('assets/images/avatars/mazamax.svg') }}"
+						class="w-25 img-fluid"
+						alt="Mazaa Max"
+						style="filter:grayscale(1)"
+					/>
 				</a>
 			</div>
 			<div class="col-lg-3"></div>
@@ -43,7 +47,7 @@
 
 		<div class="row">
 			<div class="col-lg-3">
-				<p class="text-secondary">© {{ now()->format('Y') }} MazaMax</p>
+				<p class="text-secondary">© {{ now()->format('Y') }} MazaaMax</p>
 			</div>
 			<div class="col-lg-3">
 				<ul class="direction-column">
@@ -54,24 +58,40 @@
 					</li>
 					<li>
 						<a href="javascript:void(0)">
-							<p>Refunds with MazaMax</p>
+							<p>Refunds with MazaaMax</p>
 						</a>
 					</li>
 					<li class="d-flex">
 						<a href="javascript:void(0)">
-							<p>MazaMax User Account Terms and Conditions</p>
+							<p>MazaaMax User Account Terms and Conditions</p>
 						</a>
 					</li>
+				</ul>
+			</div>
+			<div class="col-lg-3">
+				<ul class="direction-column">
 					<li class="d-flex">
 						<a href="javascript:void(0)">
 							<p>Terms And Condition</p>
+						</a>
+					</li>
+					<li class="d-flex">
+						<a href="javascript:void(0)">
 							<p>Privacy and Policy</p>
 						</a>
 					</li>
 					<li class="d-flex">
 						<a href="javascript:void(0)">
 							<p>Security</p>
-							<p>Download MazaMax Apps</p>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-lg-3">
+				<ul class="direction-column">
+					<li class="d-flex">
+						<a href="javascript:void(0)">
+							<p>Download MazaaMax Apps</p>
 						</a>
 					</li>
 					<li class="d-flex">

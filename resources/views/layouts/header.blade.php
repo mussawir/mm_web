@@ -3,12 +3,11 @@
 		<header class="bds-c-navbar__header d-flex flex-row align-items-center">
 			<nav class="bds-c-navbar__brand d-flex flex-row align-items-center">
 				<a href="/" aira-label="Home">
-					<span aria-label="odrde" style="display:flex;align-items:flex-end;justify-content:center;gap:8px;">
-						{{-- SVG Logo and SVG Logo Text --}}
-						{{-- <svg></svg> --}}
-						{{-- <svg></svg> --}}
-						<img src="/assets/images/avatars/mazamax.svg" width="32" alt="Brand Logo">
-						<span class="fw-bold fs-6">Maza Max</span>
+					<span aria-label="MazaaMax" class="d-flex justify-content-center" style="align-items:flex-end;gap:8px;">
+						<img
+							src="/assets/images/avatars/mazamax.svg"
+							class="w-50 img-fluid"
+							alt="Mazaa Max">
 					</span>
 				</a>
 			</nav>
@@ -22,13 +21,13 @@
 									<span class="bds-c-btn__idle-content">
 										<span class="bds-c-btn__idle-content__label">
 											<span>
-												<div class="d-flex align-items-center">
+												<div class="d-flex align-items-center p-2 gap-1">
 													<span class="d-flex flex-column address-label-icon">
-														<x-icon name="location"/>
+														<i class="fa-solid fa-location-dot"></i>
 													</span>
 													<span class="header-order-button-content cl-interaction-primary f-label-medium-font-size fw-label-medium-font-weight lh-label-medium-line-height ff-label-medium-font-family d-flex gap-1">
 														<span class="place"></span>
-														<span class="address-label-highlighted-header cl-neutral-primary f-label-medium-font-size fw-label-medium-font-weight lh-label-medium-line-height ff-label-medium-font-family branch-city d-block">
+														<span class="address-label-highlighted-header cl-neutral-primary f-label-medium-font-size fw-label-medium-font-weight lh-label-medium-line-height ff-label-medium-font-family city d-block">
 														</span>
 													</span>
 												</div>
