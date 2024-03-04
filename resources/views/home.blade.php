@@ -1,5 +1,7 @@
 @extends('layouts.front')
 
+@section('title', 'Homepage')
+
 @section('content')
 <div class="container-fluid p-0 mb-5">
 	<div class="hero-bannerMain">
@@ -101,7 +103,7 @@
 </div>
 @endsection
 
-@section('js')
+@push('scripts')
 <script>
 	document.addEventListener('DOMContentLoaded', function () {
 		const dropdown = document.getElementById('options');
@@ -114,7 +116,7 @@
 			vendors.forEach(function (vendor) {
 				const vendorType = vendor.dataset.vendorType;
 
-				if (selectedOption === vendorType) {
+				if (selectedOption == vendorType) {
 					vendor.style.display = 'block';
 				} else {
 					vendor.style.display = 'none';
@@ -127,10 +129,10 @@
 			updateVendorList(selectedOption);
 		});
 
-		var preSelectedOption = dropdown.value;
+		let preSelectedOption = dropdown.value;
 		if (preSelectedOption) {
 			updateVendorList(preSelectedOption);
 		}
 	});
 </script>
-@endsection
+@endpush
