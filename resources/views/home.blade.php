@@ -4,7 +4,7 @@
 {{-- <div class="container-fluid p-0 mb-5">
 	<div class="hero-bannerMain"></div>
 </div> --}}
-<div x-data="{ selectedTab: 'food' }" x-cloak class="container">
+<div class="container">
 	<div class="d-flex flex-wrap" id="vendorContent">
 		@forelse ($vendors as $vendor)
 			<div x-show="selectedTab === '{{ $vendor->vendorType->is_food ? 'food' : 'general' }}'" class="vendor-title col-12 col-lg-4 col-md-6 px-2" data-vendor-type="{{ $vendor->vendorType->is_food ? 'food' : 'general' }}">
