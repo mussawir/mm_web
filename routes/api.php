@@ -209,7 +209,8 @@ Route::prefix('v1')->group(function () {
 		Route::get('/deals/{id}', [MobileVendorController::class, 'getVendorDeals']);
 		Route::get('/items/{id}', [MobileVendorController::class, 'getVendorItems']);
 		Route::get('/categories/{id}', [MobileVendorController::class, 'getVendorCategories']);
-		Route::get('/types/{isFood}', [MobileVendorController::class, 'getVendorTypes']);
+		// Route::get('/types/{isFood}', [MobileVendorController::class, 'getVendorTypes']);
+		Route::get('/types', [MobileVendorController::class, 'getVendorTypes']);
 		Route::get('/delivery/{id}', [MobileVendorController::class, 'getVendorDeliveryDetails']);
 		Route::get('/details/{id}', [MobileVendorController::class, 'getVendorDetails']);
 		Route::post('/check/range' ,[MobileVendorController::class, 'checkInRange']);
