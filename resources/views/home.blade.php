@@ -1,41 +1,10 @@
 @extends('layouts.front')
 
-@section('title', 'Homepage')
-
 @section('content')
 {{-- <div class="container-fluid p-0 mb-5">
 	<div class="hero-bannerMain"></div>
 </div> --}}
 <div x-data="{ selectedTab: 'food' }" x-cloak class="container">
-	<div class="box-flex bds-c-navbar__bottom">
-		<div class="bds-c-tabs vertical-switcher-tabs">
-			<div class="bds-c-tabs__container">
-				<ul class="bds-c-tabs__list" role="tablist">
-					<li class="bds-c-tab" x-on:click="selectedTab = 'food'" :class="{ 'is-selected': selectedTab === 'food' }" role="presentation">
-						<button class="gap-1" role="tab">
-							<div class="bds-c-tab__icon">
-								<i class="fa-solid fa-drumstick-bite"></i>
-							</div>
-							<span class="bds-c-tab__label">
-								Food
-							</span>
-						</button>
-					</li>
-					<li class="bds-c-tab"  x-on:click="selectedTab = 'general'" :class="{ 'is-selected': selectedTab === 'general' }" role="presentation">
-						<button class="gap-1" role="tab">
-							<div class="bds-c-tab__icon">
-								<i class="fa-solid fa-shop"></i>
-							</div>
-							<span class="bds-c-tab__label" id="rlp-vertical-switcher__tab-1-label">
-								Shops
-							</span>
-						</button>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-
 	<div class="d-flex flex-wrap" id="vendorContent">
 		@forelse ($vendors as $vendor)
 			<div x-show="selectedTab === '{{ $vendor->vendorType->is_food ? 'food' : 'general' }}'" class="vendor-title col-12 col-lg-4 col-md-6 px-2" data-vendor-type="{{ $vendor->vendorType->is_food ? 'food' : 'general' }}">
