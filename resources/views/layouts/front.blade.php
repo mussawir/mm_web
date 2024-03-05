@@ -34,7 +34,7 @@
 		@yield('css')
 		@stack('styles')
 	</head>
-	<body class="vstack min-vh-100">
+	<body class="vstack min-vh-100" x-data="{ selectedTab: 'food' }" x-cloak>
 		@include('layouts.header')
 
 		<div class="custom-container m-0 p-0">
