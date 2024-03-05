@@ -4735,7 +4735,7 @@ button {
 @media screen and (min-width: 960px) {
     .header-section {
         transform: unset;
-        z-index: 1410;
+        /* z-index: 1410; */
     }
 
     .rdp-header {
