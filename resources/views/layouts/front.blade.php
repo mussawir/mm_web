@@ -8,13 +8,15 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
 
-		<title>@yield('title', 'Mazaa Max')</title>
+		<title>@yield('title', 'mazaamax')</title>
 
 		@laravelPWA
 
 		{{-- Favicon --}}
-		<link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
-		<link rel="icon" type="image/ico" href="/assets/images/favicon.ico">
+		<link rel="icon" href="/assets/images/favicon/favicon.ico" sizes="any" />
+		<link rel="icon" href="/assets/images/favicon/favicon.svg" type="image/svg+xml" />
+		<link rel="apple-touch-icon" href="/assets/images/favicon/apple-touch-icon.png" />
+		<link rel="manifest" href="/assets/images/favicon/manifest.webmanifest" />
 
 		{{-- Additional CSS Files --}}
 		<link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/bootstrap5.min.css') }}">
