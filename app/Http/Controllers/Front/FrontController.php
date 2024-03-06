@@ -19,31 +19,25 @@ class FrontController extends Controller
 		$latitude = $selectedCoords->lat ?? 0;
 		$longitude = $selectedCoords->long ?? 0;
 
-		// Fetching all operators
 		$operators = OperatorMaster::with('details')->get();
-
-		// Filtering operators based on distance
-		$filteredOperators=[];
+		$operatorIDs = [];
 
 		foreach($operators as $operator) {
-			$operatorLocation = json_decode($operator->details->operation_geo_location);
-			$operatorRadius = $operator->details->operation_radius;
+			$locationCoords = json_decode($operator->details->operation_geo_location);
+			$radius = $operator->details->operation_radius;
 
-			if($operatorLocation && $operatorRadius) {
-				$distance = $this->getDistance($latitude, $longitude, $operatorLocation->latitude, $operatorLocation->longitude);
+			if($locationCoords && $radius) {
+				$distance = $this->getDistance($latitude, $longitude, $locationCoords->latitude, $locationCoords->longitude);
 
-				if( $distance > $operatorRadius ) {
+				if( $distance > $radius ) {
 					continue;
 				}
 
-				$filteredOperators[] = $operator;
+				$operatorIDs[] = $operator->id;
 			}
 		}
 
-		// Extracting operator IDs from the filteredOperators array
-		$operatorIds = array_column($filteredOperators, 'id');
-
-		$vendors = Vendor::whereIn('operator_id', $operatorIds)
+		$vendors = Vendor::whereIn('operator_id', $operatorIDs)
 			->with('vendorType')
 			->get();
 
@@ -52,7 +46,7 @@ class FrontController extends Controller
 
 	public function vendorDetail(Request $request, $id)
 	{
-		$title = 'Vendor Detail - Order Delivery';
+		$title = 'Vendor Detail - mazaamax';
 
 		$vendor = Vendor::findOrFail($id);
 
