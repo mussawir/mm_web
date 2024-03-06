@@ -4,11 +4,11 @@
 			<header class="bds-c-navbar__header d-flex flex-row align-items-center">
 				<nav class="bds-c-navbar__brand d-flex flex-row align-items-center">
 					<a href="/" aira-label="Home">
-						<span aria-label="MazaaMax" class="d-flex justify-content-center" style="flex-shrink:0;line-height:0;align-items:flex-end;gap:8px;">
+						<span aria-label="mazaamax" class="d-flex justify-content-center" style="flex-shrink:0;line-height:0;align-items:flex-end;gap:8px;">
 							<img
 								src="/assets/images/avatars/mazamax.svg"
 								class="w-50 img-fluid"
-								alt="Mazaa Max">
+								alt="mazaamax">
 						</span>
 					</a>
 				</nav>
@@ -173,6 +173,7 @@
 					</div>
 				</div>
 			</header>
+			@if(request()->is('/') || request()->is('home'))
 			<div class="box-flex bds-c-navbar__bottom">
 				<div class="bds-c-tabs vertical-switcher-tabs">
 					<div class="bds-c-tabs__container">
@@ -201,6 +202,7 @@
 					</div>
 				</div>
 			</div>
+			@endif
 		</section>
 	</div>
 </div>

@@ -190,7 +190,6 @@
 						<div class="bds-c-tabs__container">
 							<ul class="bds-c-tabs__list" aria-orientation="horizontal" id="tabs__tablist" role="tablist">
 								@foreach ($activeCategories as $category)
-								@if ($category->items->count())
 								<li class="bds-c-tab {{ $loop->first ? 'is-selected' : '' }}" id="tabs__tab-0" role="presentation">
 									<button
 										class="scroll-to-category"
@@ -204,7 +203,6 @@
 										</span>
 									</button>
 								</li>
-								@endif
 								@endforeach
 							</ul>
 						</div>
@@ -305,7 +303,7 @@
 		const currentCity = document.querySelector('.current-city');
 		const scrollToCategoryButtons = document.querySelectorAll('.scroll-to-category');
 
-		currentCity.textContent = localStorage.getItem('cityName');
+		currentCity.textContent = localStorage.getItem('address');
 		document.getElementById("search-items").addEventListener("input", performSearch);
 
 		$('#addToCartModal').on('show.bs.modal', function (event) {
@@ -315,7 +313,6 @@
 			let vendorId = button.data('vendor-id');
 
 			// Update the modal content here using itemId and itemType
-
 			loadItemDetails(vendorId, itemId, itemType);
 		});
 
@@ -570,110 +567,55 @@
 
 					if (data.deal.addons.length) {
 						// Clear existing addons
-
 						$('#addToCartModal .addons-list-group').empty();
-
-
-
 						// Iterate through addons and append to modal
-
 						data.deal.addons.forEach(function (addon) {
-
 							const addonHtml = `
-
 								<label class="list-group-item list-group-item-secondary rounded-1 d-flex align-items-center justify-content-between pb-2 small">
-
 									<span class="d-flex align-items-center">
-
 										<input
-
 											class="form-check-input me-2 mt-0"
-
 											type="checkbox"
-
 											name="addons[${addon.item.id}]"
-
 										/>
-
 										<span class="fw-semibold lh-paragraph-small-line-height ff-paragraph-small-font-family">
-
 											${addon.item.name}
-
 										</span>
-
 									</span>
-
 									<div class="d-flex align-items-center justify-content-end gap-2">
-
 										<div class="d-inline-flex justify-content-end">
-
 											<input
-
 												type="number"
-
 												name="addon_quantities[${addon.item.id}]"
-
 												class="form-control"
-
 												min="1"
-
 												value="1"
-
 												style="width:30%!important;"
-
 											/>
-
 										</div>
-
 										<span class="d-inline-flex fw-semibold lh-paragraph-small-line-height ff-paragraph-small-font-family">
-
 										${currency + addon.item.price}
-
 									</span>
-
 									</div>
-
 								</label>
-
 							`;
-
-
-
 							$('#addToCartModal .addons-list-group').append(addonHtml);
-
 						});
-
 						// Show the div
-
 						$('#addToCartModal .extras-section').show();
-
 					} else {
-
 						// Hide or empty the div if no addons
-
 						$('#addToCartModal .addons-list-group').empty();
-
 						$('#addToCartModal .extras-section').hide();
-
 					}
 
-
-
 					$('input[name="quantity"]').val(itemQuantity);
-
 				},
-
 				error: function (error) {
-
 					console.error('Error fetching item details:', error);
-
 				}
-
 			});
-
 		}
-
 	}
-
 </script>
 @endpush

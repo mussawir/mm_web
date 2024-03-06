@@ -46,8 +46,6 @@ class FrontController extends Controller
 
 	public function vendorDetail(Request $request, $id)
 	{
-		$title = 'Vendor Detail - mazaamax';
-
 		$vendor = Vendor::findOrFail($id);
 
 		$categories = Category::with(['items' => function ($query) use ($id) {
@@ -66,7 +64,7 @@ class FrontController extends Controller
 			->take(12)
 			->get();
 
-		return view('front.vendor-detail', compact('title', 'vendor', 'deals', 'activeCategories'));
+		return view('front.vendor-detail', compact('vendor', 'deals', 'activeCategories'));
 	}
 
 	public function itemDetail($vendorId, $id)
