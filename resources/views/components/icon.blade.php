@@ -75,7 +75,6 @@
 @endif
 
 @if ($name === 'food')
-<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
 	<g id="surface1">
 		<path style=" stroke:none;fill-rule:nonzero;fill:rgb(0%,0%,0%);fill-opacity:1;" d="M 12 24 C 5.398438 24 0 18.601562 0 12 C 0 5.398438 5.398438 0 12 0 C 18.601562 0 24 5.398438 24 12 C 24 18.601562 18.601562 24 12 24 Z M 12 1 C 5.949219 1 1 5.949219 1 12 C 1 18.050781 5.949219 23 12 23 C 18.050781 23 23 18.050781 23 12 C 23 5.949219 18.050781 1 12 1 Z M 12 1 "/>
