@@ -34,7 +34,7 @@
 		@yield('css')
 		@stack('styles')
 	</head>
-	<body class="vstack min-vh-100" x-data="{ selectedTab: 'food' }" x-cloak>
+	<body class="vstack min-vh-100" @if(request()->is('/') || request()->is('home')) x-data="{ selectedTab: 'food' }" x-cloak @endif>
 		@include('layouts.header')
 
 		<div class="custom-container m-0 p-0">
