@@ -178,9 +178,9 @@
 					<div class="bds-c-tabs__container">
 						<ul class="bds-c-tabs__list" role="tablist">
 							<li class="bds-c-tab" x-on:click="selectedTab = 'food'" :class="{ 'is-selected': selectedTab === 'food' }" role="presentation">
-								<button class="gap-1" role="tab">
+								<button role="tab">
 									<div class="bds-c-tab__icon">
-										<i class="fa-solid fa-drumstick-bite"></i>
+										<x-icon name="food"/>
 									</div>
 									<span class="bds-c-tab__label">
 										Food
@@ -188,9 +188,9 @@
 								</button>
 							</li>
 							<li class="bds-c-tab"  x-on:click="selectedTab = 'general'" :class="{ 'is-selected': selectedTab === 'general' }" role="presentation">
-								<button class="gap-1" role="tab">
+								<button role="tab">
 									<div class="bds-c-tab__icon">
-										<i class="fa-solid fa-shop"></i>
+										<x-icon name="grocery"/>
 									</div>
 									<span class="bds-c-tab__label" id="rlp-vertical-switcher__tab-1-label">
 										Shops

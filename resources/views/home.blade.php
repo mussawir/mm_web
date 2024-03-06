@@ -40,7 +40,7 @@
 						</div>
 						<div class="d-flex flex-column" style="margin:12px;">
 							<div class="mb-1 d-flex align-items-center fw-semibold fs-6 cl-neutral-primary">
-								<div class="fw-bold fs-6 text-truncate vendor-name">
+								<div class="vendor-name f-title-small-font-size fw-title-small-font-weight lh-title-small-line-height ff-title-small-font-family">
 									{{ $vendor->company_name }}
 								</div>
 								<div class="d-inline-flex flex-nowrap align-items-center justify-content-end flex-shrink-0 ms-auto" style="max-width:232px;">

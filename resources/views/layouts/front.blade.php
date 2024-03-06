@@ -333,7 +333,7 @@
 						vendorName.style.color = '#333333';
 
 						const nameText = document.createElement('div');
-						nameText.classList.add('fw-semibold', 'fs-6', 'text-truncate');
+						nameText.classList.add('vendor-name', 'f-title-small-font-size', 'fw-title-small-font-weight', 'lh-title-small-line-height', 'ff-title-small-font-family');
 						nameText.textContent = vendor.company_name;
 
 						const ratingContainer = document.createElement('div');
