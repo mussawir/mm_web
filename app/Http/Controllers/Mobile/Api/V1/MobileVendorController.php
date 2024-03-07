@@ -31,7 +31,7 @@ class MobileVendorController extends Controller
 		$longitude = $request->input('longitude');
 
 		// user selected vendor type
-		$vendorType = $request->input('vendorType');
+		// $vendorType = $request->input('vendorType');
 
 		// fetching all operators
 		$operators = OperatorMaster::with('details')->get();
@@ -58,19 +58,21 @@ class MobileVendorController extends Controller
 		$operatorIds = array_column($filteredOperators, 'id');
 
 		// fetching vendors based on operator ids and vendor type
-		if($vendorType == 'all') {
-			$vendors = Vendor::whereIn('operator_id', $operatorIds)->get();
-		}
-		elseif($vendorType == 'food') {
-			$vendorTypes = VendorType::where('is_food', 1)->get('id');
-			$vendors = Vendor::whereIn('operator_id', $operatorIds)->whereIn('vendor_type_id', $vendorTypes)->get();
-		}elseif($vendorType == 'shops') {
-			$vendorTypes = VendorType::where('is_food', 0)->get('id');
-			$vendors = Vendor::whereIn('operator_id', $operatorIds)->whereIn('vendor_type_id', $vendorTypes)->get();
-		}
-		else{
-			$vendors = Vendor::whereIn('operator_id', $operatorIds)->where('vendor_type_id', $vendorType)->get();
-		}
+		// if($vendorType == 'all') {
+		// 	$vendors = Vendor::whereIn('operator_id', $operatorIds)->with('vendorType')->get();
+		// }
+		// elseif($vendorType == 'food') {
+		// 	$vendorTypes = VendorType::where('is_food', 1)->get('id');
+		// 	$vendors = Vendor::whereIn('operator_id', $operatorIds)->whereIn('vendor_type_id', $vendorTypes)->get();
+		// }elseif($vendorType == 'shops') {
+		// 	$vendorTypes = VendorType::where('is_food', 0)->get('id');
+		// 	$vendors = Vendor::whereIn('operator_id', $operatorIds)->whereIn('vendor_type_id', $vendorTypes)->get();
+		// }
+		// else{
+		// 	$vendors = Vendor::whereIn('operator_id', $operatorIds)->where('vendor_type_id', $vendorType)->get();
+		// }
+
+		$vendors = Vendor::whereIn('operator_id', $operatorIds)->with('vendorType')->get();
 
 		return response()->json([
 			'status' => 200,
