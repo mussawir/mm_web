@@ -272,7 +272,7 @@ class MobileCustomerOrdersController extends Controller
 				'status' => $order->status,
 				'date' => $order->created_at,
 				'orderType' => $order->order_type,
-
+				'vendorLogo' => $vendorDetails->logo,
 			];
 		}
 
@@ -327,6 +327,7 @@ class MobileCustomerOrdersController extends Controller
 				'orderType' => $order->order_type,
 				'cancelationReason' => $order->cancelation_reason,
 				'canceledTime' => $order->cancelation_time,
+				'vendorLogo' => $vendorDetails->logo,
 			];
 		}
 
