@@ -67,6 +67,8 @@ class MobileCustomerOrdersController extends Controller
 		$adminCommissionRate = $adminCommissionRate->details->commission_percentage;
 		$ordermaster->admin_commission = $adminCommissionRate * ($request->data['userobj']['orderAmount']/100);
 
+		$oprtDetails = OperatorMaster::where('id', $operatorId)->with('details')->first();
+
 		if ($orderType == 'Delivery')
 		{
 			$ordermaster->order_type = 1;
@@ -229,10 +231,20 @@ class MobileCustomerOrdersController extends Controller
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
                  
+		$data = [
+			'orderId' => $ordermaster->id,
+			'total' => $request->data['userobj']['totalAmount'],
+			'deliveryTime' => '30',
+			'operatorName' => $oprtDetails->company_name,
+			'operatorContact' => $oprtDetails->phone,
+			'operatorAddress' => $oprtDetails->details->address,
+			'operatorLogo' => $oprtDetails->logo,
+			'operatorBanner' => $oprtDetails->banner,
+		];
         $response = curl_exec($ch);
 		return response()->json([
 			'status' => 200,
-			'data' => $request->data['userobj'],
+			'data' => $data,
 			'message' => $response
 		]);
 	}
@@ -255,7 +267,7 @@ class MobileCustomerOrdersController extends Controller
 			$orderDealOptions = OrderDealOption::where('order_master_id', $order->id)
 				->get();
 
-			$vendorDetails = Vendor::where('id', $order->vendor_id)
+			$vendorDetails = Vendor::where('id', $order->vendor_id)->with('operator')
 				->first();
 
 			$orderDetailsList[] = [
@@ -273,6 +285,8 @@ class MobileCustomerOrdersController extends Controller
 				'date' => $order->created_at,
 				'orderType' => $order->order_type,
 				'vendorLogo' => $vendorDetails->logo,
+				'operatorCompanyName'=> $vendorDetails->operator->company_name ?? '',
+				'operatorContact' => $vendorDetails->operator->phone,
 			];
 		}
 
@@ -305,7 +319,7 @@ class MobileCustomerOrdersController extends Controller
 			$orderDetails = OrderDetails::where('order_master_id', $order->id)
 				->get();
 
-			$vendorDetails = Vendor::where('id', $order->vendor_id)
+			$vendorDetails = Vendor::where('id', $order->vendor_id)->with('operator')
 				->first();
 
 			$orderDealOptions = OrderDealOption::where('order_master_id', $order->id)
@@ -328,6 +342,8 @@ class MobileCustomerOrdersController extends Controller
 				'cancelationReason' => $order->cancelation_reason,
 				'canceledTime' => $order->cancelation_time,
 				'vendorLogo' => $vendorDetails->logo,
+				'operatorCompanyName'=> $vendorDetails->operator->company_name ?? '',
+				'operatorContact' => $vendorDetails->operator->phone,
 			];
 		}
 
