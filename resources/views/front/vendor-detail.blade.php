@@ -144,7 +144,7 @@
 						<div class="card-body vstack justify-content-end">
 							<h3 class="truncate product-tile__title cl-interaction-primary f-title-small-font-size fw-title-small-font-weight lh-title-small-line-height ff-title-small-font-family text-">
 								<span class="vertical-align-middle">
-									{{ $deal->name }}
+									{{ ucwords(strtolower($deal->name)) }}
 								</span>
 							</h3>
 							<p class="cl-neutral-primary f-label-large-font-size fw-label-large-font-weight lh-label-large-line-height ff-label-large-font-family">
@@ -239,7 +239,7 @@
 								<div>
 									<h3 class="text-truncate product-tile__title cl-neutral-primary f-title-small-font-size fw-title-small-font-weight lh-title-small-line-height ff-title-small-font-family">
 										<span class="align-middle item-title cl-interaction-primary">
-											{{ $item->name }}
+											{{ ucwords(strtolower($item->name)) }}
 										</span>
 									</h3>
 									<p class="product-tile__description cl-neutral-secondary f-paragraph-small-font-size fw-paragraph-small-font-weight lh-paragraph-small-line-height ff-paragraph-small-font-family mt-xs">
@@ -248,9 +248,9 @@
 								</div>
 								<div class="d-flex align-items-center product-tile__price-row fw-wrap mt-xs">
 									<p class="cl-neutral-primary f-label-large-font-size fw-label-large-font-weight lh-label-large-line-height ff-label-large-font-family">
-										{{ session('currency')->symbol . $item->price }}
+										{{ session('currency')->symbol . ' ' . intval($item->price) }}
 									</p>
-									@if ($item->price > 9)
+									@if ($item->price < 500)
 									<div class="bds-c-tag bds-c-tag--size-standard bds-c-tag--variant-primary">
 										<x-icon name='popular'/>
 										<span class="bds-c-tag__label">
@@ -302,6 +302,7 @@
 	document.addEventListener('DOMContentLoaded', () => {
 		const currentCity = document.querySelector('.current-city');
 		const scrollToCategoryButtons = document.querySelectorAll('.scroll-to-category');
+		const cartForm = document.querySelector('.cart-form');
 
 		currentCity.textContent = localStorage.getItem('address');
 		document.getElementById("search-items").addEventListener("input", performSearch);
@@ -314,6 +315,21 @@
 
 			// Update the modal content here using itemId and itemType
 			loadItemDetails(vendorId, itemId, itemType);
+		});
+
+		cartForm.addEventListener('submit', function (event) {
+			let sessionVendor = @json(session('vendor'));
+			let cartVendor = cartForm.querySelector('input[name="vendor"]').value;
+
+			if (sessionVendor) {
+				if (sessionVendor != cartVendor) {
+					let confirmation = confirm('There are items in cart from different vendor. Do you want to clear cart?');
+
+					if (! confirmation) {
+						event.preventDefault();
+					}
+				}
+			}
 		});
 
 		scrollToCategoryButtons.forEach(function (button) {
@@ -345,40 +361,39 @@
 
 	function performSearch() {
 		const searchQuery = document.getElementById("search-items").value.toLowerCase();
-
-		// Get all food items that can be searched
 		const foodItems = document.querySelectorAll(".item-title");
-		// Create an object to track categories and their matching item counts
-		const categoryCounts = {};
+		const categoryCount = {};
 
-		// Loop through the food items and hide/show based on search query
 		foodItems.forEach(item => {
 			const itemName = item.textContent.trim().toLowerCase();
 			const shouldDisplay = itemName.includes(searchQuery);
-			const categoryDiv = item.closest(".dish-category-section");
+			const dishSection = item.closest(".dish-category-section");
+			const productTile = item.closest('li.product-tile');
 
-			// item.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.style.display = shouldDisplay ? "flex" : "none";
-			if (categoryDiv) {
-				// Initialize the count for this category if not already
-				categoryCounts[categoryDiv.id] = categoryCounts[categoryDiv.id] || 0;
+			if (shouldDisplay) {
+				productTile.classList.remove('d-none');
+				productTile.classList.add('d-flex');
+			} else {
+				productTile.classList.remove('d-flex');
+				productTile.classList.add('d-none');
+			}
+
+			if (dishSection) {
+				categoryCount[dishSection.id] = categoryCount[dishSection.id] || 0;
 
 				if (shouldDisplay) {
-					// If an item matches, increment the count for its category
-					categoryCounts[categoryDiv.id]++;
+					categoryCount[dishSection.id]++;
 				}
-				// item.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.style.display = shouldDisplay ? "flex" : "none";
 			}
 		});
 
-		// Loop through categories and hide those with no matching items
-
-		for (const categoryID in categoryCounts) {
-			if (categoryCounts[categoryID] === 0) {
-				document.getElementById(categoryID).classList.remove('d-flex');
-				document.getElementById(categoryID).classList.add('d-none');
+		for (let id in categoryCount) {
+			if (categoryCount[id] === 0) {
+				document.getElementById(id).classList.remove('d-flex');
+				document.getElementById(id).classList.add('d-none');
 			} else {
-				document.getElementById(categoryID).classList.add('d-flex');
-				document.getElementById(categoryID).classList.remove('d-none');
+				document.getElementById(id).classList.remove('d-none');
+				document.getElementById(id).classList.add('d-flex');
 			}
 		}
 	}
@@ -403,7 +418,7 @@
 
 					$('#addToCartModal .product-description').html(data.item.discription);
 
-					$('#addToCartModal .product-price').html(currency + data.item.price);
+					$('#addToCartModal .product-price').html(currency + ' ' + parseInt(data.item.price));
 
 					$('#addToCartModal .product-information-image').attr('src', '/images/vendors/' + data.item.vendor_id + '/items/500x500/' + data.item.main_image);
 

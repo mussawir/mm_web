@@ -155,10 +155,10 @@
 												<td>
 													<div class="d-flex align-items-center gap-3">
 														@php
-															$imgPath = ($key == 'deal') ? 'deal-banners' : 'branch-products';
-															$branch = session('selectedBranch');
+															$imgPath = ($key == 'deal') ? 'deals' : 'items';
+															$vendor = session('vendor');
 														@endphp
-														<img src='{{ "/images/{$imgPath}/{$branch}/250x250/{$item['image']}" }}' class="img-thumbnail border-0" style="width:8rem !important"/>
+														<img src='{{ "/images/vendors/{$vendor}/{$imgPath}/250x250/{$item['image']}" }}' class="img-thumbnail border-0" style="width:8rem !important"/>
 														<span class="fw-medium fs-6">
 															{{ $item['name'] }}
 															@if (count($item['addons']))
@@ -223,7 +223,7 @@
 											@endif
 											</tbody>
 										</table>
-										@php $total = 0; @endphp
+										{{-- @php $total = 0; @endphp --}}
 										@if (session('cart'))
 											@foreach (session('cart') as $key => $items)
 												@foreach ($items as $item)
@@ -236,7 +236,7 @@
 															$addonTotal += $addon['price'] * $addon['quantity'];
 														}
 
-														$total += ($itemTotal + $addonTotal);
+														// $total += ($itemTotal + $addonTotal);
 													@endphp
 												@endforeach
 											@endforeach
@@ -250,23 +250,25 @@
 									<div class="d-flex justify-content-between mt-4 text-secondary">
 										<span>Sub Total:</span>
 										<span>
-											{{ session('currency')->symbol . $total }}
+											{{ session('currency')->symbol }}
+											{{ session('cartTotal') }}
 										</span>
 									</div>
 									<div class="d-flex justify-content-between mt-2 text-secondary">
 										<span>Delivery Charges:</span>
 										<span>
 											@if ($deliveryCharges == 0)
-												Free delivery
+												Free
 											@else
-												{{ session('currency')->symbol . $deliveryCharges}}
+												{{ session('currency')->symbol }}
+												{{ $deliveryCharges }}
 											@endif
 										</span>
 									</div>
 									@if ($deliveryCharges)
 									<div class="d-flex mt-1">
 										<span class="fw-bold f-label-small-font-size">
-											(Get free delivery on order above {{ session('currency')->symbol . $deliveryFreeAfer }})
+											(Get free delivery on order above {{ session('currency')->symbol . ' ' . $deliveryFreeAfer }})
 										</span>
 									</div>
 									@endif
@@ -274,14 +276,15 @@
 									<div class="d-flex justify-content-between fw-semibold mt-2">
 										<span>Total:</span>
 										<span>
-											{{ session('currency')->symbol . (float) $total + $deliveryCharges }}
+											{{ session('currency')->symbol }}
+											{{ (float) session('cartTotal') + $deliveryCharges }}
 										</span>
 									</div>
 									<div class="row mt-4">
 										<div class="col-12">
 											@if (! $minimumOrderCheck)
 											<span class="fw-bold ms-1 mb-1 small text-danger d-inline-flex">
-												Minimum Order Amount is {{ session('currency')->symbol . $minimumOrderAmount }}
+												Minimum Order Amount is {{ session('currency')->symbol . ' ' . $minimumOrderAmount }}
 											</span>
 											@endif
 											<button class="btn bds-c-btn bds-c-btn-primary bds-is-idle bds-c-btn--layout-default zi-surface-base p-3 checkout-button">
@@ -300,9 +303,8 @@
 </section>
 @endsection
 
-@section('js')
+@push('scripts')
 <script src="assets/js/mapInput.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize" async defer></script>
 <script>
 	document.addEventListener('DOMContentLoaded', () => {
 		$('#order-type').val(localStorage.getItem('selectedOption'));
@@ -336,4 +338,4 @@
 		}
 	});
 </script>
-@endsection
+@endpush

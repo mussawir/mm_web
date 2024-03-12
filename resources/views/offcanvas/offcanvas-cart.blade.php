@@ -12,7 +12,7 @@
 	</div>
 	<div class="offcanvas-body vstack">
 		@if ($cartItems)
-			@php $total = 0; @endphp
+			{{-- @php $total = 0; @endphp --}}
 			@foreach (session('cart') as $key => $items)
 				@if (is_array($items))
 					@foreach ($items as $id => $item)
@@ -27,22 +27,23 @@
 										<div class="row g-0">
 											<div class="col-md-3">
 												@php
-												$imgPath = ($key == 'deal') ? 'deal-banners' : 'branch-products';
-												$branch = session('selectedBranch');
+												$imgPath = ($key == 'deal') ? 'deals' : 'items';
+												$vendor = session('vendor');
 												@endphp
 												<img
-													src='{{ "/images/{$imgPath}/{$branch}/250x250/{$item['image']}" }}'
+													src='{{ "/images/vendors/{$vendor}/{$imgPath}/250x250/{$item['image']}" }}'
 													style="width:100%;height:65px;"
 													class="card-img card-img-left"
 												/>
 											</div>
 											<div class="col-md-9">
 												<div class="card-body hstack justify-content-between">
-													<h5 class="card-title small mb-0">
-														{{ ucwords($item['name']) }}
+													<h5 class="card-title small mb-0" style="text-wrap:balance">
+														{{ ucwords(strtolower($item['name'])) }}
 													</h5>
-													<p class="card-text fw-bold">
-														{{ session('currency')->symbol . $itemTotal }}
+													<p class="card-text text-truncate overflow-visible fw-bold">
+														{{ session('currency')->symbol }}
+														{{ $itemTotal }}
 													</p>
 												</div>
 											</div>
@@ -92,22 +93,20 @@
 								</div>
 							</div>
 						</div>
-						@php
+						{{-- @php
 							$total += ($itemTotal + $addonTotal);
-						@endphp
+						@endphp --}}
 					@endforeach
 				@endif
 			@endforeach
 			<div class="d-flex flex-column justify-content-end mt-auto">
-				{{-- <div class="d-flex justify-content-between px-3 mb-3 fw-semibold">
-					<span class="text-secondary fs-5">Total</span>
-					<span class="text-dark fs-4">
-						{{ session('currency')->symbol . $total }}
-					</span>
-				</div> --}}
 				<div class="d-flex justify-content-center px-5">
 					<a href="{{ route('checkout.page') }}" class="btn bds-c-btn bds-c-btn-primary bds-is-idle bds-c-btn--layout-default zi-surface-base p-3">
-						Checkout
+						<span>Order:</span>
+						<span>
+							{{ session('currency')->symbol }}
+							{{ session('cartTotal') }}
+						</span>
 					</a>
 				</div>
 			</div>
