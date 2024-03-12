@@ -68,6 +68,8 @@ class MobileCustomerOrdersController extends Controller
 		$ordermaster->admin_commission = $adminCommissionRate * ($request->data['userobj']['orderAmount']/100);
 
 		$oprtDetails = OperatorMaster::where('id', $operatorId)->with('details')->first();
+		
+		$itemsArray = [];
 
 		if ($orderType == 'Delivery')
 		{
@@ -130,6 +132,8 @@ class MobileCustomerOrdersController extends Controller
 			$order->is_deal = 0;
 			
 			$order->save();
+
+			$itemsArray[] = $record['id'];
 			
 			if (count($record['addons']))
 			{
@@ -201,10 +205,14 @@ class MobileCustomerOrdersController extends Controller
 						$orderDealOption->quantity = 0;
 
 						$orderDealOption->save();
+
+						$itemsArray[] = $dealOption['id'];
 					}
 				}
 			}
 		}
+
+		$preparationTime = Items_list::whereIn('id', $itemsArray)->max('preparation_time');
 
 		$existingToken = DB::table('admins')
 			->where('user_id', $request->data['userobj']['vendorId'])
@@ -234,7 +242,7 @@ class MobileCustomerOrdersController extends Controller
 		$data = [
 			'orderId' => $ordermaster->id,
 			'total' => $request->data['userobj']['totalAmount'],
-			'deliveryTime' => '30',
+			'deliveryTime' => $preparationTime,
 			'operatorName' => $oprtDetails->company_name,
 			'operatorContact' => $oprtDetails->phone,
 			'operatorAddress' => $oprtDetails->details->address,
@@ -245,7 +253,7 @@ class MobileCustomerOrdersController extends Controller
 		return response()->json([
 			'status' => 200,
 			'data' => $data,
-			'message' => $response
+			'message' => [$itemsArray, $preparationTime]
 		]);
 	}
 	
