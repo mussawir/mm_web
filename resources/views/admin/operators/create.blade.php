@@ -8,12 +8,12 @@
 	<div class="col-xl">
 		<div class="card">
 			<div class="card-body">
-				<form class="add-operator-form" method="POST" action="/admin/operators">
+				<form class="add-operator-form" method="POST" action="/admin/operators" enctype="multipart/form-data">
 					@csrf
 					<input type="hidden" name="address_latitude" id="address-latitude" value="0" />
 					<input type="hidden" name="address_longitude" id="address-longitude" value="0" />
 					<div class="row mb-3">
-						<div class="col-md-4">
+						<div class="col-md-3">
 							<label for="name" class="form-label">
 								Name
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -35,7 +35,29 @@
 							</span>
 							@endif
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-3">
+							<label for="company_name" class="form-label">
+								Company Name
+								<span class='text-danger' aria-hidden='true'>*</span>
+							</label>
+							<input
+								class="form-control @error('company_name') is-invalid @enderror"
+								type="text"
+								name="company_name"
+								id="company_name"
+								placeholder="Enter Your Company Name"
+								aria-required="true"
+								value="{{ old('company_name') }}"
+							>
+							@if ($errors->has('company_name'))
+							<span class="invalid-feedback">
+								<strong>
+									{{ $errors->first('company_name') }}
+								</strong>
+							</span>
+							@endif
+						</div>
+						<div class="col-md-3">
 							<label for="email" class="form-label">
 								Email
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -57,7 +79,7 @@
 							</span>
 							@endif
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-3">
 							<label for="phone" class="form-label">
 								Phone
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -81,14 +103,56 @@
 						</div>
 					</div>
 					<div class="row mb-3">
+						<div class="col-md-6">
+							<label for="logo" class="form-label">
+								Logo
+								<span class='text-danger' aria-hidden='true'>*</span>
+							</label>
+							<input
+								class="form-control @error('logo') is-invalid @enderror"
+								name="logo"
+								id="logo"
+								type="file"
+								accept="image/*"
+							>
+							@if ($errors->has('logo'))
+							<span class="invalid-feedback">
+								<strong>
+									{{ $errors->first('logo') }}
+								</strong>
+							</span>
+							@endif
+						</div>
+						<div class="col-md-6">
+							<label for="banner" class="form-label">
+								Banner
+								<span class='text-danger' aria-hidden='true'>*</span>
+							</label>
+							<input
+								class="form-control @error('banner') is-invalid @enderror"
+								name="banner"
+								id="banner"
+								type="file"
+								accept="image/*"
+							>
+							@if ($errors->has('banner'))
+							<span class="invalid-feedback">
+								<strong>
+									{{ $errors->first('banner') }}
+								</strong>
+							</span>
+							@endif
+						</div>
+					</div>
+					<div class="row mb-3">
 						<div class="col-md-12">
 							<label for="address_address" class="form-label">
 								Address
 								<span class='text-danger' aria-hidden='true'>*</span>
 							</label>
 							<input
-								type="text"
 								class="form-control map-input @error('address_address') is-invalid @enderror"
+								type="text"
 								id="address-input"
 								name="address_address"
 								placeholder="Enter Address"
@@ -270,7 +334,7 @@
 </div>
 @endsection
 
-@section('js')
+@push('scripts')
 <script src="{{ asset('assets/js/mapInput.js') }}"></script>
 <script async src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize" defer></script>
 <script>
@@ -301,4 +365,4 @@
 		}
 	});
 </script>
-@endsection
+@endpush

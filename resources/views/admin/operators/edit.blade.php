@@ -8,11 +8,13 @@
 	<div class="col-xxl">
 		<div class="card">
 			<div class="card-body">
-				<form method="POST" action="/admin/operators/{{ $operator->id }}">
+				<form class="edit-operator-form" method="POST" action="/admin/operators/{{ $operator->id }}" enctype="multipart/form-data">
 					@csrf
 					@method('PUT')
+					<input type="hidden" name="address_latitude" id="address-latitude" value="0" />
+					<input type="hidden" name="address_longitude" id="address-longitude" value="0" />
 					<div class="row mb-3">
-						<div class="col-md-4">
+						<div class="col-md-3">
 							<label for="name" class="form-label">
 								Name
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -34,7 +36,29 @@
 							</span>
 							@endif
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-3">
+							<label for="company_name" class="form-label">
+								Company Name
+								<span class='text-danger' aria-hidden='true'>*</span>
+							</label>
+							<input
+								class="form-control @error('company_name') is-invalid @enderror"
+								type="text"
+								name="company_name"
+								id="company_name"
+								placeholder="Enter Company Name"
+								aria-required="true"
+								value="{{ old('company_name', $operator->company_name) }}"
+							>
+							@if ($errors->has('company_name'))
+							<span class="invalid-feedback">
+								<strong>
+									{{ $errors->first('company_name') }}
+								</strong>
+							</span>
+							@endif
+						</div>
+						<div class="col-md-3">
 							<label for="email" class="form-label">
 								Email
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -56,7 +80,7 @@
 							</span>
 							@endif
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-3">
 							<label for="phone" class="form-label">
 								Phone
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -80,27 +104,74 @@
 						</div>
 					</div>
 					<div class="row mb-3">
+						<div class="col-md-6">
+							<label for="logo" class="form-label">
+								Logo
+							</label>
+							<input
+								class="form-control @error('logo') is-invalid @enderror"
+								name="logo"
+								id="logo"
+								type="file"
+								accept="image/*"
+							>
+							@if ($errors->has('logo'))
+							<span class="invalid-feedback">
+								<strong>
+									{{ $errors->first('logo') }}
+								</strong>
+							</span>
+							@endif
+						</div>
+						<div class="col-md-6">
+							<label for="banner" class="form-label">
+								Banner
+							</label>
+							<input
+								class="form-control @error('banner') is-invalid @enderror"
+								name="banner"
+								id="banner"
+								type="file"
+								accept="image/*"
+							>
+							@if ($errors->has('banner'))
+							<span class="invalid-feedback">
+								<strong>
+									{{ $errors->first('banner') }}
+								</strong>
+							</span>
+							@endif
+						</div>
+					</div>
+					<div class="row mb-3">
 						<div class="col-sm-12">
-							<label for="address" class="form-label">
+							<label for="address_address" class="form-label">
 								Address
 								<span class='text-danger' aria-hidden='true'>*</span>
 							</label>
 							<input
-								class="form-control @error('address') is-invalid @enderror"
+								class="form-control map-input @error('address_address') is-invalid @enderror"
 								type="text"
-								name="address"
-								id="address"
+								id="address-input"
+								name="address_address"
 								placeholder="Enter Address"
 								aria-required='true'
-								value="{{ old('address', $operator->details->address) }}"
+								value="{{ old('address_address', $operator->details->address) }}"
 							>
-							@if ($errors->has('address'))
+							@if ($errors->has('address_address'))
 							<span class="invalid-feedback">
 								<strong>
-									{{ $errors->first('address') }}
+									{{ $errors->first('address_address') }}
 								</strong>
 							</span>
 							@endif
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-md-12">
+							<div class="w-100 rounded-2 border" id="address-map-container" style="height:400px;">
+								<div class="h-100" id="address-map"></div>
+							</div>
 						</div>
 					</div>
 					<div class="row mb-3">
@@ -232,7 +303,7 @@
 					</div>
 					<div class="row justify-content-end">
 						<div class="col-sm-10 text-end">
-							<button type="submit" class="btn btn-primary">
+							<button type="submit" class="btn btn-primary update-operator">
 								Update
 							</button>
 						</div>
@@ -243,3 +314,36 @@
 	</div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('assets/js/mapInput.js') }}"></script>
+<script async src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize" defer></script>
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const addOperatorForm = document.querySelector('.edit-operator-form');
+		const saveOperatorButton = document.querySelector('.update-operator');
+
+		saveOperatorButton.addEventListener('click', function (event) {
+			event.preventDefault();
+
+			if (checkCoords()) {
+				addOperatorForm.submit();
+			}
+		});
+
+		function checkCoords() {
+			const address = document.getElementById('address-input');
+			const latitude = document.getElementById('address-latitude');
+			const longitude = document.getElementById('address-longitude');
+
+			if (latitude.value === '0' || longitude.value === '0') {
+				alert('Please select a valid location on the map.');
+				address.classList.add('is-invalid');
+				return false;
+			}
+
+			return true;
+		}
+	});
+</script>
+@endpush

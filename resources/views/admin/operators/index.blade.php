@@ -42,6 +42,7 @@
 			<thead>
 				<tr>
 					<th scope="col">Name</th>
+					<th scope="col">Company Name</th>
 					<th scope="col">Email</th>
 					<th scope="col">Phone</th>
 					<th scope="col">City</th>
@@ -52,6 +53,7 @@
 				@forelse ($operators as $operator)
 				<tr>
 					<td>{{ $operator->name }}</td>
+					<td>{{ $operator->company_name }}</td>
 					<td>{{ $operator->email }}</td>
 					<td>{{ $operator->phone }}</td>
 					<td>{{ $operator->details->city->name }}</td>
