@@ -2,10 +2,10 @@
 	<div class="app-brand demo">
 		<a href="{{ url('/admin/dashboard') }}" class="app-brand-link">
 			<span class="app-brand-logo demo">
-				<img src="{{ asset('/assets/images/avatars/fastfood.png') }}" class="navbar-brand-img" width="40" height="40" alt="Brand Logo">
+				<img src="{{ asset('/assets/images/favicon/favicon.svg') }}" class="navbar-brand-img" width="40" height="40" alt="MazaaMax">
 			</span>
 			<span class="app-brand-text demo menu-text fw-bolder ms-2">
-				MzaMax
+				MazaaMax
 			</span>
 		</a>
 		<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -57,18 +57,6 @@
 				<div data-i18n="Vendors">Vendors</div>
 			</a>
 		</li>
-		{{-- <li class="menu-item {{ request()->is('admin/branches') ? 'active' : '' }}">
-			<a href="{{ url('/admin/branches') }}" class="menu-link">
-				<i class="menu-icon tf-icons bx bx-store"></i>
-				<div data-i18n="Branches">Branches</div>
-			</a>
-		</li> --}}
-		{{-- <li class="menu-item {{ request()->is('admin/customer/list') ? 'active' : '' }}">
-			<a href="{{ url('/admin/customer/list') }}" class="menu-link">
-				<i class="menu-icon tf-icons bx bxs-user-circle"></i>
-				<div data-i18n="Customers">Customers</div>
-			</a>
-		</li> --}}
 		<li class="menu-item {{ in_array('settings', request()->segments()) ? 'active' : '' }}">
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
 				<i class='menu-icon tf-icons bx bx-cog'></i>

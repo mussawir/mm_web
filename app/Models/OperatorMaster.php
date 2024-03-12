@@ -15,6 +15,9 @@ class OperatorMaster extends Model
 		'name',
 		'email',
 		'phone',
+		'company_name',
+		'logo',
+		'banner'
 	];
 
 	public function details()

@@ -37,15 +37,45 @@ class OperatorController extends Controller
 	{
 		$request->validate([
 			'name' => 'required|string|min:3',
+			'company_name' => 'required|string|min:3',
 			'email' => 'required|email|unique:operator_master,email',
-			'phone' => 'required|numeric|unique:operator_master,phone',
+			'phone' => 'required|numeric',
 			'address_address' => 'required|string',
 			'commission_percentage' => 'required|numeric|min:2|max:20',
 			'city' => 'required',
 			'area_name' => 'required|string',
 			'operation_radius' => 'required',
 			'operational_area' => 'required',
+			'logo' => 'required|image|mimes:jpeg,png,jpg|min:100|max:500',
+			'banner' => 'required|image|mimes:jpeg,png,jpg|min:100|max:500',
 		]);
+
+		if($request->hasfile('logo')) {
+			$file = $request->file('logo');
+
+			if ($file->isValid()) {
+				$logo = time() . '.' . $file->extension();
+
+				$file->move('images/operators/logos/', $logo);
+			} else {
+				return redirect()
+					->back()
+					->withErrors(['logo' => 'Invalid image file.']);
+			}
+		}
+
+		if ($request->hasFile('banner')) {
+			$file = $request->file('banner');
+			if ($file->isValid()) {
+				$banner = time() . '.' . $file->extension();
+
+				$file->move('images/operators/banners/', $banner);
+			} else {
+				return redirect()
+					->back()
+					->withErrors(['banner' => 'Invalid image file.']);
+			}
+		}
 
 		$latitude = floatval($request->input('address_latitude'));
 		$longitude = floatval($request->input('address_longitude'));
@@ -54,8 +84,11 @@ class OperatorController extends Controller
 		$operator = new OperatorMaster;
 
 		$operator->name = $request->get('name');
+		$operator->company_name = $request->get('company_name');
 		$operator->email = $request->get('email');
 		$operator->phone = $request->get('phone');
+		$operator->logo = $logo;
+		$operator->banner = $banner;
 
 		$operator->save();
 
@@ -109,17 +142,64 @@ class OperatorController extends Controller
 	{
 		$request->validate([
 			'name' => 'required|string|min:3',
-			'email' => 'required|email|unique:operator_master,email',
-			'phone' => 'required|numeric|unique:operator_master,phone',
-			'address' => 'required|string',
+			'company_name' => 'required|string|min:3',
+			'email' => 'required|email|unique:operator_master,email,' . $id,
+			'phone' => 'required|numeric',
+			'address_address' => 'required|string',
 			'commission_percentage' => 'required|numeric|min:2|max:20',
 			'city' => 'required',
 			'area_name' => 'required|string',
 			'operation_radius' => 'required',
 			'operational_area' => 'required',
+			'logo' => 'image|mimes:jpeg,png,jpg|min:100|max:500',
+			'banner' => 'image|mimes:jpeg,png,jpg|min:100|max:500',
 		]);
 
 		$operator = OperatorMaster::findOrFail($id);
+
+		if($request->hasfile('logo')) {
+			$file = $request->file('logo');
+
+			if ($file->isValid()) {
+				$logo = time() . '.' . $file->extension();
+				
+				if ($operator->logo) {
+					$oldLogo = public_path('images/operators/logos/' . $operator->logo);
+				}
+
+				$file->move('images/operators/logos/', $logo);
+
+				if (isset($oldLogo) && file_exists($oldLogo)) {
+					unlink($oldLogo);
+				}
+			} else {
+				return redirect()
+					->back()
+					->withErrors(['image' => 'Invalid image file.']);
+			}
+		}
+
+		if ($request->hasFile('banner')) {
+			$file = $request->file('banner');
+
+			if ($file->isValid()) {
+				$banner = time() . '.' . $file->extension();
+				
+				if ($operator->banner) {
+					$oldBanner = public_path('images/operators/banners/' . $operator->banner);
+				}
+
+				$file->move('images/operators/banners/', $banner);
+
+				if (isset($oldBanner) && file_exists($oldBanner)) {
+					unlink($oldBanner);
+				}
+			} else {
+				return redirect()
+					->back()
+					->withErrors(['image' => 'Invalid image file.']);
+			}
+		}
 
 		if ($operator->email !== $request->get('email')) {
 			$operatorLogin = Admin::where('role', 1)
@@ -132,8 +212,17 @@ class OperatorController extends Controller
 		}
 
 		$operator->name = $request->get('name');
+		$operator->company_name = $request->get('company_name');
 		$operator->email = $request->get('email');
 		$operator->phone = $request->get('phone');
+		
+		if (isset($logo)) {
+			$operator->logo = $logo;
+		}
+
+		if (isset($banner)) {
+			$operator->banner = $banner;
+		}
 
 		$operator->save();
 
@@ -143,7 +232,7 @@ class OperatorController extends Controller
 
 			$operatorDetails->operator_id = $operator->id;
 			$operatorDetails->city_id = $request->get('city');
-			$operatorDetails->address = $request->get('address');
+			$operatorDetails->address = $request->get('address_address');
 			$operatorDetails->commission_percentage = $request->get('commission_percentage');
 			$operatorDetails->area_name = $request->get('area_name');
 			$operatorDetails->operational_area = $request->get('operational_area');

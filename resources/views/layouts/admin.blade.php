@@ -7,11 +7,13 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<title>MzaMax</title>
+		<title>MazaaMax</title>
 
 		{{-- Favicon --}}
-		<link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
-		<link rel="icon" type="image/ico" href="/assets/images/favicon.ico">
+		<link rel="icon" href="/assets/images/favicon/favicon.ico" sizes="any" />
+		<link rel="icon" href="/assets/images/favicon/favicon.svg" type="image/svg+xml" />
+		<link rel="apple-touch-icon" href="/assets/images/favicon/apple-touch-icon.png" />
+		<link rel="manifest" href="/assets/images/favicon/manifest.webmanifest" />
 
 		{{-- Fonts --}}
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -186,5 +188,6 @@
 		});
 		</script>
 		@yield('js')
+		@stack('scripts')
 	</body>
 </html>
