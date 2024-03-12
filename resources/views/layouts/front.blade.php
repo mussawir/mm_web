@@ -421,7 +421,11 @@
 					});
 				}
 				else {
-					vendorContent.textContent = 'We are coming to this area soon.'
+					const headingElement = document.createElement('h3');
+					headingElement.classList.add('m-3', 'p-3');
+					headingElement.textContent = 'We are coming to this area soon.'
+
+					vendorContent.appendChild(headingElement);
 				}
 			}
 

@@ -23,11 +23,6 @@ class CartController extends Controller
 	
 	public function addToCart(Request $request)
 	{
-		// $request->validate([
-		// 	'product_id' => 'required|numeric|exists:items_list,id',
-		// 	'quantity' => 'required|numeric|min:1',
-		// ]);
-
 		if ($request->input('vendor') !== session('vendor')) {
 			session::forget('cart');
 		}
@@ -46,26 +41,24 @@ class CartController extends Controller
 		$itemImageColumn = '';
 		$itemPriceColumn = '';
 
-		if ($type === 'deal')
-		{
-			$item = DealMaster::with('branch')->findOrFail($id);
+		if ($type === 'deal') {
+			$item = DealMaster::findOrFail($id);
 			$itemImageColumn = 'banner';
 			$itemPriceColumn = 'grand_total';
-		}
-		elseif ($type === 'item')
-		{
-			$item = Items_list::with('branch')->findOrFail($id);
+		} elseif ($type === 'item') {
+			$item = Items_list::findOrFail($id);
 			$itemImageColumn = 'main_image';
 			$itemPriceColumn = 'price';
 		}
 
-		if (isset($item->max_order_qty) && $quantity > $item->max_order_qty)
-		{
-			return redirect()->back()->withErrors(['quantity' => "Maximum order quantity for this {$type} is: {$item->max_order_qty}"]);
+		// Check if item quantity exceeds max order quantity set by admin
+		if (isset($item->max_order_qty) && $quantity > $item->max_order_qty) {
+			return redirect()
+				->back()
+				->withErrors(['quantity' => "Maximum order quantity for this {$type} is: {$item->max_order_qty}"]);
 		}
 
-		if (!isset($cart[$type][$id]))
-		{
+		if (!isset($cart[$type][$id])) {
 			$cart[$type][$id] = [
 				"name" => $item->name,
 				"quantity" => $quantity,
@@ -77,8 +70,7 @@ class CartController extends Controller
 		// Update item or deal quantity
 		$cart[$type][$id]['quantity'] = $quantity;
 
-		if ($request->input('options') && count($request->input('options')))
-		{
+		if ($request->input('options') && count($request->input('options'))) {
 			foreach($request->input('options') as $key => $item)
 			{
 				$dealDetail = DealDetail::findorFail($key);
@@ -124,47 +116,35 @@ class CartController extends Controller
 		// Reference to the addons in the cart
 		$cartAddons = &$cart[$type][$id]['addons'];
 
-		// Loop through the addons in the cart and update/add/remove based on selectedAddons
 		foreach ($cartAddons as $index => $cartAddon)
 		{
 			$addonId = $cartAddon['id'];
-			if (isset($selectedAddons[$addonId]) && $selectedAddons[$addonId])
-			{
-				// If the addon exists in selectedAddons, update its quantity
+			if (isset($selectedAddons[$addonId]) && $selectedAddons[$addonId]) {
 				$cartAddons[$index]['quantity'] = $addonQuantities[$addonId] ?? 0;
-			}
-			else
-			{
+			} else {
 				// If the addon doesn't exist in selectedAddons, remove it
 				unset($cartAddons[$index]);
 			}
 		}
 
 		// Loop through selectedAddons to add new addons to the cart
-		foreach ($selectedAddons as $addonId => $selected)
-		{
-			if ($selected)
-			{
+		foreach ($selectedAddons as $addonId => $selected) {
+			if ($selected) {
 				$addon = Items_list::findOrFail($addonId);
 				$addonQuantity = $addonQuantities[$addonId] ?? 0;
 	
 				$existingAddon = null;
-				foreach ($cartAddons as $index => $cartAddon)
-				{
-					if ($cartAddon['id'] === $addonId)
-					{
+				foreach ($cartAddons as $index => $cartAddon) {
+					if ($cartAddon['id'] === $addonId) {
 						$existingAddon = $index;
 						break;
 					}
 				}
 	
-				if ($existingAddon !== null)
-				{
+				if ($existingAddon !== null) {
 					// If the addon already exists in the cart, update its quantity
 					$cartAddons[$existingAddon]['quantity'] = $addonQuantity;
-				}
-				else
-				{
+				} else {
 					// If the addon doesn't exist in the cart, add it directly to the addons array
 					$cartAddons[] = [
 						'id' => $addon->id,
@@ -178,6 +158,7 @@ class CartController extends Controller
 
 		session()->put('vendor', $vendor);
 		session()->put('cart', $cart);
+		session()->put('cartTotal', $this->getGrandTotal($cart, $id));
 
 		$this->saveCarttoDB($ip, $vendor, $id, $type, $request->get('options', []));
 
@@ -291,12 +272,9 @@ class CartController extends Controller
 
 	private function saveCarttoDB($ip, $vendor, $id, $type, $options = [])
 	{
-		if ($type === 'deal')
-		{
+		if ($type === 'deal') {
 			$deal = DealMaster::with('vendor')->findOrFail($id);
-		}
-		elseif ($type === 'item')
-		{
+		} elseif ($type === 'item') {
 			$item = Items_list::with('vendor')->findOrFail($id);
 		}
 
@@ -306,13 +284,10 @@ class CartController extends Controller
 
 		$cartMaster->ip_address = $ip;
 
-		if ($type === 'deal')
-		{
-			$cartMaster->branch_id = $deal->vendor->branch_id;
-		}
-		elseif ($type === 'item')
-		{
-			$cartMaster->branch_id = $item->vendor->branch_id;
+		if ($type === 'deal') {
+			$cartMaster->operator_id = $deal->vendor->operator_id;
+		} elseif ($type === 'item') {
+			$cartMaster->operator_id = $item->vendor->operator_id;
 		}
 
 		$deals = count(session()->get('cart.deal', []));

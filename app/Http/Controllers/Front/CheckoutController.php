@@ -81,9 +81,9 @@ class CheckoutController extends Controller
 
 				$customerId = Auth::guard('customer')->user()->id ?? null;
 
-				$order->customer_id = $customerId;
-				$order->branch_id = $cart->branch_id;
+				$order->operator_id = $vendor->operator_id;
 				$order->vendor_id = $vendor->id;
+				$order->customer_id = $customerId;
 				$order->order_address = $orderAddress;
 				$order->order_geo_location = $selectedCoords;
 				$order->further_instructions = $request->input('instructions');

@@ -83,9 +83,9 @@
 				</div>
 			</div>
 		@empty
-		<div class="fw-semibold px-3">
+		<h3 class="m-3 p-3">
 			We are coming to this area soon.
-		</div>
+		</h3>
 		@endforelse
 	</div>
 </div>
