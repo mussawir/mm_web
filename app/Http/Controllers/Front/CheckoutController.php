@@ -219,12 +219,8 @@ class CheckoutController extends Controller
 
 			$user->name = $userData['name'];
 			$user->address = $userData['address'];
-			// $user->city = $userData['city'];
-			// $user->country = $userData['country'];
 
 			$user->save();
-
-			// Return a response or perform any additional actions here.
 		}
 	}
 }

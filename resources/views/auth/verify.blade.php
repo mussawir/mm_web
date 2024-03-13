@@ -9,10 +9,10 @@
 			<div class="app-brand justify-content-center">
 				<a href="{{ route('home') }}" class="app-brand-link gap-2">
 					<span class="app-brand-logo demo">
-						<img src="{{ asset('/assets/images/avatars/fastfood.png') }}" width="40" height="40" alt="Brand Logo"/>
+						<img class="img-fluid" src="{{ asset('/assets/images/favicon/favicon.svg') }}" width="42" height="42" alt="MazaaMax"/>
 					</span>
 					<span class="app-brand-text demo text-body fw-bolder text-capitalize">
-						Fast Food
+						MazaaMax
 					</span>
 				</a>
 			</div>

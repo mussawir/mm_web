@@ -115,7 +115,7 @@
 										<div class="form-check">
 											<input class="form-check-input" type="radio" name="payment_method" id="online" value="credit">
 											<label class="form-check-label" for="credit">
-												Credit Card
+												Online Payment
 											</label>
 										</div>
 									</div>

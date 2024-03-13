@@ -409,8 +409,8 @@ class CartController extends Controller
 					foreach($items as $item)
 					{
 						$itemTotal = $item['quantity'] * $item['price'];
-						// $dealOptionsTotal = 0;
 						$addonTotal = 0;
+						$dealOptionsTotal = 0;
 
 						if ($key === 'deal')
 						{
@@ -422,7 +422,9 @@ class CartController extends Controller
 									{
 										if (is_array($dealOption) && count($dealOption))
 										{
-											// dd ($dealOption);
+											if (intval($dealOption['deal_price']) !== 0) {
+												$dealOptionsTotal += intval($dealOption['deal_price']);
+											}
 										}
 									}
 								}
@@ -434,7 +436,7 @@ class CartController extends Controller
 							$addonTotal += $addon['price'] * $addon['quantity'];
 						}
 
-						$total += ($itemTotal + $addonTotal);
+						$total += ($itemTotal + $addonTotal + $dealOptionsTotal);
 					}
 				}
 				elseif (count($items))
