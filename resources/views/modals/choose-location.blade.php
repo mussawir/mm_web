@@ -10,45 +10,46 @@
 						alt="Mazaa Max"
 					/>
 					<div class="card-body w-75 mt-4">
-						<h5 class="card-title text-center" id="cardTitle">
-							Your location
-						</h5>
-						<div class="btn-group gap-3 mt-3 d-flex" role="group" aria-label="Basic radio toggle button group">
-							<input
-								type="radio"
-								class="btn-check"
-								name="deliveryPickupOption"
-								id="delivery"
-								value="delivery"
-								autocomplete="off"
-							/>
-							<label class="btn btn-outline-primary rounded-pill" for="delivery">
-								Delivery
-							</label>
-
-							<input
-								type="radio"
-								class="btn-check"
-								name="deliveryPickupOption"
-								id="pickup"
-								value="pickup"
-								autocomplete="off"
-							/>
-							<label class="btn btn-outline-primary rounded-pill" for="pickup">
-								Pickup
-							</label>
+						<div class="d-flex align-items-center justify-content-center gap-3">
+							<div class="d-flex">
+								<input
+									type="radio"
+									class="btn-check"
+									name="deliveryPickupOption"
+									id="delivery"
+									value="delivery"
+									autocomplete="off"
+								/>
+								<label class="btn bds-c-tab__label border-2" for="delivery">Delivery</label>
+							</div>
+							<div class="d-flex">
+								<input
+									type="radio"
+									class="btn-check"
+									name="deliveryPickupOption"
+									id="pickup"
+									value="pickup"
+									autocomplete="off"
+								/>
+								<label class="btn bds-c-tab__label border-2" for="pickup">Pickup</label>
+							</div>
 						</div>
 						<div class="row mt-3">
 							<div class="col-md-12">
 								<label for="address_address" class="form-label">
 									Address
 								</label>
-								<input
-									type="text"
-									class="form-control map-input"
-									id="address-input"
-									name="address_address"
-								/>
+								<div class="input-group mb-3">
+									<input
+										type="text"
+										class="form-control map-input"
+										id="address-input"
+										name="address_address"
+									/>
+									<button id="locate-me" class="btn btn-outline-secondary">
+										<i class="fa-solid fa-location-crosshairs"></i>
+									</button>
+								</div>
 							</div>
 						</div>
 						<div class="row mt-3">

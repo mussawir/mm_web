@@ -27,6 +27,9 @@
 															<i class="fa-solid fa-location-dot"></i>
 														</span>
 														<span class="header-order-button-content cl-interaction-primary f-label-medium-font-size fw-label-medium-font-weight lh-label-medium-line-height ff-label-medium-font-family d-flex gap-1">
+															<span class="cl-neutral-primary f-label-medium-font-size fw-label-medium-font-weight lh-label-medium-line-height ff-label-medium-font-family">
+																Current Address:
+															</span>
 															<span class="place"></span>
 															<span class="address-label-highlighted-header cl-neutral-primary f-label-medium-font-size fw-label-medium-font-weight lh-label-medium-line-height ff-label-medium-font-family city d-block">
 															</span>

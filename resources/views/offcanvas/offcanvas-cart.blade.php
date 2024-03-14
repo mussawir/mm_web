@@ -53,6 +53,34 @@
 							</div>
 
 							<div class="vstack mt-3 mb-2 w-100">
+								@if ($key === 'deal')
+									<span class="fw-semibold text-muted ps-3" style="font-size:.775em;">
+										Selected Options:
+									</span>
+									@foreach ($item['options'] as $options)
+									@foreach ($options as $option)
+									@if (is_array($option))
+										{{-- @php
+											$addonTotal += $addon['price'] * $addon['quantity'];
+										@endphp --}}
+										<div class="d-flex align-items-center justify-content-between">
+											<span class="d-flex align-items-center justify-content-center text-muted fw-semibold ps-4 gap-1" style="font-size:.675em;">
+												<span>+</span>
+												{{ ucwords(strtolower($option['name'])) }}
+											</span>
+											@if ($option['deal_price'] != 0)
+											<span class="text-muted fw-semibold ps-2" style="font-size:.675em;">
+												+
+												{{ session('currency')->symbol }}
+												{{ $option['deal_price'] }}
+											</span>
+											@endif
+										</div>
+									@endif
+									@endforeach
+									@endforeach
+								@endif
+
 								@if (count($item['addons']))
 									<span class="fw-semibold text-muted ps-3" style="font-size:.775em;">
 										Addons:
