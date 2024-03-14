@@ -171,6 +171,7 @@
 
 			document.addEventListener('DOMContentLoaded', () => {
 				const selectedOption = localStorage.getItem('selectedOption');
+				const selectedAddress = localStorage.getItem('formattedAddress');
 				const selectedCoords = localStorage.getItem('locationCoords');
 				const deliveryType = document.querySelectorAll('input[name="deliveryPickupOption"]');
 
@@ -183,14 +184,14 @@
 					myModal.show();
 				});
 
-				if (selectedOption === 'pickup' || selectedOption === 'delivery') {
-					cardTitle.textContent = 'Your location';
-				}
-
 				if (selectedOption && selectedCoords) {
 					myModal.hide();
 				} else {
 					myModal.show();
+				}
+
+				if (selectedAddress) {
+					document.getElementById('address-input').value = selectedAddress;
 				}
 
 				updateButtonText(selectedOption);
@@ -216,7 +217,7 @@
 
 					if (locationCoords) {
 						// myModal.hide();
-						localStorage.setItem('selectedOption', selectedOption.value);
+						// localStorage.setItem('selectedOption', selectedOption.value);
 
 						saveSelectedLocationToSession(locationCoords);
 						updateButtonText(selectedOption.value);
@@ -336,39 +337,39 @@
 						nameText.classList.add('vendor-name', 'f-title-small-font-size', 'fw-title-small-font-weight', 'lh-title-small-line-height', 'ff-title-small-font-family');
 						nameText.textContent = vendor.company_name;
 
-						const ratingContainer = document.createElement('div');
-						ratingContainer.classList.add('d-inline-flex', 'flex-nowrap', 'align-items-center', 'justify-content-end', 'flex-shrink-0', 'ms-auto');
-						ratingContainer.style.maxWidth = '232px';
+						// const ratingContainer = document.createElement('div');
+						// ratingContainer.classList.add('d-inline-flex', 'flex-nowrap', 'align-items-center', 'justify-content-end', 'flex-shrink-0', 'ms-auto');
+						// ratingContainer.style.maxWidth = '232px';
 
-						const starIcon = document.createElement('div');
-						starIcon.classList.add('d-inline-flex', 'align-items-center', 'justify-content-center', 'me-1');
+						// const starIcon = document.createElement('div');
+						// starIcon.classList.add('d-inline-flex', 'align-items-center', 'justify-content-center', 'me-1');
 
-						const starImage = document.createElement('img');
-						starImage.src = 'assets/images/avatars/rating-star.png';
-						starImage.width = '14';
-						starImage.height = '14';
-						starImage.alt = 'Restaurant Rating';
+						// const starImage = document.createElement('img');
+						// starImage.src = 'assets/images/avatars/rating-star.png';
+						// starImage.width = '14';
+						// starImage.height = '14';
+						// starImage.alt = 'Restaurant Rating';
 
-						starIcon.appendChild(starImage);
+						// starIcon.appendChild(starImage);
 
-						const ratingValue = document.createElement('span');
-						ratingValue.classList.add('fw-semibold', 'text-truncate', 'fs-7');
-						ratingValue.style.marginLeft = '2px';
-						ratingValue.style.color = '#333333';
-						ratingValue.textContent = '4.2';
+						// const ratingValue = document.createElement('span');
+						// ratingValue.classList.add('fw-semibold', 'text-truncate', 'fs-7');
+						// ratingValue.style.marginLeft = '2px';
+						// ratingValue.style.color = '#333333';
+						// ratingValue.textContent = '4.2';
 
-						const reviewCount = document.createElement('span');
-						reviewCount.classList.add('text-truncate', 'fs-7');
-						reviewCount.style.marginLeft = '2px';
-						reviewCount.style.color = '#767676';
-						reviewCount.textContent = '(1000+)';
+						// const reviewCount = document.createElement('span');
+						// reviewCount.classList.add('text-truncate', 'fs-7');
+						// reviewCount.style.marginLeft = '2px';
+						// reviewCount.style.color = '#767676';
+						// reviewCount.textContent = '(1000+)';
 
-						ratingContainer.appendChild(starIcon);
-						ratingContainer.appendChild(ratingValue);
-						ratingContainer.appendChild(reviewCount);
+						// ratingContainer.appendChild(starIcon);
+						// ratingContainer.appendChild(ratingValue);
+						// ratingContainer.appendChild(reviewCount);
 
 						vendorName.appendChild(nameText);
-						vendorName.appendChild(ratingContainer);
+						// vendorName.appendChild(ratingContainer);
 
 						const priceAndCategory = document.createElement('div');
 						priceAndCategory.classList.add('ms-0', 'd-block', 'text-truncate');
@@ -381,17 +382,17 @@
 						priceContainer.style.marginRight = '2px';
 						priceContainer.style.color = '#666666';
 
-						const priceValue = document.createElement('div');
-						priceValue.classList.add('d-inline', 'fw-semibold', 'fs-7');
-						priceValue.textContent = '$$$';
+						// const priceValue = document.createElement('div');
+						// priceValue.classList.add('d-inline', 'fw-semibold', 'fs-7');
+						// priceValue.textContent = '$$$';
 
-						priceContainer.appendChild(priceValue);
+						// priceContainer.appendChild(priceValue);
 
-						const separator1 = document.createElement('div');
-						separator1.classList.add('d-inline', 'fw-semibold', 'fs-7', 'align-middle');
-						separator1.style.color = '#cacaca';
-						separator1.style.margin = '0 4px 0 2px';
-						separator1.textContent = '•';
+						// const separator1 = document.createElement('div');
+						// separator1.classList.add('d-inline', 'fw-semibold', 'fs-7', 'align-middle', 'cl-neutral-inactive');
+						// separator1.style.color = '#cacaca';
+						// separator1.style.margin = '0 4px 0 2px';
+						// separator1.textContent = '•';
 
 						const categoryContainer = document.createElement('div');
 						categoryContainer.classList.add('fw-semibold', 'd-inline', 'fs-7', 'align-middle');
@@ -400,12 +401,15 @@
 
 						const categoryValue = document.createElement('div');
 						categoryValue.classList.add('fw-semibold', 'd-inline', 'fs-7');
-						categoryValue.textContent = 'Burgers';
+						const randomIndex = Math.floor(Math.random() * vendor.categories.length);
+						const randomCategory = vendor.categories[randomIndex];
+						const randomName = randomCategory.name;
+						categoryValue.textContent = randomName;
 
 						categoryContainer.appendChild(categoryValue);
 
 						priceAndCategory.appendChild(priceContainer);
-						priceAndCategory.appendChild(separator1);
+						// priceAndCategory.appendChild(separator1);
 						priceAndCategory.appendChild(categoryContainer);
 
 						vendorInfo.appendChild(vendorName);
@@ -521,17 +525,10 @@
 			// 	});
 			// }
 
-			// Event listener for the city change
-			// citySelect.addEventListener('change', fetchBranches);
-
 			// Event listener for the radio buttons
 			document.querySelectorAll('input[name="deliveryPickupOption"]').forEach(radio => {
 				radio.addEventListener('change', function() {
-					if (this.value === 'pickup' || this.value === 'delivery') {
-						cardTitle.textContent = 'Your location';
-					} else if (this.value === 'dine-in') {
-						cardTitle.textContent = 'Go to reservation page';
-					}
+					localStorage.setItem('selectedOption', this.value);
 				});
 			});
 

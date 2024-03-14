@@ -20,6 +20,9 @@ async function initialize() {
 
 		for (let i = 0; i < locationInputs.length; i++) {
 			const input = locationInputs[i];
+			const options = {
+				componentRestrictions: { country: "pk" },
+			};
 			const fieldKey = input.id.replace("-input", "");
 			const isEdit = document.getElementById(fieldKey + "-latitude").value != '' && document.getElementById(fieldKey + "-longitude").value != '';
 
@@ -37,7 +40,7 @@ async function initialize() {
 
 			marker.setVisible(isEdit);
 
-			const autocomplete = new google.maps.places.Autocomplete(input);
+			const autocomplete = new google.maps.places.Autocomplete(input, options);
 			autocomplete.key = fieldKey;
 			autocompletes.push({input: input, map: map, marker: marker, autocomplete: autocomplete});
 		}

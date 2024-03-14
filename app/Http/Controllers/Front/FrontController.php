@@ -152,7 +152,7 @@ class FrontController extends Controller
 		$operatorIds = array_column($filteredOperators, 'id');
 
 		$vendors = Vendor::whereIn('operator_id', $operatorIds)
-			->with('vendorType')
+			->with(['categories', 'vendorType'])
 			->get();
 
 		return response()->json([

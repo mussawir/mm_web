@@ -158,13 +158,24 @@ function mobileNav() {
 	});
 }
 
+let map;
+
 async function initialize() {
 	try {
-		const currentPosition = await getCurrentPosition();
-		const pos = {
-			lat: currentPosition.coords.latitude,
-			lng: currentPosition.coords.longitude,
-		};
+		let pos;
+
+		const storedCoords = localStorage.getItem('locationCoords');
+
+		if (storedCoords) {
+			const { lat, long } = JSON.parse(storedCoords);
+			pos = { lat, lng: long };
+		} else {
+			const currentPosition = await getCurrentPosition();
+			pos = {
+				lat: currentPosition.coords.latitude,
+				lng: currentPosition.coords.longitude,
+			};
+		}
 
 		const locationInputs = document.getElementsByClassName("map-input");
 		const autocompletes = [];
@@ -180,12 +191,14 @@ async function initialize() {
 			const latitude = parseFloat(pos.lat);
 			const longitude = parseFloat(pos.lng);
 
-			const map = new google.maps.Map(document.getElementById(fieldKey + '-map'), {
+			map = new google.maps.Map(document.getElementById(fieldKey + '-map'), {
+				zoom: 13,
 				center: {lat: latitude, lng: longitude},
-				zoom: 13
 			});
+
 			const marker = new google.maps.Marker({
 				map: map,
+				animation: google.maps.Animation.DROP,
 				position: {lat: latitude, lng: longitude},
 			});
 
@@ -211,7 +224,7 @@ async function initialize() {
 						const lat = results[0].geometry.location.lat();
 						const lng = results[0].geometry.location.lng();
 
-						setLocationCoordinates(place.name, lat, lng);
+						setLocationCoordinates(place, lat, lng);
 					}
 				});
 
@@ -232,6 +245,36 @@ async function initialize() {
 
 			});
 		}
+		if (storedCoords) {
+			map.setCenter(pos);
+			map.setZoom(13);
+
+			// geocoder
+			// .geocode({ location: pos })
+			// .then((response) => {
+			// 	if (response.results[0]) {
+			// 		map.setCenter(pos);
+			// 		map.setZoom(13);
+					
+			// 		new google.maps.Marker({
+			// 			position: pos,
+			// 			map: map,
+			// 			animation: google.maps.Animation.DROP
+			// 		});
+
+			// 		const address = response.results[0].formatted_address;
+			// 		document.getElementById('address-input').value = address;
+			// 	} else {
+			// 		console.log("No results found");
+			// 	}
+			// })
+			// .catch((e) => console.log("Geocoder failed due to: " + e));
+		}
+		new google.maps.Marker({
+			position: pos,
+			map: map,
+			animation: google.maps.Animation.DROP
+		});
 	} catch (error) {
 		console.log(error);
 	}
@@ -250,5 +293,84 @@ function getCurrentPosition() {
 function setLocationCoordinates(place, lat, lng) {
 	const locationCoords = JSON.stringify({lat: lat, long: lng});
 	localStorage.setItem('locationCoords', locationCoords);
-	localStorage.setItem('address', place);
+	localStorage.setItem('address', place.name);
+	localStorage.setItem('formattedAddress', place.formatted_address);
 }
+
+document.getElementById('locate-me').addEventListener('click', function() {
+	getCurrentPosition().then(position => {
+		const currentLocation = {
+			lat: position.coords.latitude,
+			lng: position.coords.longitude
+		};
+
+		// Center the map to the user's current location
+		map.setCenter(currentLocation);
+		map.setZoom(15);
+
+		new google.maps.Marker({
+			position: currentLocation,
+			map: map,
+			animation: google.maps.Animation.DROP
+		});
+	}).catch(error => {
+		console.error('Error getting current position:', error);
+	});
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const locationCoords = JSON.parse(localStorage.getItem('locationCoords'));
+
+// if (locationCoords) {
+// 	const lat = locationCoords.lat;
+// 	const lng = locationCoords.long;
+	
+// 	geocodeLatLng(lat, lng);
+// } else {
+// 	console.error('No coordinates found in local storage');
+// }
+
+// function geocodeLatLng(geocoder, map) {
+// 	const input = document.getElementById("latlng").value;
+// 	const latlngStr = input.split(",", 2);
+	
+// 	const latlng = {
+// 		lat: parseFloat(latlngStr[0]),
+// 		lng: parseFloat(latlngStr[1]),
+// 	};
+
+// 	geocoder
+// 		.geocode({ location: latlng })
+// 		.then((response) => {
+// 			if (response.results[0]) {
+// 				map.setZoom(11);
+				
+// 				const marker = new google.maps.Marker({
+// 					position: latlng,
+// 					map: map,
+// 				});
+// 			} else {
+// 				window.alert("No results found");
+// 			}
+// 		})
+// 		.catch((e) => window.alert("Geocoder failed due to: " + e));
+// }
