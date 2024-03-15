@@ -188,6 +188,8 @@ class CartController extends Controller
 			$cart = session()->get('cart');
 			$cart[$type][$id]['quantity'] = $quantity;
 
+			session()->put('cartTotal', $this->getGrandTotal($cart, $id));
+
 			$cartDetail = CartDetail::where('item_id', $id)
 				->first();
 
@@ -395,7 +397,22 @@ class CartController extends Controller
 			}
 		}
 	}
-	
+
+	public function clearCart(Request $request)
+	{
+		$ip = $request->ip();
+
+		$cart = CartMaster::where('ip_address', $ip)->first();
+
+		CartDetail::where('cart_master_id', $cart->id)->delete();
+		CartDealOption::where('cart_master_id', $cart->id)->delete();
+		CartAddon::where('cart_master_id', $cart->id)->delete();
+
+		$cart->delete();
+
+		Session::forget('cart');
+	}
+
 	private function getGrandTotal($cart = [], $id)
 	{
 		$total = 0;
@@ -423,7 +440,7 @@ class CartController extends Controller
 										if (is_array($dealOption) && count($dealOption))
 										{
 											if (intval($dealOption['deal_price']) !== 0) {
-												$dealOptionsTotal += intval($dealOption['deal_price']);
+												$dealOptionsTotal += intval($dealOption['deal_price'] * intval($item['quantity']));
 											}
 										}
 									}
@@ -447,20 +464,5 @@ class CartController extends Controller
 		}
 
 		return $total;
-	}
-
-	public function clearCart(Request $request)
-	{
-		$ip = $request->ip();
-
-		$cart = CartMaster::where('ip_address', $ip)->first();
-
-		CartDetail::where('cart_master_id', $cart->id)->delete();
-		CartDealOption::where('cart_master_id', $cart->id)->delete();
-		CartAddon::where('cart_master_id', $cart->id)->delete();
-
-		$cart->delete();
-
-		Session::forget('cart');
 	}
 }

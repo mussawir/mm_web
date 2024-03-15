@@ -10,7 +10,7 @@
 						alt="Mazaa Max"
 					/>
 					<div class="card-body w-75 mt-4">
-						<div class="d-flex align-items-center justify-content-center gap-3">
+						{{-- <div class="d-flex align-items-center justify-content-center gap-3">
 							<div class="d-flex">
 								<input
 									type="radio"
@@ -33,7 +33,7 @@
 								/>
 								<label class="btn bds-c-tab__label border-2" for="pickup">Pickup</label>
 							</div>
-						</div>
+						</div> --}}
 						<div class="row mt-3">
 							<div class="col-md-12">
 								<label for="address_address" class="form-label">
@@ -54,7 +54,7 @@
 						</div>
 						<div class="row mt-3">
 							<div class="col-md-12">
-								<div class="w-100" id="address-map-container" style="height:400px;">
+								<div class="w-100 border border-2 rounded-3" id="address-map-container" style="height:400px;">
 									<div class="h-100" id="address-map"></div>
 								</div>
 							</div>
@@ -64,7 +64,7 @@
 			</div>
 
 			<div class="d-flex justify-content-center mb-4 mx-5">
-				<button type="button" class="btn btn-primary save-option px-5" onclick="saveOption()">
+				<button type="button" class="w-auto bds-c-btn bds-c-btn-primary bds-c-btn--size-regular zi-surface-base save-option px-5" onclick="saveOption()">
 					Select
 				</button>
 			</div>
