@@ -357,7 +357,7 @@ Route::post('customer/verify', [LoginController::class, 'verify'])
 
 // Cart Routes Start
 Route::controller(CartController::class)->group(function () {
-	Route::get('cart', 'cart')->name('cart');
+	// Route::get('cart', 'cart')->name('cart');
 	Route::post('cart/add', 'addToCart')->name('cart.create');
 	Route::post('cart/update', 'update')->name('cart.update');
 	Route::post('cart/remove', 'remove')->name('cart.remove');

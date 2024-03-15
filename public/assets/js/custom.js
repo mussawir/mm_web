@@ -308,6 +308,23 @@ document.getElementById('locate-me').addEventListener('click', function() {
 		map.setCenter(currentLocation);
 		map.setZoom(15);
 
+		const geocoder = new google.maps.Geocoder();
+
+		geocoder.geocode({ location: currentLocation }, (results, status) => {
+			if (status === 'OK') {
+				if (results[0]) {
+					const formattedAddress = results[0].formatted_address;
+
+					// Do something with the formatted address, such as saving or displaying it
+					console.log('Formatted Address:', formattedAddress);
+				} else {
+					console.error('No results found');
+				}
+			} else {
+				console.error('Geocoder failed due to: ' + status);
+			}
+		});
+
 		new google.maps.Marker({
 			position: currentLocation,
 			map: map,
@@ -317,26 +334,6 @@ document.getElementById('locate-me').addEventListener('click', function() {
 		console.error('Error getting current position:', error);
 	});
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // const locationCoords = JSON.parse(localStorage.getItem('locationCoords'));
 

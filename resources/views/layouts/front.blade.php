@@ -170,10 +170,10 @@
 			let saveButton = document.querySelector('.save-option');
 
 			document.addEventListener('DOMContentLoaded', () => {
-				const selectedOption = localStorage.getItem('selectedOption');
+				// const selectedOption = localStorage.getItem('selectedOption');
 				const selectedAddress = localStorage.getItem('formattedAddress');
 				const selectedCoords = localStorage.getItem('locationCoords');
-				const deliveryType = document.querySelectorAll('input[name="deliveryPickupOption"]');
+				// const deliveryType = document.querySelectorAll('input[name="deliveryPickupOption"]');
 
 				const sessionCoords = @js(session('selectedCoords'));
 				if (selectedCoords && (!sessionCoords)) {
@@ -184,7 +184,7 @@
 					myModal.show();
 				});
 
-				if (selectedOption && selectedCoords) {
+				if (selectedCoords) {
 					myModal.hide();
 				} else {
 					myModal.show();
@@ -194,47 +194,49 @@
 					document.getElementById('address-input').value = selectedAddress;
 				}
 
-				updateButtonText(selectedOption);
-				updateSaveButtonState();
+				updateButtonText();
+				// updateSaveButtonState();
 
-				deliveryType.forEach(type => {
-					if (selectedOption == type.value) {
-						type.checked = true;
-					}
-					else {
-						if (type.value == 'delivery') {
-							type.checked = true;
-						}
-					}
-				});
+				// deliveryType.forEach(type => {
+				// 	if (selectedOption == type.value) {
+				// 		type.checked = true;
+				// 	}
+				// 	else {
+				// 		if (type.value == 'delivery') {
+				// 			type.checked = true;
+				// 		}
+				// 	}
+				// });
 			});
 
 			function saveOption() {
-				const selectedOption = document.querySelector('input[name="deliveryPickupOption"]:checked');
+				// const selectedOption = document.querySelector('input[name="deliveryPickupOption"]:checked');
 
-				if (selectedOption) {
-					const locationCoords = localStorage.getItem('locationCoords');
+				// if (selectedOption) {
+					
+				// }
 
-					if (locationCoords) {
-						// myModal.hide();
-						// localStorage.setItem('selectedOption', selectedOption.value);
+				const locationCoords = localStorage.getItem('locationCoords');
 
-						saveSelectedLocationToSession(locationCoords);
-						updateButtonText(selectedOption.value);
-						myModal.hide();
-					} else {
-						// const cartItemCount = @json($cartItemCount);
-						// let shouldChange = false;
+				if (locationCoords) {
+					// myModal.hide();
+					// localStorage.setItem('selectedOption', selectedOption.value);
 
-						// if (cartItemCount > 0) {
-						// 	shouldChange = window.confirm("This will clear your cart. Are you sure you want to proceed?");
-						// }
+					saveSelectedLocationToSession(locationCoords);
+					updateButtonText();
+					myModal.hide();
+				} else {
+					// const cartItemCount = @json($cartItemCount);
+					// let shouldChange = false;
 
-						// if (shouldChange) {
-						// 	// Clear the cart when the branch changes
-						// 	clearCart();
-						// }
-					}
+					// if (cartItemCount > 0) {
+					// 	shouldChange = window.confirm("This will clear your cart. Are you sure you want to proceed?");
+					// }
+
+					// if (shouldChange) {
+					// 	// Clear the cart when the branch changes
+					// 	clearCart();
+					// }
 				}
 			}
 
@@ -468,17 +470,17 @@
 				return badge;
 			}
 
-			function updateSaveButtonState() {
-				const selectedOption = document.querySelector('input[name="deliveryPickupOption"]:checked');
+			// function updateSaveButtonState() {
+			// 	// const selectedOption = document.querySelector('input[name="deliveryPickupOption"]:checked');
 
-				// const selectedBranch = branchSelect.value;
+			// 	// const selectedBranch = branchSelect.value;
 
-				// if (selectedOption && selectedBranch) {
-				// 	saveButton.disabled = false;
-				// } else {
-				// 	saveButton.disabled = true;
-				// }
-			}
+			// 	// if (selectedOption && selectedBranch) {
+			// 	// 	saveButton.disabled = false;
+			// 	// } else {
+			// 	// 	saveButton.disabled = true;
+			// 	// }
+			// }
 
 			function saveSelectedLocationToSession(selectedCoords) {
 				if (selectedCoords) {
@@ -526,14 +528,13 @@
 			// }
 
 			// Event listener for the radio buttons
-			document.querySelectorAll('input[name="deliveryPickupOption"]').forEach(radio => {
-				radio.addEventListener('change', function() {
-					localStorage.setItem('selectedOption', this.value);
-				});
-			});
+			// document.querySelectorAll('input[name="deliveryPickupOption"]').forEach(radio => {
+			// 	radio.addEventListener('change', function() {
+			// 		localStorage.setItem('selectedOption', this.value);
+			// 	});
+			// });
 
-			function updateButtonText(selectedOption)
-			{
+			function updateButtonText() {
 				const button = document.querySelector('.location');
 				const placeSpan = document.querySelector('.place');
 

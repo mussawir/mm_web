@@ -12,13 +12,13 @@
 	</div>
 	<div class="offcanvas-body vstack">
 		@if ($cartItems)
-			{{-- @php $total = 0; @endphp --}}
 			@foreach (session('cart') as $key => $items)
 				@if (is_array($items))
 					@foreach ($items as $id => $item)
 						@php
 							$itemTotal = $item['quantity'] * $item['price'];
 							$addonTotal = 0;
+							$dealOptionsTotal = 0;
 						@endphp
 						<div class="d-flex flex-column mb-4 border-bottom pb-2">
 							<div class="row">
@@ -43,7 +43,11 @@
 													</h5>
 													<p class="card-text text-truncate overflow-visible fw-bold">
 														{{ session('currency')->symbol }}
-														{{ $itemTotal }}
+														{{ intval($item['price']) }}
+														@if ($item['quantity'] > 1)
+														<span>x</span>
+														{{ $item['quantity'] }}
+														@endif
 													</p>
 												</div>
 											</div>
@@ -60,9 +64,6 @@
 									@foreach ($item['options'] as $options)
 									@foreach ($options as $option)
 									@if (is_array($option))
-										{{-- @php
-											$addonTotal += $addon['price'] * $addon['quantity'];
-										@endphp --}}
 										<div class="d-flex align-items-center justify-content-between">
 											<span class="d-flex align-items-center justify-content-center text-muted fw-semibold ps-4 gap-1" style="font-size:.675em;">
 												<span>+</span>
@@ -70,9 +71,16 @@
 											</span>
 											@if ($option['deal_price'] != 0)
 											<span class="text-muted fw-semibold ps-2" style="font-size:.675em;">
-												+
+												<span>+</span>
 												{{ session('currency')->symbol }}
 												{{ $option['deal_price'] }}
+												@if ($item['quantity'] > 1)
+												<span>x</span>
+												{{ $item['quantity'] }}
+												@endif
+												@php
+													$dealOptionsTotal += intval($option['deal_price'] * intval($item['quantity']));
+												@endphp
 											</span>
 											@endif
 										</div>
@@ -98,7 +106,8 @@
 											</span>
 											<span class="text-muted fw-semibold ps-2" style="font-size:.675em;">
 												+
-												{{ session('currency')->symbol . $addon['price'] }}
+												{{ session('currency')->symbol }}
+												{{ intval($addon['price']) }}
 											</span>
 										</div>
 									@endforeach
@@ -119,11 +128,17 @@
 										</a>
 									</div>
 								</div>
+								<div class="d-flex justify-content-between align-items-center pt-3">
+									<span class="card-text text-truncate overflow-visible fw-bold small">
+										Sub Total:
+									</span>
+									<span class="card-text text-truncate overflow-visible fw-bold small">
+										{{ session('currency')->symbol }}
+										{{ ($itemTotal + $addonTotal + $dealOptionsTotal) }}
+									</span>
+								</div>
 							</div>
 						</div>
-						{{-- @php
-							$total += ($itemTotal + $addonTotal);
-						@endphp --}}
 					@endforeach
 				@endif
 			@endforeach

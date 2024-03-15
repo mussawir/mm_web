@@ -11,92 +11,81 @@
 						{{-- Hidden Inputs --}}
 						<input type="hidden" name="order_type" id="order-type" />
 						<input type="hidden" name="delivery_charges" id="delivery-charges" value="{{ $deliveryCharges }}" />
-						<input type="hidden" name="address_latitude" id="address-latitude" value="0" />
-						<input type="hidden" name="address_longitude" id="address-longitude" value="0" />
+						<input type="hidden" name="address_latitude" id="address-latitude" value="{{ $latitude }}" />
+						<input type="hidden" name="address_longitude" id="address-longitude" value="{{ $longitude }}" />
 						{{-- Hidden Inputs End --}}
 
-						{{-- Contact Information --}}
 						<div class="row">
 							<div class="col-lg-8">
-								<p class="fs-6 fw-semibold">
-									Contact Information
-								</p>
-								<div class="row g-3">
-									<div class="col-md-6">
-										<label for="name" class="form-label">
-											Name
-										</label>
-										<input
-											type="text"
-											class="form-control @error('name') is-invalid @enderror"
-											id="name"
-											name="name"
-											value="{{ old('name', Auth::guard('customer')->user()->name) }}"
-										/>
-										@if ($errors->has('name'))
-										<span class="invalid-feedback" role="alert">
-											<strong>
-												{{ $errors->first('name') }}
-											</strong>
-										</span>
-										@endif
-									</div>
-								</div>
 								<div class="row g-3 mt-4">
 									<div class="col-md-12">
-										<label for="address_address" class="form-label">
-											Address
-										</label>
-										<input
-											type="text"
-											class="form-control map-input @error('address_address') is-invalid @enderror"
-											id="address-input"
-											name="address_address"
-											value="{{ old('address_address') }}"
-										/>
-										@if ($errors->has('address_address'))
-										<span class="invalid-feedback" role="alert">
-											<strong>
-												{{ $errors->first('address_address') }}
-											</strong>
-										</span>
-										@endif
-									</div>
-								</div>
-								<div class="row g-3 mt-4">
-									<div class="col-md-12">
-										<div class="w-100" id="address-map-container" style="height:400px;">
+										<div class="w-100 border border-2 rounded-3" id="address-map-container" style="height:400px;">
 											<div class="h-100" id="address-map"></div>
 										</div>
 									</div>
 								</div>
-								{{-- <div class="row g-3 mt-4">
-									<div class="col-md-6">
-										<label for="city" class="form-label">
-											City
-										</label>
-										<input
-											type="text"
-											class="form-control @error('city') is-invalid @enderror"
-											id="city"
-											name="city"
-											value="{{ old('city', '') }}"
-										/>
-										@if ($errors->has('city'))
-										<span class="invalid-feedback" role="alert">
-											<strong>
-												{{ $errors->first('city') }}
-											</strong>
-										</span>
-										@endif
+								<div class="row g-3 mt-4">
+									<div class="col-lg-12 mb-3">
+										<p class="fs-6 fw-semibold">
+											Order Type
+										</p>
 									</div>
-								</div> --}}
+									<div class="hstack gap-5">
+										<div class="d-flex">
+											<input
+												type="radio"
+												class="btn-check"
+												name="orderType"
+												id="delivery"
+												value="delivery"
+												autocomplete="off"
+											/>
+											<label class="btn bds-c-tab__label border-2" for="delivery">Delivery</label>
+										</div>
+										<div class="d-flex">
+											<input
+												type="radio"
+												class="btn-check"
+												name="orderType"
+												id="pickup"
+												value="pickup"
+												autocomplete="off"
+											/>
+											<label class="btn bds-c-tab__label border-2" for="pickup">Pickup</label>
+										</div>
+									</div>
+								</div>
+								<div class="row g-3 mt-4 address-container" style="display: none;">
+									<div class="col-md-12">
+										<div class="form-floating mb-3">
+											<input
+												type="text"
+												class="form-control @error('user_address') is-invalid @enderror"
+												id="user-address"
+												name="user_address"
+												value="{{ old('user_address') }}"
+											/>
+											<label for="user_address">
+												Address
+											</label>
+											@if ($errors->has('user_address'))
+											<span class="invalid-feedback" role="alert">
+												<strong>
+													{{ $errors->first('user_address') }}
+												</strong>
+											</span>
+											@endif
+										</div>
+									</div>
+								</div>
 								<div class="row g-3 mt-4">
 									<div class="col-12">
-										<label for="instructions" class="form-label">
-											Instructions
-										</label>
-										<textarea class="form-control" name="instructions" id="instructions" rows="4" placeholder="Further instructions">{{ old('instructions') }}</textarea>
+										<div class="form-floating">
+											<textarea class="form-control" placeholder="Any further instructions..." name="instructions" id="instructions" style="height: 80px">{{ old('instructions') }}</textarea>
+											<label for="instructions">
+												Instructions
+											</label>
+										</div>
 									</div>
 								</div>
 								<div class="row mt-5">
@@ -105,7 +94,7 @@
 											Payment
 										</p>
 									</div>
-									<div class="hstack gap-5">
+									<div class="hstack gap-4">
 										<div class="form-check">
 											<input class="form-check-input" type="radio" name="payment_method" value="cash" id="cash" checked>
 											<label class="form-check-label" for="cod">
@@ -123,13 +112,13 @@
 								<div class="row mt-5">
 									<div class="vstack">
 										<div class="d-inline-flex justify-content-between align-items-center mb-3">
-											<p class="fs-3 fw-medium">
+											<p class="fs-5 fw-semibold">
 												Order Details
 											</p>
 										</div>
 										<table class="table table-sm table-hover align-middle">
 											<thead>
-												<tr class="text-secondary text-uppercase">
+												<tr class="text-secondary">
 													<th class="fw-semibold small">
 														Item
 													</th>
@@ -158,13 +147,33 @@
 															$imgPath = ($key == 'deal') ? 'deals' : 'items';
 															$vendor = session('vendor');
 														@endphp
-														<img src='{{ "/images/vendors/{$vendor}/{$imgPath}/250x250/{$item['image']}" }}' class="img-thumbnail border-0" style="width:8rem !important"/>
+														<img src='{{ "/images/vendors/{$vendor}/{$imgPath}/250x250/{$item['image']}" }}' class="img-thumbnail border-0 rounded-4" style="width:8rem !important"/>
 														<span class="fw-medium fs-6">
-															{{ $item['name'] }}
+															{{ ucwords(strtolower($item['name'])) }}
+															@if ($key === 'deal')
+															<span class="d-flex fw-semibold text-muted ps-1" style="font-size:.775em;">
+																Selected Options:
+															</span>
+															@foreach ($item['options'] as $options)
+															@foreach ($options as $option)
+															@if (is_array($option))
+																<div class="d-flex align-items-center justify-content-between">
+																	<span class="d-flex align-items-center justify-content-center text-muted fw-semibold ps-3 gap-1" style="font-size:.675em;">
+																		<span>+</span>
+																		{{ ucwords(strtolower($option['name'])) }}
+																	</span>
+																</div>
+															@endif
+															@endforeach
+															@endforeach
+														@endif
 															@if (count($item['addons']))
+															<span class="d-flex fw-semibold text-muted ps-1" style="font-size:.775em;">
+																Addons:
+															</span>
 															@foreach ($item['addons'] as $addon)
 															<div class="d-flex align-items-center">
-																<span class="d-flex align-items-center justify-content-center text-muted fw-semibold ps-2 gap-1 small">
+																<span class="d-flex align-items-center justify-content-center text-muted fw-semibold ps-2 gap-1" style="font-size:.775em;">
 																	<span>+</span>
 																	{{ $addon['name'] }}
 																	<span>x</span>
@@ -178,7 +187,7 @@
 												</td>
 												<td class="fw-medium small">
 													{{ session('currency')->symbol }}
-													{{ $item['price'] }}
+													{{ intval($item['price']) }}
 												</td>
 												<td>
 													<div class="d-flex align-items-center gap-3">
@@ -195,7 +204,26 @@
 												</td>
 												<td class="fw-medium small">
 													{{ session('currency')->symbol }}
-													{{ (int) ($item['quantity'] * $item['price']) }}
+													{{ intval($item['quantity'] * $item['price']) }}
+													@if ($key === 'deal')
+														@foreach ($item['options'] as $options)
+														@foreach($options as $option)
+														@if (is_array($option))
+														@if ($option['deal_price'] != 0)
+														<div class="d-flex align-items-center">
+															<span class="d-flex align-items-center justify-content-center text-muted fw-semibold ps-1 small">
+																<span class="text-muted fw-semibold">
+																	+
+																	{{ session('currency')->symbol }}
+																	{{ intval($option['deal_price']) }}
+																</span>
+															</span>
+														</div>
+														@endif
+														@endif
+														@endforeach
+														@endforeach
+													@endif
 													@if (count($item['addons']))
 														@foreach ($item['addons'] as $addon)
 														<div class="d-flex align-items-center">
@@ -203,7 +231,7 @@
 																<span class="text-muted fw-semibold">
 																	+
 																	{{ session('currency')->symbol }}
-																	{{ $addon['price'] }}
+																	{{ intval($addon['price']) }}
 																</span>
 															</span>
 														</div>
@@ -223,7 +251,6 @@
 											@endif
 											</tbody>
 										</table>
-										{{-- @php $total = 0; @endphp --}}
 										@if (session('cart'))
 											@foreach (session('cart') as $key => $items)
 												@foreach ($items as $item)
@@ -235,8 +262,6 @@
 														{
 															$addonTotal += $addon['price'] * $addon['quantity'];
 														}
-
-														// $total += ($itemTotal + $addonTotal);
 													@endphp
 												@endforeach
 											@endforeach
@@ -304,10 +329,35 @@
 @endsection
 
 @push('scripts')
-<script src="assets/js/mapInput.js"></script>
+{{-- <script src="assets/js/mapInput.js"></script> --}}
 <script>
 	document.addEventListener('DOMContentLoaded', () => {
-		$('#order-type').val(localStorage.getItem('selectedOption'));
+		const orderType = localStorage.getItem('selectedOption');
+		const addressContainer = document.querySelector('.address-container');
+		
+		if (orderType) {
+			$('#order-type').val(orderType);
+			showAddressField(orderType)
+		}
+
+		// Event listener for order type change
+		document.querySelectorAll('input[name="orderType"]').forEach(radio => {
+			if (orderType == radio.value) {
+				radio.checked = true;
+			}
+			else {
+				if (radio.value == 'delivery') {
+					radio.checked = true;
+				} else {
+
+				}
+			}
+			radio.addEventListener('change', function() {
+				showAddressField(this.value);
+				localStorage.setItem('selectedOption', this.value);
+				$('#order-type').val(this.value);
+			});
+		});
 
 		const checkoutForm = document.querySelector('.checkout-form');
 		const orderButton = document.querySelector('.checkout-button');
@@ -322,6 +372,14 @@
 				checkoutForm.submit();
 			}
 		});
+
+		function showAddressField(value) {
+			if (value === 'delivery') {
+				addressContainer.style.display = 'flex';
+			} else {
+				addressContainer.style.display = 'none';
+			}
+		}
 
 		function checkCoords() {
 			const address = document.getElementById('address-input');
