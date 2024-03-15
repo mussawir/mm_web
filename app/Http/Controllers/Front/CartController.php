@@ -264,6 +264,9 @@ class CartController extends Controller
 				$items = count(session()->get('cart.item', []));
 
 				$cartMaster->item_quantity = ($deals + $items);
+				if ($deals + $items == 0) {
+					session()->forget('vendor');
+				}
 				$cartMaster->grand_total = $this->getGrandTotal(session('cart'), $id);
 
 				$cartMaster->save();
