@@ -224,8 +224,7 @@ class CartController extends Controller
 		$type = $request->input('type');
 		$id = $request->input('id');
 
-		if($id)
-		{
+		if($id) {
 			$cart = session()->get('cart');
 			
 			if(isset($cart[$type][$id]))
@@ -255,6 +254,7 @@ class CartController extends Controller
 				}
 
 				session()->put('cart', $cart);
+				session()->put('cartTotal', $this->getGrandTotal($cart, $id));
 
 				$cartMaster = CartMaster::firstOrNew([
 					'ip_address' => $request->ip(),
