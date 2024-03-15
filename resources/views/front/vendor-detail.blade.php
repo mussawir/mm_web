@@ -293,7 +293,7 @@
 			</div>
 		</section>
 	</div>
-	@include('modals.vendor-info')
+	{{-- @include('modals.vendor-info') --}}
 	@include('modals.add-to-cart')
 @endsection
 
@@ -422,6 +422,9 @@
 
 					$('#addToCartModal .product-information-image').attr('src', '/images/vendors/' + data.item.vendor_id + '/items/500x500/' + data.item.main_image);
 
+					$('#addToCartModal .deal-options-section').hide();
+					$('#addToCartModal .deal-options-section').find('*').hide();
+
 					if (data.item.addons.length) {
 						// Clear existing addons
 						$('#addToCartModal .list-group').empty();
@@ -500,7 +503,6 @@
 					$('#addToCartModal .product-information-image').attr('src', '/images/vendors/' + data.deal.vendor_id + '/deals/500x500/' + data.deal.banner);
 
 					// Clear existing options
-
 					$('.deal-options').empty();
 
 					data.deal.items.forEach(function (item) {
@@ -579,6 +581,9 @@
 							$('.deal-options').append(list);
 						}
 					});
+
+					$('#addToCartModal .deal-options-section').show();
+					$('#addToCartModal .deal-options-section').find('*').show();
 
 					if (data.deal.addons.length) {
 						// Clear existing addons
