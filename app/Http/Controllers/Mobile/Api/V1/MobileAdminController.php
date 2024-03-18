@@ -47,7 +47,12 @@ class MobileAdminController extends Controller
         $startDate = Carbon::parse($request->input('startDate'))->format('Y-m-d');
         $endDate = $request->input('endDate') ? Carbon::parse($request->input('endDate'))->format('Y-m-d') : null;
 
-        $query = OrderMaster::get();
+        $query = OrderMaster::whereDate('created_at', '>=', $startDate);
+
+        if ($endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
+        }
+    
 
         $receivedPayments = OperatorPaymentMaster::get();
 
