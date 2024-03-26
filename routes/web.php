@@ -374,7 +374,7 @@ Route::group(['middleware' => 'auth:customer'], function () {
 	});
 });
 
-Route::controller(ReservationController::class)->group(function (){
-	Route::get('reservation', 'showReservationform')->name('reservationForm');
-	Route::post('reservation', 'store')->name('reservation');
-});
+// Route::controller(ReservationController::class)->group(function (){
+// 	Route::get('reservation', 'showReservationform')->name('reservationForm');
+// 	Route::post('reservation', 'store')->name('reservation');
+// });
