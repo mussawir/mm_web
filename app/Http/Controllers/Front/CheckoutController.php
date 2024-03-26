@@ -33,6 +33,9 @@ class CheckoutController extends Controller
 			$vendorID = session('vendor');
 			$vendor = Vendor::findOrFail($vendorID);
 
+			$name = Auth::guard('customer')->user()->name;
+			$address = Auth::guard('customer')->user()->address;
+
 			$ip = $request->ip();
 			$cart = CartMaster::where('ip_address', $ip)->first();
 
@@ -51,7 +54,7 @@ class CheckoutController extends Controller
 			// Free delivery calculation
 			$deliveryCharges = ($cart->grand_total >= $vendor->delivery_free_after) ? 0 : $vendor->delivery_charges;
 
-			return view('front.checkout', compact('deliveryCharges', 'minimumOrderCheck', 'minimumOrderAmount', 'deliveryFreeAfer', 'latitude', 'longitude'));
+			return view('front.checkout', compact('deliveryCharges', 'minimumOrderCheck', 'minimumOrderAmount', 'deliveryFreeAfer', 'latitude', 'longitude', 'name', 'address'));
 		}
 		else {
 			return redirect()->route('customer.login');
@@ -60,6 +63,11 @@ class CheckoutController extends Controller
 
 	public function checkout(Request $request)
 	{
+		$request->validate([
+			'name' => 'required|string',
+			'user_address' => 'required|string'
+		]);
+
 		$orderType = $request->input('order_type');
 
 		if ($orderType == 'delivery') {
@@ -246,13 +254,14 @@ class CheckoutController extends Controller
 
 	public function customerOrders($customerID)
 	{
-		$authenticatedCustomer = Auth::guard('customer')->user();
+		$customer = Auth::guard('customer')->user();
 
-		if ($authenticatedCustomer && $authenticatedCustomer->id == $customerID)
-		{
+		if ($customer && $customer->id == $customerID) {
+
 			$orders = OrderMaster::where('customer_id', $customerID)
 				->with('details', 'details.orderDealOptions', 'details.orderAddons')
-				->get();
+				->get()
+				->sortByDesc('created_at');
 
 			return view('front.customer.orders', ['orders' => $orders]);
 		}

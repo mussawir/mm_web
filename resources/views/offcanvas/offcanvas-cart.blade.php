@@ -145,7 +145,7 @@
 			<div class="d-flex flex-column justify-content-end mt-auto">
 				<div class="d-flex justify-content-center px-5">
 					<a href="{{ route('checkout.page') }}" class="btn bds-c-btn bds-c-btn-primary bds-is-idle bds-c-btn--layout-default zi-surface-base p-3">
-						<span>Order:</span>
+						<span>Checkout:</span>
 						<span>
 							{{ session('currency')->symbol }}
 							{{ session('cartTotal') }}

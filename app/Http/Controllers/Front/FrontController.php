@@ -9,6 +9,7 @@ use App\Models\DealMaster;
 use App\Models\Items_list;
 use App\Models\OperatorMaster;
 use App\Models\Vendor;
+use App\Models\VendorType;
 
 class FrontController extends Controller
 {
@@ -41,7 +42,9 @@ class FrontController extends Controller
 			->with('vendorType')
 			->get();
 
-		return view('home', compact('vendors'));
+		$vendorTypes = VendorType::where('status', 1)->get();
+
+		return view('home', compact('vendors', 'vendorTypes'));
 	}
 
 	public function vendorDetail(Request $request, $id)

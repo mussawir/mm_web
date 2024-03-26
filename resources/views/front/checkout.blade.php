@@ -55,7 +55,38 @@
 										</div>
 									</div>
 								</div>
-								<div class="row g-3 mt-4 address-container" style="display: none;">
+								<div class="row g-3 mt-4">
+									<div class="col-lg-12 mb-3">
+										<p class="fs-6 fw-semibold">
+											Contact
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-floating mb-3">
+											<input
+												type="text"
+												class="form-control"
+												id="name"
+												name="name"
+												placeholder="Enter Name"
+												value="{{ old('name', $name) }}"
+											/>
+											<label for="name">
+												Name
+											</label>
+											@if ($errors->has('name'))
+											<span class="invalid-feedback" role="alert">
+												<strong>
+													{{ $errors->first('name') }}
+												</strong>
+											</span>
+											@endif
+										</div>
+									</div>
+								</div>
+								<div class="row address-container" style="display: none;">
 									<div class="col-md-12">
 										<div class="form-floating mb-3">
 											<input
@@ -63,7 +94,7 @@
 												class="form-control @error('user_address') is-invalid @enderror"
 												id="user-address"
 												name="user_address"
-												value="{{ old('user_address') }}"
+												value="{{ old('user_address', $address) }}"
 											/>
 											<label for="user_address">
 												Address
@@ -313,7 +344,7 @@
 											</span>
 											@endif
 											<button class="btn bds-c-btn bds-c-btn-primary bds-is-idle bds-c-btn--layout-default zi-surface-base p-3 checkout-button">
-												Order
+												Checkout
 											</button>
 										</div>
 									</div>
