@@ -162,7 +162,7 @@ class MobileCustomerOrdersController extends Controller
 				$order->order_master_id = $ordermaster->id;
 				$order->sub_total = $deal['sub_total'];
 				$order->qty = $deal['qty'];
-				$order->item_id = $deal['id'];
+				$order->item_id = $deal['deal_id'];
 				$order->item_price = $deal['price'];
 				$order->item_name = $deal['name'];
 				$order->main_image = $deal['deal_banner'];
@@ -178,7 +178,7 @@ class MobileCustomerOrdersController extends Controller
 
 						$orderAddon->order_master_id = $ordermaster->id;
 						$orderAddon->order_detail_id = $order->id;
-						$orderAddon->item_id = $deal['id'];
+						$orderAddon->item_id = $deal['deal_id'];
 						$orderAddon->addon_id = $addon['item_id'];
 						$orderAddon->quantity = $addon['quantityByUser'];
 						$orderAddon->is_deal = 1;
@@ -422,7 +422,7 @@ class MobileCustomerOrdersController extends Controller
 			if ($orderDetail->is_deal) {
 				$dealOptions = $orderDealOptions->where('order_detail_id', $orderDetail->id);
 
-				$orderDetail['dealOptions'] = $dealOptions->map(function ($dealOption) {
+				$orderDetail['dealOptions'] = collect($dealOptions)->map(function ($dealOption) {
 					return [
 						'id' => $dealOption->item_id,
 						'item_name' => $dealOption->item_name,
@@ -432,7 +432,7 @@ class MobileCustomerOrdersController extends Controller
 						'deal_price' => $dealOption->deal_price,
 						'quantity' => $dealOption->quantity,
 					];
-				});
+				})->values();
 			}
 
 			$orderDetail['addons'] = $addonsList->all();
