@@ -13,10 +13,8 @@
 		@laravelPWA
 
 		{{-- Favicon --}}
-		<link rel="icon" href="/assets/images/favicon/favicon.ico" sizes="any" />
+		<link rel="icon" href="/assets/images/favicon/favicon.png" sizes="any" />
 		<link rel="icon" href="/assets/images/favicon/favicon.svg" type="image/svg+xml" />
-		<link rel="apple-touch-icon" href="/assets/images/favicon/apple-touch-icon.png" />
-		<link rel="manifest" href="/assets/images/favicon/manifest.webmanifest" />
 
 		{{-- Additional CSS Files --}}
 		<link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/bootstrap5.min.css') }}">
