@@ -1,13 +1,18 @@
 @extends('layouts.front')
 
 @section('content')
-{{-- <div class="container-fluid p-0 mb-5">
-	<div class="hero-bannerMain"></div>
-</div> --}}
 <div class="container">
+	@if ($vendors->count())
+	<div class="m-2 p-2">
+		<h3>
+			All
+			<span x-text="selectedType === 'food' ? 'Restaurants' : 'Shops'"></span>
+		</h3>
+	</div>
+	@endif
 	<div class="d-flex flex-wrap" id="vendorContent">
 		@forelse ($vendors as $vendor)
-			<div x-show="selectedTab === '{{ $vendor->vendorType->is_food ? 'food' : 'general' }}'" class="vendor-title col-12 col-lg-4 col-md-6 px-2" data-vendor-type="{{ $vendor->vendorType->is_food ? 'food' : 'general' }}">
+			<div x-show="(selectedTab === 'all' || selectedTab === '{{ strtolower($vendor->vendorType->type_name) }}') && ((selectedTab === 'all' && (selectedType === 'food' || selectedType === 'shop')) || (selectedType === '{{ $vendor->vendorType->is_food ? 'food' : 'shop' }}'))" class="vendor-title col-12 col-lg-4 col-md-6 px-2" data-vendor-type="{{ $vendor->vendorType->is_food ? 'food' : 'shop' }}">
 				<div class="overflow-hidden mw-100 rounded-4 shadow-lg m-3 position-relative border border-secondary-subtle">
 					<a href="{{ route('vendor.detail', $vendor->id) }}">
 						<div class="rounded-3 position-relative">
@@ -43,34 +48,12 @@
 								<div class="vendor-name f-title-small-font-size fw-title-small-font-weight lh-title-small-line-height ff-title-small-font-family">
 									{{ $vendor->company_name }}
 								</div>
-								{{-- <div class="d-inline-flex flex-nowrap align-items-center justify-content-end flex-shrink-0 ms-auto" style="max-width:232px;">
-									<div class="d-inline-flex align-items-center justify-content-center me-1">
-										<img
-											src="{{ asset('assets/images/avatars/rating-star.png') }}"
-											width="14"
-											height="14"
-											alt="Restaurant Rating"
-											loading="lazy"
-										>
-									</div>
-									<span class="fw-semibold text-truncate fs-7 cl-neutral-primary" style="margin-left:2px;">
-										4.2
-									</span>
-									<span class="text-truncate fs-7 cl-neutral-secondary" style="margin-left:2px;">
-										(1000+)
-									</span>
-								</div> --}}
 							</div>
 							<div class="ms-0 d-block text-truncate" style="line-height:16px;color:#666666;margin-right:unset;">
 								<div class="fw-semibold fs-7 align-middle d-inline" style="margin-right:2px;color:#666666;">
-									{{-- <div class="d-inline fw-semibold fs-7">
-										$$$
-									</div> --}}
 								</div>
 								@if ($vendor->categories->count())
-								{{-- <div class="d-inline fw-semibold fs-7 align-middle cl-neutral-inactive" style="margin:0 4px 0 2px;">
-									•
-								</div> --}}
+								
 								<div class="fw-semibold d-inline fs-7 align-middle" style="margin-right:2px;color:#666666;">
 									<div class="fw-semibold d-inline fs-7">
 										{{ $vendor->categories->random()->name }}

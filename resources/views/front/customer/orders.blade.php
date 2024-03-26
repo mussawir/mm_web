@@ -41,7 +41,7 @@
 										<br>
 										<div class="pt-2">
 											<span>
-												{{ $order->branch->name }}
+												{{ $order->vendor->company_name }}
 											</span>
 											-
 											<span class="text-dark fw-bold">

@@ -181,7 +181,17 @@
 				<div class="bds-c-tabs vertical-switcher-tabs">
 					<div class="bds-c-tabs__container">
 						<ul class="bds-c-tabs__list" role="tablist">
-							<li class="bds-c-tab" x-on:click="selectedTab = 'food'" :class="{ 'is-selected': selectedTab === 'food' }" role="presentation">
+							<li class="bds-c-tab" x-on:click="selectedTab = 'all', selectedType='food'" :class="{ 'is-selected': selectedTab === 'all' }" role="presentation">
+								<button role="tab">
+									<div class="bds-c-tab__icon">
+										<x-icon name="food"/>
+									</div>
+									<span class="bds-c-tab__label">
+										All
+									</span>
+								</button>
+							</li>
+							<li class="bds-c-tab" x-on:click="selectedTab = 'food',selectedType='food'" :class="{ 'is-selected': selectedTab === 'food' }" role="presentation">
 								<button role="tab">
 									<div class="bds-c-tab__icon">
 										<x-icon name="food"/>
@@ -191,16 +201,30 @@
 									</span>
 								</button>
 							</li>
-							<li class="bds-c-tab"  x-on:click="selectedTab = 'general'" :class="{ 'is-selected': selectedTab === 'general' }" role="presentation">
+							<li class="bds-c-tab"  x-on:click="selectedTab = 'shop',selectedType='shop'" :class="{ 'is-selected': selectedTab === 'shop' }" role="presentation">
 								<button role="tab">
 									<div class="bds-c-tab__icon">
-										<x-icon name="grocery"/>
+										<x-icon name="shop"/>
 									</div>
 									<span class="bds-c-tab__label" id="rlp-vertical-switcher__tab-1-label">
 										Shops
 									</span>
 								</button>
 							</li>
+							@if ($vendorTypes->count())
+							@foreach ($vendorTypes as $vendorType)
+							<li class="bds-c-tab"  x-on:click="selectedTab = '{{ strtolower($vendorType->type_name) }}',selectedType = '{{ $vendorType->is_food ? 'food' : 'shop' }}'" :class="{ 'is-selected': selectedTab === '{{ strtolower($vendorType->type_name) }}' }" role="presentation">
+								<button role="tab">
+									<div class="bds-c-tab__icon">
+										{{-- <x-icon name="shop"/> --}}
+									</div>
+									<span class="bds-c-tab__label" id="rlp-vertical-switcher__tab-1-label">
+										{{ $vendorType->type_name }}
+									</span>
+								</button>
+							</li>
+							@endforeach
+							@endif
 						</ul>
 					</div>
 				</div>

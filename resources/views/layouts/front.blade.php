@@ -34,7 +34,7 @@
 		@yield('css')
 		@stack('styles')
 	</head>
-	<body class="vstack min-vh-100" @if(request()->is('/') || request()->is('home')) x-data="{ selectedTab: 'food' }" x-cloak @endif>
+	<body class="vstack min-vh-100" @if(request()->is('/') || request()->is('home')) x-data="{ selectedTab: 'all', selectedType: 'food' }" x-cloak @endif>
 		@include('layouts.header')
 
 		<div class="custom-container m-0 p-0">
@@ -170,10 +170,8 @@
 			let saveButton = document.querySelector('.save-option');
 
 			document.addEventListener('DOMContentLoaded', () => {
-				// const selectedOption = localStorage.getItem('selectedOption');
 				const selectedAddress = localStorage.getItem('formattedAddress');
 				const selectedCoords = localStorage.getItem('locationCoords');
-				// const deliveryType = document.querySelectorAll('input[name="deliveryPickupOption"]');
 
 				const sessionCoords = @js(session('selectedCoords'));
 				if (selectedCoords && (!sessionCoords)) {
@@ -195,48 +193,15 @@
 				}
 
 				updateButtonText();
-				// updateSaveButtonState();
-
-				// deliveryType.forEach(type => {
-				// 	if (selectedOption == type.value) {
-				// 		type.checked = true;
-				// 	}
-				// 	else {
-				// 		if (type.value == 'delivery') {
-				// 			type.checked = true;
-				// 		}
-				// 	}
-				// });
 			});
 
 			function saveOption() {
-				// const selectedOption = document.querySelector('input[name="deliveryPickupOption"]:checked');
-
-				// if (selectedOption) {
-					
-				// }
-
 				const locationCoords = localStorage.getItem('locationCoords');
 
 				if (locationCoords) {
-					// myModal.hide();
-					// localStorage.setItem('selectedOption', selectedOption.value);
-
 					saveSelectedLocationToSession(locationCoords);
 					updateButtonText();
 					myModal.hide();
-				} else {
-					// const cartItemCount = @json($cartItemCount);
-					// let shouldChange = false;
-
-					// if (cartItemCount > 0) {
-					// 	shouldChange = window.confirm("This will clear your cart. Are you sure you want to proceed?");
-					// }
-
-					// if (shouldChange) {
-					// 	// Clear the cart when the branch changes
-					// 	clearCart();
-					// }
 				}
 			}
 
@@ -339,39 +304,7 @@
 						nameText.classList.add('vendor-name', 'f-title-small-font-size', 'fw-title-small-font-weight', 'lh-title-small-line-height', 'ff-title-small-font-family');
 						nameText.textContent = vendor.company_name;
 
-						// const ratingContainer = document.createElement('div');
-						// ratingContainer.classList.add('d-inline-flex', 'flex-nowrap', 'align-items-center', 'justify-content-end', 'flex-shrink-0', 'ms-auto');
-						// ratingContainer.style.maxWidth = '232px';
-
-						// const starIcon = document.createElement('div');
-						// starIcon.classList.add('d-inline-flex', 'align-items-center', 'justify-content-center', 'me-1');
-
-						// const starImage = document.createElement('img');
-						// starImage.src = 'assets/images/avatars/rating-star.png';
-						// starImage.width = '14';
-						// starImage.height = '14';
-						// starImage.alt = 'Restaurant Rating';
-
-						// starIcon.appendChild(starImage);
-
-						// const ratingValue = document.createElement('span');
-						// ratingValue.classList.add('fw-semibold', 'text-truncate', 'fs-7');
-						// ratingValue.style.marginLeft = '2px';
-						// ratingValue.style.color = '#333333';
-						// ratingValue.textContent = '4.2';
-
-						// const reviewCount = document.createElement('span');
-						// reviewCount.classList.add('text-truncate', 'fs-7');
-						// reviewCount.style.marginLeft = '2px';
-						// reviewCount.style.color = '#767676';
-						// reviewCount.textContent = '(1000+)';
-
-						// ratingContainer.appendChild(starIcon);
-						// ratingContainer.appendChild(ratingValue);
-						// ratingContainer.appendChild(reviewCount);
-
 						vendorName.appendChild(nameText);
-						// vendorName.appendChild(ratingContainer);
 
 						const priceAndCategory = document.createElement('div');
 						priceAndCategory.classList.add('ms-0', 'd-block', 'text-truncate');
@@ -383,18 +316,6 @@
 						priceContainer.classList.add('fw-semibold', 'fs-7', 'align-middle', 'd-inline');
 						priceContainer.style.marginRight = '2px';
 						priceContainer.style.color = '#666666';
-
-						// const priceValue = document.createElement('div');
-						// priceValue.classList.add('d-inline', 'fw-semibold', 'fs-7');
-						// priceValue.textContent = '$$$';
-
-						// priceContainer.appendChild(priceValue);
-
-						// const separator1 = document.createElement('div');
-						// separator1.classList.add('d-inline', 'fw-semibold', 'fs-7', 'align-middle', 'cl-neutral-inactive');
-						// separator1.style.color = '#cacaca';
-						// separator1.style.margin = '0 4px 0 2px';
-						// separator1.textContent = '•';
 
 						const categoryContainer = document.createElement('div');
 						categoryContainer.classList.add('fw-semibold', 'd-inline', 'fs-7', 'align-middle');
@@ -411,7 +332,6 @@
 						categoryContainer.appendChild(categoryValue);
 
 						priceAndCategory.appendChild(priceContainer);
-						// priceAndCategory.appendChild(separator1);
 						priceAndCategory.appendChild(categoryContainer);
 
 						vendorInfo.appendChild(vendorName);
@@ -470,18 +390,6 @@
 				return badge;
 			}
 
-			// function updateSaveButtonState() {
-			// 	// const selectedOption = document.querySelector('input[name="deliveryPickupOption"]:checked');
-
-			// 	// const selectedBranch = branchSelect.value;
-
-			// 	// if (selectedOption && selectedBranch) {
-			// 	// 	saveButton.disabled = false;
-			// 	// } else {
-			// 	// 	saveButton.disabled = true;
-			// 	// }
-			// }
-
 			function saveSelectedLocationToSession(selectedCoords) {
 				if (selectedCoords) {
 					$.ajax({
@@ -504,35 +412,6 @@
 					});
 				}
 			}
-
-			// function clearCart() {
-			// 	fetch('/clear-cart', {
-			// 		method: 'POST',
-			// 		headers: {
-			// 			'Content-Type': 'application/json',
-			// 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content"),
-			// 		},
-			// 	})
-			// 	.then(response => {
-			// 		if (response.ok) {
-			// 			alert ('Cart cleared successfully.')
-			// 			window.location.href = '/';
-			// 		}
-			// 		else {
-			// 			// Handle errors if clearing the cart fails
-			// 		}
-			// 	})
-			// 	.catch(error => {
-			// 		console.error('Error clearing the cart:', error);
-			// 	});
-			// }
-
-			// Event listener for the radio buttons
-			// document.querySelectorAll('input[name="deliveryPickupOption"]').forEach(radio => {
-			// 	radio.addEventListener('change', function() {
-			// 		localStorage.setItem('selectedOption', this.value);
-			// 	});
-			// });
 
 			function updateButtonText() {
 				const button = document.querySelector('.location');
