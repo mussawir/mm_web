@@ -12,6 +12,7 @@ use App\Models\CartDetail;
 use App\Models\DealDetail;
 use App\Models\DealMaster;
 use App\Models\DealOption;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
@@ -45,10 +46,12 @@ class CartController extends Controller
 			$item = DealMaster::findOrFail($id);
 			$itemImageColumn = 'banner';
 			$itemPriceColumn = 'grand_total';
+			$uniqueKey = $id . '-' . implode('-', Arr::flatten($request->input('options')));
 		} elseif ($type === 'item') {
 			$item = Items_list::findOrFail($id);
 			$itemImageColumn = 'main_image';
 			$itemPriceColumn = 'price';
+			$uniqueKey = $id;
 		}
 
 		// Check if item quantity exceeds max order quantity set by admin
@@ -58,8 +61,8 @@ class CartController extends Controller
 				->withErrors(['quantity' => "Maximum order quantity for this {$type} is: {$item->max_order_qty}"]);
 		}
 
-		if (!isset($cart[$type][$id])) {
-			$cart[$type][$id] = [
+		if (!isset($cart[$type][$uniqueKey])) {
+			$cart[$type][$uniqueKey] = [
 				"name" => $item->name,
 				"quantity" => $quantity,
 				"price" => $item->$itemPriceColumn,
@@ -68,14 +71,14 @@ class CartController extends Controller
 		}
 
 		// Update item or deal quantity
-		$cart[$type][$id]['quantity'] = $quantity;
+		$cart[$type][$uniqueKey]['quantity'] = $quantity;
 
 		if ($request->input('options') && count($request->input('options'))) {
 			foreach($request->input('options') as $key => $item)
 			{
 				$dealDetail = DealDetail::findorFail($key);
 
-				$cart[$type][$id]['options'][$key] = [
+				$cart[$type][$uniqueKey]['options'][$key] = [
 					'name' => $dealDetail->item_type_name,
 					'quantity' => $dealDetail->quantity,
 				];
@@ -96,7 +99,7 @@ class CartController extends Controller
 
 				foreach ($dealOptions as $dealOption)
 				{
-					$cart[$type][$id]['options'][$key][] = [
+					$cart[$type][$uniqueKey]['options'][$key][] = [
 						'id' => $dealOption->item_id,
 						'name' => $dealOption->item_name,
 						'description' => $dealOption->item_description,
@@ -108,13 +111,13 @@ class CartController extends Controller
 			}
 		}
 
-		if (!isset($cart[$type][$id]['addons']))
+		if (!isset($cart[$type][$uniqueKey]['addons']))
 		{
-			$cart[$type][$id]['addons'] = [];
+			$cart[$type][$uniqueKey]['addons'] = [];
 		}
 
 		// Reference to the addons in the cart
-		$cartAddons = &$cart[$type][$id]['addons'];
+		$cartAddons = &$cart[$type][$uniqueKey]['addons'];
 
 		foreach ($cartAddons as $index => $cartAddon)
 		{
@@ -158,17 +161,15 @@ class CartController extends Controller
 
 		session()->put('vendor', $vendor);
 		session()->put('cart', $cart);
-		session()->put('cartTotal', $this->getGrandTotal($cart, $id));
+		session()->put('cartTotal', $this->getGrandTotal($cart, $uniqueKey));
 
-		$this->saveCarttoDB($ip, $vendor, $id, $type, $request->get('options', []));
+		$this->saveCarttoDB($ip, $vendor, $uniqueKey, $type, $request->get('options', []));
 
 		return redirect()->back()->with('success', 'Item added to cart successfully!');
 	}
 	
 	public function update(Request $request)
 	{
-		// Validate and sanitize your request here
-
 		// $validator = Validator::make($request->all(), [
 		// 	'type' => 'required|string',
 		// 	'id' => 'required|numeric',
@@ -190,8 +191,13 @@ class CartController extends Controller
 
 			session()->put('cartTotal', $this->getGrandTotal($cart, $id));
 
-			$cartDetail = CartDetail::where('item_id', $id)
+			if ($type === 'deal') {
+				$cartDetail = CartDetail::where('unique_key', $id)
 				->first();
+			} else {
+				$cartDetail = CartDetail::where('item_id', $id)
+				->first();
+			}
 
 			$cartDetail->qty = $quantity;
 			$cartDetail->sub_total = (int) $quantity * $cartDetail->item_price;
@@ -229,22 +235,28 @@ class CartController extends Controller
 			
 			if(isset($cart[$type][$id]))
 			{
-				$cartDetail = CartDetail::where('item_id', $id)
+				$itemID = explode('-', $id)[0];
+				if ($type === 'deal') {
+					$cartDetail = CartDetail::where('unique_key', $id)
 					->first();
+				} else {
+					$cartDetail = CartDetail::where('item_id', $itemID)
+					->first();
+				}
 				
 				if ($cartDetail)
 				{
 					if ($type === 'deal')
 					{
 						CartDealOption::where('cart_detail_id', $cartDetail->id)
-							->where('deal_id', $id)
+							->where('deal_id', $itemID)
 							->delete();
 					}
 
 					if (count($cart[$type][$id]['addons']))
 					{
 						CartAddon::where('cart_detail_id', $cartDetail->id)
-							->where('item_id', $id)
+							->where('item_id', $itemID)
 							->delete();
 					}
 
@@ -317,9 +329,12 @@ class CartController extends Controller
 					$addonTotal += $addon['price'] * $addon['quantity'];
 				}
 
+				$itemID = explode('-', $id)[0];
+
 				$cartDetail = CartDetail::updateOrCreate(
-					['item_id' => $id, 'cart_master_id' => $cartMaster->id],
+					['unique_key' => $id, 'cart_master_id' => $cartMaster->id],
 					[
+						'item_id' => $itemID,
 						'sub_total' => ($itemTotal + $addonTotal),
 						'qty' => $cartItem[$id]['quantity'],
 						'item_name' => $cartItem[$id]['name'],

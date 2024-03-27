@@ -191,7 +191,7 @@
 									</span>
 								</button>
 							</li>
-							<li class="bds-c-tab" x-on:click="selectedTab = 'food',selectedType='food'" :class="{ 'is-selected': selectedTab === 'food' }" role="presentation">
+							{{-- <li class="bds-c-tab" x-on:click="selectedTab = 'food',selectedType='food'" :class="{ 'is-selected': selectedTab === 'food' }" role="presentation">
 								<button role="tab">
 									<div class="bds-c-tab__icon">
 										<x-icon name="food"/>
@@ -210,7 +210,7 @@
 										Shops
 									</span>
 								</button>
-							</li>
+							</li> --}}
 							@if ($vendorTypes->count())
 							@foreach ($vendorTypes as $vendorType)
 							<li class="bds-c-tab"  x-on:click="selectedTab = '{{ strtolower($vendorType->type_name) }}',selectedType = '{{ $vendorType->is_food ? 'food' : 'shop' }}'" :class="{ 'is-selected': selectedTab === '{{ strtolower($vendorType->type_name) }}' }" role="presentation">

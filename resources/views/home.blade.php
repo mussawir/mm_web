@@ -12,7 +12,11 @@
 	@endif
 	<div class="d-flex flex-wrap" id="vendorContent">
 		@forelse ($vendors as $vendor)
-			<div x-show="(selectedTab === 'all' || selectedTab === '{{ strtolower($vendor->vendorType->type_name) }}') && ((selectedTab === 'all' && (selectedType === 'food' || selectedType === 'shop')) || (selectedType === '{{ $vendor->vendorType->is_food ? 'food' : 'shop' }}'))" class="vendor-title col-12 col-lg-4 col-md-6 px-2" data-vendor-type="{{ $vendor->vendorType->is_food ? 'food' : 'shop' }}">
+			<div
+				x-show="(selectedTab === 'all' || selectedTab === '{{ strtolower($vendor->vendorType->type_name) }}') && ((selectedTab === 'all' && (selectedType === 'food' || selectedType === 'shop')) || (selectedType === '{{ $vendor->vendorType->is_food ? 'food' : 'shop' }}'))"
+				class="vendor-title col-12 col-lg-4 col-md-6 px-2"
+				data-vendor-type="{{ $vendor->vendorType->is_food ? 'food' : 'shop' }}"
+			>
 				<div class="overflow-hidden mw-100 rounded-4 shadow-lg m-3 position-relative border border-secondary-subtle">
 					<a href="{{ route('vendor.detail', $vendor->id) }}">
 						<div class="rounded-3 position-relative">
