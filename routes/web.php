@@ -373,8 +373,3 @@ Route::group(['middleware' => 'auth:customer'], function () {
 			->name('customer.orders');
 	});
 });
-
-// Route::controller(ReservationController::class)->group(function (){
-// 	Route::get('reservation', 'showReservationform')->name('reservationForm');
-// 	Route::post('reservation', 'store')->name('reservation');
-// });

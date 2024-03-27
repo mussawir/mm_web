@@ -2,18 +2,6 @@
 
 @section('content')
 <div class="container">
-	<nav class="mt-4" aria-label="breadcrumb">
-		<ol class="breadcrumb">
-			<li class="breadcrumb-item">
-				<a href="{{ route('home') }}">
-					<i class="fa fa-home"></i>
-				</a>
-			</li>
-			<li class="breadcrumb-item">
-				My Orders
-			</li>
-		</ol>
-	</nav>
 	<div class="row justify-content-center align-items-center">
 		<div class="col">
 			<div class="card mt-2 mb-4 mx-auto">
@@ -24,7 +12,7 @@
 						<div class="accordion-item">
 							<h2 class="accordion-header">
 								<button
-									class="accordion-button collapsed"
+									class="d-flex justify-content-between position-relative align-items-center w-100 py-3 px-4 fs-6 text-start bg-white border-0 collapsed"
 									type="button"
 									data-bs-toggle="collapse"
 									data-bs-target="#order{{ $order->id }}"
@@ -32,23 +20,31 @@
 									aria-controls="order{{ $order->id }}"
 								>
 									<div>
+										<div class="pt-2 fw-bold">
+											{{ $order->vendor->company_name }}
+										</div>
 										<span class="fw-semibold">
-											Order
+											Order # {{ $order->id }}
+										</span>
+										<span class="text-dark fw-bold">
+											{{ session('currency')->symbol }}
+											{{ intval($order->grand_total) }}
 										</span>
 										<span class="ps-2 fw-medium text-muted small">
 											{{ $order->created_at->format('j-M-Y') }}
 										</span>
 										<br>
-										<div class="pt-2">
-											<span>
-												{{ $order->vendor->company_name }}
-											</span>
-											-
-											<span class="text-dark fw-bold">
-												{{ session('currency')->symbol }}
-												{{ $order->grand_total }}
-											</span>
-										</div>
+									</div>
+									<div>
+										@switch($order->status)
+											@case(1)
+												<span class="alert alert-primary border border-primary border-2 p-1">
+													<span class="small fw-semibold text-primary">
+														Waiting for approval
+													</span>
+												</span>
+												@break
+										@endswitch
 									</div>
 								</button>
 							</h2>
@@ -69,14 +65,14 @@
 													</span>
 													<span>x</span>
 													<span>
-														{{ $orderDetail->item_price }}
+														{{ intval($orderDetail->item_price) }}
 													</span>
 												</div>
 											</div>
 										</div>
 										<span class="fw-semibold">
 											{{ session('currency')->symbol }}
-											{{ $orderDetail->sub_total }}
+											{{ intval($orderDetail->sub_total) }}
 										</span>
 									</li>
 									@if ($orderDetail->is_deal)

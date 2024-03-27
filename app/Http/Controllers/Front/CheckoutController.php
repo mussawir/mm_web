@@ -257,16 +257,14 @@ class CheckoutController extends Controller
 		$customer = Auth::guard('customer')->user();
 
 		if ($customer && $customer->id == $customerID) {
-
 			$orders = OrderMaster::where('customer_id', $customerID)
+				->whereIn('status', [1, 2, 3, 4])
 				->with('details', 'details.orderDealOptions', 'details.orderAddons')
-				->get()
-				->sortByDesc('created_at');
+				->latest()
+				->get();
 
 			return view('front.customer.orders', ['orders' => $orders]);
-		}
-		else
-		{
+		} else {
 			return abort(403);
 		}
 	}
