@@ -237,8 +237,8 @@
 					vendors.forEach(vendor => {
 						const vendorElement = document.createElement('div');
 						vendorElement.classList.add('vendor-title', 'col-12', 'col-lg-4', 'col-md-6', 'px-2');
-						vendorElement.dataset.vendorType = (vendor.vendor_type.is_food == '1') ? 'food' : 'general';
-						vendorElement.setAttribute('x-show', 'selectedTab === "' + vendorElement.dataset.vendorType + '"');
+						vendorElement.dataset.vendorType = (vendor.vendor_type.is_food == '1') ? 'food' : 'shop';
+						vendorElement.setAttribute('x-show', "(selectedTab === 'all' || selectedTab === '"+vendor.vendor_type.type_name.toLowerCase()+"') && ((selectedTab === 'all' && (selectedType === 'food' || selectedType === 'shop')) || (selectedType === '"+vendorElement.dataset.vendorType+"'))");
 
 						const vendorTitle = document.createElement('div');
 						vendorTitle.classList.add('overflow-hidden', 'mw-100', 'rounded-4', 'shadow-lg', 'm-3', 'position-relative', 'border', 'border-secondary-subtle');
