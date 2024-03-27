@@ -12,6 +12,7 @@ class CartDetail extends Model
 	
 	protected $fillable = [
 		'cart_master_id',
+		'unique_key',
 		'sub_total',
 		'qty',
 		'measuring_unit',
