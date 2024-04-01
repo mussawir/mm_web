@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\AItemsListController;
 use App\Http\Controllers\ShopRegistrationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\AdminDashboardController;
-// use App\Http\Controllers\Admin\BranchesController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\DealController;
@@ -20,7 +19,6 @@ use App\Http\Controllers\Admin\VendorTypeController;
 use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CheckoutController;
-use App\Http\Controllers\Front\ReservationController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -117,22 +115,6 @@ Route::group(['middleware' => 'auth:admin'], function () {
 		});
 		// Admin Items List Routes End
 
-		// Admin Branch Routes Start
-		// Route::controller(BranchesController::class)->group(function () {
-		// 	Route::get('/branches', 'index')->name('branches.index');
-		// 	Route::get('/branches/create', 'create')->name('branches.create');
-		// 	Route::post('/branches', 'store')->name('branches.store');
-		// 	Route::get('/branches/{id}', 'show')->name('branches.show');
-		// 	Route::get('/branches/{id}/edit', 'edit')->name('branches.edit');
-		// 	Route::put('/branches/{id}', 'update')->name('branches.update');
-		// 	Route::delete('/branches/{id}', 'destroy')->name('branches.destroy');
-		// 	Route::get('/branch/orders/{id}', 'getBranchOrders')
-		// 		->name('branches.orders');
-		// 	Route::get('/branch/vendors/{id}', 'getBranchVendors')
-		// 		->name('branches.vendors');
-		// });
-		// Admin Branch Routes End
-
 		// Admin User Routes Start
 		Route::controller(UserController::class)->group(function () {
 			Route::get('/addnew/user', 'create')->name('user.create');
@@ -188,17 +170,6 @@ Route::group(['middleware' => 'auth:admin'], function () {
 			Route::post('/items/{item}/remove-addon', 'removeAddon');
 		});
 		// Admin Addon Routes End
-
-		// Admin Reservation Routes Start
-		Route::controller(ReservationController::class)->group(function () {
-			Route::get('/reservations/{branch}', 'index')
-				->name('reservation.index');
-			Route::get('/reservation/reserve/{id}', 'markAsReserved')
-				->name('reservation.reserve');
-			Route::get('/reservation/cancel/{id}', 'cancelReservation')
-				->name('reservation.cancel');
-		});
-		// Admin Reservation Routes End
 
 		// Admin Settings Routes Start
 		Route::controller(SettingController::class)->group(function () {
@@ -286,23 +257,6 @@ Route::controller(FrontController::class)->group(function () {
 });
 # Front End Routes End
 
-// Route::get('/', [HomeController::class, 'index']);
-
-// Start Shop Routes
-// Route::get('/shop-registration', [ShopRegistrationController::class, 'shopRegistationForm']);
-// Route::post('/shop/register', [ShopRegistrationController::class, 'shopRegistration']);
-// Route::get('/shop/login', [LoginController::class, 'showshopLoginForm']);
-// Route::post('/login/shop', [LoginController::class, 'shopLogin']);
-
-// Route::group(['middleware' => 'auth:shop'], function () {
-// 	Route::view('/shop', 'shop');
-// 	Route::view('/shop/dashboard', 'layouts.shop');
-// 	Route::resource('shops', ShopController::class);
-// 	Route::resource('/shop/items', ShopController::class);
-// 	Route::get('/shop/shop-product-list', [ShopController::class, 'showProductList']);
-// 	Route::post('/shop/upload-store-items/{id}', [ShopController::class, 'storeItems']);
-// });
-// End Shop Routes
 Route::get('/thankyou', [ShopRegistrationController::class, 'thankYou']);
 
 // Customer Routes Start
@@ -331,29 +285,19 @@ Route::get('customer/login', [LoginController::class, 'showCustomerLoginForm'])
 	->name('customer.login');
 Route::post('login/customer', [LoginController::class, 'customerLogin'])
 	->name('customer.login.submit');
+Route::get('/customer/register', [LoginController::class, 'showCustomerRegistrationForm'])
+	->name('customer.register');
+Route::post('register/customer', [LoginController::class, 'customerRegister'])
+	->name('customer.register.submit');
+Route::get('/verify-pin', [LoginController::class, 'showPinVerificationForm'])
+	->name('customer.verify.pin');
+Route::post('/verify-pin', [LoginController::class, 'verifyPin'])
+	->name('customer.verify.pin.submit');
 Route::get('customer/verify', [LoginController::class, 'verifyForm'])
 	->name('customer.verify');
 Route::post('customer/verify', [LoginController::class, 'verify'])
 	->name('customer.verify.submit');
 // Customer Login Routes End
-
-// ================= Rider route =================
-// Route::get('/rider/login', [LoginController::class, 'showRiderLoginForm']);
-// Route::post('/login/rider', [LoginController::class, 'riderLogin']);
-
-// Route::group(['middleware' => 'auth:rider'], function () {
-//     Route::view('/rider', 'rider');
-//     Route::view('/rider/dashboard', 'layouts.rider');
-// });
-
-// ================= Shop route =================
-// Route::get('/shop/login', [LoginController::class, 'showshopLoginForm']);
-// Route::post('/login/shop', [LoginController::class, 'shopLogin']);
-
-// Route::group(['middleware' => 'auth:shop'], function () {
-//     Route::view('/shop', 'shop');
-//     Route::view('/shop/dashboard', 'layouts.shop');
-// });
 
 // Cart Routes Start
 Route::controller(CartController::class)->group(function () {

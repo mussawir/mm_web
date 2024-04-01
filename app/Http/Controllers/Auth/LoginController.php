@@ -44,7 +44,6 @@ class LoginController extends Controller
 	{
 		$this->middleware('guest')->except('logout');
 		$this->middleware('guest:admin')->except('logout');
-		$this->middleware('guest:rider')->except('logout');
 		$this->middleware('guest:customer')->except('logout');
 	}
 
@@ -69,25 +68,6 @@ class LoginController extends Controller
 		return Redirect::back()->withErrors($errors)->withInput($request->only('email', 'remember'));
 	}
 
-	public function showRiderLoginForm()
-	{
-		return view('auth.login', ['url' => 'rider']);
-	}
-
-	public function riderLogin(Request $request)
-	{
-		$this->validate($request, [
-			'email'   => 'required|email',
-			'password' => 'required|min:6'
-		]);
-		if (Auth::guard('rider')->attempt(['email' => $request->input('email'), 'password' => $request->input('password')], $request->get('remember'))) {
-			return redirect()->intended('/rider/dashboard');
-		}
-		$errors = new MessageBag(['password' => ['Email and/or password invalid.']]);
-
-		return Redirect::back()->withErrors($errors)->withInput($request->only('email', 'remember'));
-	}
-
 	public function showCustomerLoginForm()
 	{
 		return view('auth.login', ['url' => 'customer']);
@@ -98,16 +78,82 @@ class LoginController extends Controller
 		$request->validate([
 			'phone' => 'required|numeric',
 		]);
-		
-		$phone = $request->input('phone');
+
+		$customer = Customer::where('phone_number', $request->phone)->first();
+
+		if ($customer) {
+			return redirect()
+				->route('customer.verify.pin')
+				->withInput(['phone' => $request->phone]);
+		} else {
+			return redirect()
+				->route('customer.register')
+				->withInput(['phone' => $request->phone]);
+		}
+	}
+
+	public function showCustomerRegistrationForm()
+	{
+		return view('auth.register');
+	}
+
+	public function customerRegister(Request $request)
+	{
+		$request->validate([
+			'name' => 'required|string',
+			'phone' => 'required|numeric|unique:customers,phone_number',
+			'pin' => 'required|digits:4|confirmed',
+		]);
+
+		$customer = new Customer;
+
+		$customer->phone_number = $request->phone;
+		$customer->name = $request->name;
+		$customer->pin = $request->pin;
+		$customer->verified_customer = 0;
+
+		$customer->save();
 
 		$otp = $this->generateOTP();
-		$this->sendOTP($phone, $otp);
-		
+		$this->sendOTP($customer->id, $customer->phone_number, $otp);
+
 		Session::put('otp', $otp);
-		Session::put('phone', $phone);
+		Session::put('phone', $request->phone);
 
 		return redirect()->route('customer.verify');
+	}
+
+	public function showPinVerificationForm()
+	{
+		return view('auth.verify-pin');
+	}
+
+	public function verifyPin(Request $request)
+	{
+		$request->validate([
+			'phone' => 'required|numeric',
+			'pin' => 'required|digits:4|numeric',
+		]);
+
+		$customer = Customer::where("phone_number", $request->phone)->first();
+
+		if (! $customer) {
+			return redirect()
+				->back()
+				->with('message', 'Customer not found.')
+				->withInput(['phone' => $request->phone]);
+		}
+
+		if ($customer->pin != $request->pin) {
+			return redirect()
+				->back()
+				->with('message', 'Wrong PIN.')
+				->withInput(['phone' => $customer->phone_number]);
+		}
+
+		Auth::guard('customer')->login($customer);
+
+		return redirect()->intended('/home');
 	}
 
 	public function verifyForm()
@@ -118,7 +164,7 @@ class LoginController extends Controller
 	public function verify(Request $request)
 	{
 		$request->validate([
-			'otp' => 'required|numeric',
+			'otp' => 'required|digits:4|numeric',
 		]);
 
 		$otp = $request->input('otp');
@@ -131,24 +177,22 @@ class LoginController extends Controller
 		if ($otpModel && $otp == $otpModel->otp_number) {
 			$customer = Customer::where('phone_number', $phone)->first();
 
-			if (!$customer) {
-				$customer = new Customer();
-				$customer->phone_number = $phone;
+			if ($customer) {
+				$otpModel->delete();
+				$customer->verified_customer = 1;
 
 				$customer->save();
+
+				Session::forget(['phone', 'otp']);
+
+				return redirect()
+					->route('customer.login')
+					->with('message', 'Successfully verified OTP.');
+			} else {
+				return redirect()
+					->back()
+					->with('message', 'Customer not found.');
 			}
-
-			Auth::guard('customer')->login($customer);
-
-			// $otpModel->delete();
-			$otpModel->otp_number = null;
-
-			$otpModel->save();
-
-			Session::forget('phone');
-			Session::forget('otp');
-
-			return redirect()->intended('/home');
 		}
 	
 		return redirect()->back()->withErrors(['otp' => 'Invalid OTP']);
@@ -160,10 +204,10 @@ class LoginController extends Controller
 		return mt_rand(1000, 9999);
 	}
 
-	private function sendOTP($phone, $otp)
+	private function sendOTP($customerID, $phone, $otp)
 	{
 		CustRegOtp::updateOrCreate(
-			['phone_number' => $phone],
+			['customer_id' => $customerID, 'phone_number' => $phone],
 			['otp_number' => $otp]
 		);
 

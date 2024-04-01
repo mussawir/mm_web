@@ -16,36 +16,52 @@
 					</span>
 				</a>
 			</div>
-			@if (session('resent'))
-				<div class="alert alert-success" role="alert">
-					{{ __('OTP has been resent to your phone number') }}
+			@if (session('message'))
+				<div class="alert alert-danger" role="alert">
+					{{ session('message') }}
 				</div>
 			@endif
 			{{-- /Logo --}}
 			<h4 class="mb-2">
 				<span>
-					{{ __('Verify OTP') }}
+					{{ __('Verify PIN') }}
 				</span>
 			</h4>
 			<p class="mb-4">
-				Please enter OTP sent to your phone
+				Please enter your 4 digit PIN
 			</p>
-			<p class="text-center text-danger fw-semibold alert alert-danger mb-4" style="letter-spacing:1rem;">
-				{{ session('otp') }}
-			</p>
-			<form method="POST" action="{{ route('customer.verify.submit') }}" aria-label="{{ __('OTP Verification') }}" id="formAuthentication" class="mb-3">
+			<form method="POST" action="{{ route('customer.verify.pin.submit') }}" aria-label="{{ __('PIN Verification') }}" id="formAuthentication" class="mb-3">
 				@csrf
 				<div class="mb-3">
-					<label for="otp" class="form-label">
-						OTP:
+					<label for="phone" class="form-label">
+						Phone:
 					</label>
 					<input
 						type="text"
-						name="otp"
-						id="otp"
-						class="form-control @error('otp') is-invalid @enderror"
+						name="phone"
+						id="phone"
+						class="form-control @error('phone') is-invalid @enderror"
+						value="{{ old('phone', session('phone')) }}"
 					/>
-					@error('otp')
+					@error('phone')
+					<span class="d-block invalid-feedback" role="alert">
+						<strong>
+							{{ $message }}
+						</strong>
+					</span>
+					@enderror
+				</div>
+				<div class="mb-3">
+					<label for="pin" class="form-label">
+						PIN:
+					</label>
+					<input
+						type="password"
+						name="pin"
+						id="pin"
+						class="form-control @error('pin') is-invalid @enderror"
+					/>
+					@error('pin')
 					<span class="d-block invalid-feedback" role="alert">
 						<strong>
 							{{ $message }}
@@ -55,7 +71,7 @@
 				</div>
 				<div class="vstack align-items-center gap-3 mb-3">
 					<button type="submit" class="btn btn-primary w-100">
-						{{ __('Verify OTP') }}
+						{{ __('Verify') }}
 					</button>
 				</div>
 			</form>

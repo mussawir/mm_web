@@ -10,13 +10,18 @@
 			<div class="app-brand justify-content-center">
 				<a href="{{ route('home') }}" class="app-brand-link gap-2">
 					<span class="app-brand-logo demo">
-						<img class="img-fluid" src="{{ asset('/assets/images/favicon/favicon.svg') }}" width="42" height="42" alt="MazaaMax"/>
+						<img class="img-fluid" src="{{ asset('/assets/images/favicon/favicon.svg') }}" width="36" height="36" alt="MazaaMax"/>
 					</span>
 					<span class="app-brand-text demo text-body fw-bolder text-capitalize">
 						MazaaMax
 					</span>
 				</a>
 			</div>
+			@if (session('message'))
+				<div class="alert alert-success" role="alert">
+					{{ session('message') }}
+				</div>
+			@endif
 			{{-- /Logo --}}
 			<h4 class="mb-2">
 				{{ isset($url) ? ucwords($url) : "" }}
@@ -126,7 +131,7 @@
 				@endif
 				<div class="mb-3">
 					<button class="btn btn-primary d-grid w-100" type="submit">
-						{{ (isset($url) && ($url === 'customer')) ? __('Send OTP') : __('Login') }}
+						{{ __('Login') }}
 					</button>
 				</div>
 			</form>
