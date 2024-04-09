@@ -56,14 +56,11 @@
 							<div class="ms-0 d-block text-truncate" style="line-height:16px;color:#666666;margin-right:unset;">
 								<div class="fw-semibold fs-7 align-middle d-inline" style="margin-right:2px;color:#666666;">
 								</div>
-								@if ($vendor->categories->count())
-								
 								<div class="fw-semibold d-inline fs-7 align-middle" style="margin-right:2px;color:#666666;">
 									<div class="fw-semibold d-inline fs-7">
-										{{ $vendor->categories->random()->name }}
+										{{ $vendor->vendorType->type_name }}
 									</div>
 								</div>
-								@endif
 							</div>
 						</div>
 					</a>

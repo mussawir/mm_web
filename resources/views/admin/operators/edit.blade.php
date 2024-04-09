@@ -11,8 +11,8 @@
 				<form class="edit-operator-form" method="POST" action="/admin/operators/{{ $operator->id }}" enctype="multipart/form-data">
 					@csrf
 					@method('PUT')
-					<input type="hidden" name="address_latitude" id="address-latitude" value="0" />
-					<input type="hidden" name="address_longitude" id="address-longitude" value="0" />
+					<input type="hidden" name="address_latitude" id="address-latitude" value="{{ $latitude }}" />
+					<input type="hidden" name="address_longitude" id="address-longitude" value="{{ $longitude }}" />
 					<div class="row mb-3">
 						<div class="col-md-3">
 							<label for="name" class="form-label">
@@ -316,7 +316,7 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('assets/js/mapInput.js') }}"></script>
+<script src="{{ asset('assets/js/mapInput.js') }}?v={{ filemtime(public_path('/assets/js/mapInput.js')) }}"></script>
 <script async src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize" defer></script>
 <script>
 	document.addEventListener('DOMContentLoaded', () => {

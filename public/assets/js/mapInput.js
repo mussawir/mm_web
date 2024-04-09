@@ -10,18 +10,11 @@ async function initialize() {
 
 		let pos;
 
-		const storedCoords = localStorage.getItem('locationCoords');
-
-		if (storedCoords) {
-			const { lat, long } = JSON.parse(storedCoords);
-			pos = { lat, lng: long };
-		} else {
-			const currentPosition = await getCurrentPosition();
-			pos = {
-				lat: currentPosition.coords.latitude,
-				lng: currentPosition.coords.longitude,
-			};
-		}
+		const currentPosition = await getCurrentPosition();
+		pos = {
+			lat: currentPosition.coords.latitude,
+			lng: currentPosition.coords.longitude,
+		};
 
 		const locationInputs = document.getElementsByClassName("map-input");
 		const autocompletes = [];

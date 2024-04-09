@@ -19,7 +19,7 @@
 		{{-- Additional CSS Files --}}
 		<link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/bootstrap5.min.css') }}">
 		<link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/all.min.css') }}">
-		<link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/store-front.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/store-front.css') }}?v={{ filemtime(public_path('/assets/css/store-front.css')) }}">
 		<link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/owl.carousel.min.css') }}">
 		<link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/owl.theme.default.min.css') }}">
 		<link rel="stylesheet" href="{{ asset('/assets/css/swiper-bundle.min.css') }}"/>
@@ -322,10 +322,7 @@
 
 						const categoryValue = document.createElement('div');
 						categoryValue.classList.add('fw-semibold', 'd-inline', 'fs-7');
-						const randomIndex = Math.floor(Math.random() * vendor.categories.length);
-						const randomCategory = vendor.categories[randomIndex];
-						const randomName = randomCategory.name;
-						categoryValue.textContent = randomName;
+						categoryValue.textContent = vendor.vendor_type.type_name;
 
 						categoryContainer.appendChild(categoryValue);
 
