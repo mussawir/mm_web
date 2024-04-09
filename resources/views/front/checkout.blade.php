@@ -67,7 +67,7 @@
 										<div class="form-floating mb-3">
 											<input
 												type="text"
-												class="form-control"
+												class="form-control @error('name') is-invalid @enderror"
 												id="name"
 												name="name"
 												placeholder="Enter Name"
@@ -128,13 +128,13 @@
 									<div class="hstack gap-4">
 										<div class="form-check">
 											<input class="form-check-input" type="radio" name="payment_method" value="cash" id="cash" checked>
-											<label class="form-check-label" for="cod">
+											<label class="form-check-label" for="cash">
 												Cash On Delivery
 											</label>
 										</div>
 										<div class="form-check">
 											<input class="form-check-input" type="radio" name="payment_method" id="online" value="credit">
-											<label class="form-check-label" for="credit">
+											<label class="form-check-label" for="online">
 												Online Payment
 											</label>
 										</div>
