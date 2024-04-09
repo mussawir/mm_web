@@ -132,10 +132,14 @@ class OperatorController extends Controller
 		$operator = OperatorMaster::where('id', $id)
 			->with('details')
 			->firstOrFail();
+		$geoLocation = jsoN_decode($operator->details->operation_geo_location);
+
+		$latitude = $geoLocation->latitude;
+		$longitude = $geoLocation->longitude;
 
 		$cities = City::all();
 
-		return view('admin.operators.edit', compact('operator', 'cities'));
+		return view('admin.operators.edit', compact('operator', 'cities', 'latitude', 'longitude'));
 	}
 
 	public function update(Request $request, $id)
@@ -230,8 +234,14 @@ class OperatorController extends Controller
 			$operatorDetails = OperatorDetail::where('operator_id', $operator->id)
 				->firstOrFail();
 
-			$operatorDetails->operator_id = $operator->id;
+			$latitude = $request->get('address_latitude');
+			$longitude = $request->get('address_longitude');
+
+			$selectedCoords = json_encode(['latitude' => $latitude, 'longitude' => $longitude]);
+
+			// $operatorDetails->operator_id = $operator->id;
 			$operatorDetails->city_id = $request->get('city');
+			$operatorDetails->operation_geo_location = $selectedCoords;
 			$operatorDetails->address = $request->get('address_address');
 			$operatorDetails->commission_percentage = $request->get('commission_percentage');
 			$operatorDetails->area_name = $request->get('area_name');

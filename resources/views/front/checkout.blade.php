@@ -360,7 +360,6 @@
 @endsection
 
 @push('scripts')
-{{-- <script src="assets/js/mapInput.js"></script> --}}
 <script>
 	document.addEventListener('DOMContentLoaded', () => {
 		const orderType = localStorage.getItem('selectedOption');

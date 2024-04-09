@@ -12,8 +12,6 @@
 		{{-- Favicon --}}
 		<link rel="icon" href="/assets/images/favicon/favicon.ico" sizes="any" />
 		<link rel="icon" href="/assets/images/favicon/favicon.svg" type="image/svg+xml" />
-		<link rel="apple-touch-icon" href="/assets/images/favicon/apple-touch-icon.png" />
-		<link rel="manifest" href="/assets/images/favicon/manifest.webmanifest" />
 
 		{{-- Fonts --}}
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
