@@ -348,7 +348,7 @@ class CartController extends Controller
 				{
 					CartAddon::where('cart_master_id', $cartMaster->id)
 						->where('cart_detail_id', $cartDetail->id)
-						->where('item_id', $id)
+						->where('item_id', $itemID)
 						->delete();
 
 					foreach($cartItem[$id]['addons'] as $addon)
@@ -356,7 +356,7 @@ class CartController extends Controller
 						$addons[] = [
 							'cart_master_id' => $cartMaster->id,
 							'cart_detail_id' => $cartDetail->id,
-							'item_id' => $id,
+							'item_id' => $itemID,
 							'addon_id' => $addon['id'],
 							'quantity' => $addon['quantity'],
 							'is_deal' => ($type === 'deal') ? 1 : 0,
