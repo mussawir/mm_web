@@ -35,7 +35,9 @@
 								</div>
 								<div class="flex-grow-1">
 									<span class="fw-semibold d-block">
-										{{ Auth::guard('admin')->user()->first_name . ' ' . Auth::guard('admin')->user()->last_name }}
+										{{-- Won't work as admins table doesn't have mentioned columns --}}
+										{{ Auth::guard('admin')->user()->first_name }}
+										{{ Auth::guard('admin')->user()->last_name }}
 									</span>
 									<small class="text-muted">
 										@php

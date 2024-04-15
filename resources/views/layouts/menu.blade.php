@@ -82,7 +82,7 @@
 		</li>
 		@endcan
 
-		@can('vendor')
+		@canany(['vendor', 'single-vendor-operator'])
 		{{-- Orders --}}
 		<li class="menu-item {{ (in_array('order', request()->segments())) ? 'active' : '' }}">
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -96,7 +96,7 @@
 						<div data-i18n="New">New</div>
 					</a>
 				</li>
-				@can('vendor')
+				@canany(['vendor', 'single-vendor-operator'])
 				<li class="menu-item {{ request()->is('admin/dashboard/orders/approved') ? 'active' : '' }}">
 					<a href="{{ url('/admin/dashboard/orders/approved') }}" class="menu-link">
 						<div data-i18n="Approved Orders">
@@ -118,7 +118,7 @@
 						</div>
 					</a>
 				</li>
-				@endcan
+				@endcanany
 				<li class="menu-item {{ request()->is('admin/dashboard/order/history') ? 'active' : '' }}">
 					<a href="/admin/dashboard/order/history" class="menu-link">
 						<div data-i18n="History">History</div>
@@ -126,6 +126,6 @@
 				</li>
 			</ul>
 		</li>
-		@endcan
+		@endcanany
 	</ul>
 </aside>

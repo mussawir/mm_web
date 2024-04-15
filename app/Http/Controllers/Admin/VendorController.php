@@ -12,6 +12,7 @@ use App\Models\Vendor;
 use App\Models\VendorType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 
 class VendorController extends Controller
@@ -33,6 +34,15 @@ class VendorController extends Controller
 
 	public function create()
 	{
+		$vendorCount = Auth::user()->operator->vendors->count();
+
+		if (Gate::allows('single-vendor-operator')) {
+			if ($vendorCount > 0 && $vendorCount <= 1) {
+				return redirect()
+					->back()
+					->with('message', 'Single Vendor Operator cannot add more vendors.');
+			}
+		}
 		$operatorID = Auth::user()->user_id;
 		$vendorTypes = VendorType::where('status', 1)->get();
 		$randomPassword = '12345678';

@@ -65,7 +65,8 @@ class LoginController extends Controller
 
 		$errors = new MessageBag(['password' => ['Email and/or password invalid.']]);
 
-		return Redirect::back()->withErrors($errors)->withInput($request->only('email', 'remember'));
+		return Redirect::back()->withErrors($errors)
+			->withInput($request->only('email', 'remember'));
 	}
 
 	public function showCustomerLoginForm()

@@ -27,4 +27,9 @@ class Admin extends Authenticatable
 	protected $casts = [
 		'email_verified_at' => 'datetime',
 	];
+
+	public function operator()
+	{
+		return $this->belongsTo('App\Models\OperatorMaster', 'user_id');
+	}
 }
