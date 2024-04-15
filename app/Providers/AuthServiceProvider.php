@@ -25,17 +25,22 @@ class AuthServiceProvider extends ServiceProvider
 
 		// Admin
 		Gate::define('admin', function ($user) {
-			return $user->role == "0";
+			return $user->role == '0';
+		});
+
+		// Single Vendor Operator
+		Gate::define('single-vendor-operator', function ($user) {
+			return $user->role == '1' && $user->operator->single_vendor == '1';
 		});
 
 		// Operator
 		Gate::define('operator', function($user) {
-			return $user->role == "1";
+			return $user->role == '1';
 		});
 
 		// Vendor
 		Gate::define('vendor', function($user) {
-			return $user->role == "2";
+			return $user->role == '2';
 		});
 	}
 }

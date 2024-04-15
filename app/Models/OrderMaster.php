@@ -34,11 +34,6 @@ class OrderMaster extends Model
 	{
 		return $this->belongsTo('App\Models\Customer');
 	}
-	
-	// public function branch()
-	// {
-	// 	return $this->belongsTo('App\Models\Branches');
-	// }
 
 	public function details()
 	{

@@ -18,11 +18,6 @@
 				@endif
 				<form method="POST" action="{{ url('/admin/addnew/item') }}" enctype="multipart/form-data">
 					@csrf
-					{{-- <input
-						name="branch"
-						type="hidden"
-						value="{{ $vendor->branch_id }}"
-					/> --}}
 					<input
 						name="vendor"
 						type="hidden"

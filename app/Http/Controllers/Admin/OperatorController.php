@@ -89,6 +89,7 @@ class OperatorController extends Controller
 		$operator->phone = $request->get('phone');
 		$operator->logo = $logo;
 		$operator->banner = $banner;
+		$operator->single_vendor = $request->get('single_vendor');
 
 		$operator->save();
 
@@ -219,6 +220,7 @@ class OperatorController extends Controller
 		$operator->company_name = $request->get('company_name');
 		$operator->email = $request->get('email');
 		$operator->phone = $request->get('phone');
+		$operator->single_vendor = $request->get('single_vendor');
 		
 		if (isset($logo)) {
 			$operator->logo = $logo;

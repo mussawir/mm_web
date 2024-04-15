@@ -319,6 +319,40 @@
 								readonly
 							>
 						</div>
+						<div class="col-md-4">
+							<label for="" class="col-sm-4 col-form-label">
+								Single Vendor
+							</label>
+							<div class="col-sm-8">
+								<div class="form-check form-check-inline">
+									<input
+										class="form-check-input"
+										type="radio"
+										name="single_vendor"
+										value="1"
+										id="yes"
+										{{ (old('single_vendor') == '1') ? 'checked' : '' }}
+									>
+									<label class="form-check-label" for="yes">
+										Yes
+									</label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input
+										class="form-check-input"
+										type="radio"
+										name="single_vendor"
+										value="0"
+										id="no"
+										{{ (old('single_vendor') == '0') ? 'checked' : '' }}
+										{{ ((old('single_vendor', null))) ? '' : 'checked' }}
+									>
+									<label class="form-check-label" for="no">
+										No
+									</label>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div class="row justify-content-end">
 						<div class="col-sm-10 text-end">
