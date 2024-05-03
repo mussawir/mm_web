@@ -33,4 +33,9 @@ class Customer extends Authenticatable
 	protected $casts = [
 		'email_verified_at' => 'datetime',
 	];
+
+	public function favouriteVendors()
+	{
+		return $this->belongsToMany(Vendor::class, 'favourite_vendors', 'customer_id', 'vendor_id');
+	}
 }

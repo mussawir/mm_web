@@ -77,4 +77,9 @@ class Vendor extends Model
 	{
 		return $this->belongsTo('App\Models\OperatorMaster', 'operator_id');
 	}
+
+	public function customers()
+	{
+		return $this->belongsToMany(Customer::class, 'favourite_vendors', 'vendor_id', 'customer_id');
+	}
 }
