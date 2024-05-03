@@ -21,6 +21,7 @@ use App\Http\Controllers\Mobile\Api\V1\MobileShopsCategoryController;
 use App\Http\Controllers\Mobile\Api\V1\MobileVendorController;
 use App\Http\Controllers\Mobile\Api\V1\MobileOperatorController;
 use App\Http\Controllers\Mobile\Api\V1\MobileAdminController;
+use App\Http\Controllers\Mobile\Api\V1\MobileShopCustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -202,6 +203,12 @@ Route::prefix('v1')->group(function () {
 	Route::get('/operator/num/vendors/{operatorId}', [MobileOperatorController::class, 'numberOfVendors']);
 	Route::get('/operator/vendors/list/{operatorId}', [MobileOperatorController::class, 'vendorsList']);
 	Route::post('/operator/dashboard/vendor/stats', [MobileOperatorController::class, 'vendorStats']);
+
+
+	// favorites api's routes
+	Route::post('/customer/favorites/add', [MobileShopCustomerController::class, 'addToFavourite']);
+	Route::get('/customer/favorites/check', [MobileShopCustomerController::class, 'checkFavourite']);
+	Route::get('/customer/favorites/list', [MobileShopCustomerController::class, 'favouriteVendorsList']);
 
 	# Added by Sohail Asghar [22-DEC-2023]
 	Route::prefix('vendors')->group(function() {
