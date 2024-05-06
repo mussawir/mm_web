@@ -12,6 +12,7 @@ use App\Models\OrderDetails;
 use App\Models\CartMaster;
 use App\Models\CartDetail;
 use App\Models\CustomerOperator;
+use App\Models\FavouriteVendor;
 use App\Models\Items_list;
 use App\Models\OperatorDues;
 use App\Models\OperatorMaster;
@@ -266,6 +267,33 @@ class CheckoutController extends Controller
 			return view('front.customer.orders', ['orders' => $orders]);
 		} else {
 			return abort(403);
+		}
+	}
+
+	public function favouriteVendor($vendorID)
+	{
+		$customerID = Auth::guard('customer')->user()->id;
+
+		$checkFavourite = FavouriteVendor::where('customer_id', $customerID)
+			->where('vendor_id', $vendorID)
+			->first();
+		
+		if ($checkFavourite) {
+			$checkFavourite->delete();
+			
+			return redirect()
+				->back()
+				->with('success', 'Removed from favourites.');
+		} else {
+			$favouriteVendor = new FavouriteVendor;
+			$favouriteVendor->customer_id = $customerID;
+			$favouriteVendor->vendor_id = $vendorID;
+
+			$favouriteVendor->save();
+
+			return redirect()
+				->back()
+				->with('success', 'Added to favourites.');
 		}
 	}
 

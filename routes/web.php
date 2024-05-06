@@ -260,7 +260,7 @@ Route::controller(FrontController::class)->group(function () {
 Route::get('/thankyou', [ShopRegistrationController::class, 'thankYou']);
 
 // Customer Routes Start
-Route::get('/customer-registration', [ShopRegistrationController::class, 'customerRegistationForm'])->name('customer.register');
+Route::get('/customer-registration', [ShopRegistrationController::class, 'customerRegistationForm'])->name('customer.shop.register');
 Route::post('/customer/register', [ShopRegistrationController::class, 'customerRegistration']);
 // Customer Routes End
 
@@ -315,5 +315,7 @@ Route::group(['middleware' => 'auth:customer'], function () {
 		Route::post('/checkout', 'checkout')->name('checkout');
 		Route::get('/my-orders/{customerID}', 'customerOrders')
 			->name('customer.orders');
+		Route::get('/favourite-vendor/{vendor}', 'favouriteVendor')
+			->name('customer.favourite.vendor');
 	});
 });

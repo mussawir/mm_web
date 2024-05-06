@@ -154,7 +154,7 @@ class LoginController extends Controller
 
 		Auth::guard('customer')->login($customer);
 
-		return redirect()->intended('/home');
+		return redirect()->intended();
 	}
 
 	public function verifyForm()
