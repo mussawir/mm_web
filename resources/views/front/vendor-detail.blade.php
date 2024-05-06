@@ -54,8 +54,10 @@
 						href="{{ route('customer.favourite.vendor', $vendor->id) }}"
 					>
 						@php
-							$heart = Auth::guard('customer')->user()->favouriteVendors->whereIn('id', [$vendor->id])->count() ? 'fa-solid' : 'fa-regular';
-							
+							$heart = 'fa-regular';
+							if (Auth::guard('customer')->check()) {
+								$heart = Auth::guard('customer')->user()->favouriteVendors->whereIn('id', [$vendor->id])->count() ? 'fa-solid' : 'fa-regular';
+							}
 						@endphp
 						<i class="fa-heart {{ $heart }} text-primary fs-4"></i>
 					</a>
