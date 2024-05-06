@@ -8,6 +8,7 @@
 			All
 			<span x-text="selectedType === 'food' ? 'Restaurants' : 'Shops'"></span>
 		</h3>
+		@livewire('search-vendors')
 	</div>
 	@endif
 	<div class="d-flex flex-wrap" id="vendorContent">
@@ -48,10 +49,12 @@
 							</div>
 						</div>
 						<div class="d-flex flex-column" style="margin:12px;">
-							<div class="mb-1 d-flex align-items-center fw-semibold fs-6 cl-neutral-primary">
+							<div class="mb-1 d-flex align-items-center fw-semibold fs-6 cl-neutral-primary justify-content-between">
 								<div class="vendor-name f-title-small-font-size fw-title-small-font-weight lh-title-small-line-height ff-title-small-font-family">
 									{{ $vendor->company_name }}
 								</div>
+								{{-- Condition for logged in customer and if customer has this vendor as favourite
+								<i class="fa-solid fa-heart text-primary"></i> --}}
 							</div>
 							<div class="ms-0 d-block text-truncate" style="line-height:16px;color:#666666;margin-right:unset;">
 								<div class="fw-semibold fs-7 align-middle d-inline" style="margin-right:2px;color:#666666;">
@@ -76,5 +79,5 @@
 @endsection
 
 @push('scripts')
-<script src="//unpkg.com/alpinejs" defer></script>
+{{-- <script src="//unpkg.com/alpinejs" defer></script> --}}
 @endpush

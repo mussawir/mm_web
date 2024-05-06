@@ -23,16 +23,11 @@ class AppServiceProvider extends ServiceProvider
 	public function boot(): void
 	{
 		Paginator::useBootstrapFive();
-		// Retrieve currency information from the database
-		$currency = Currency::where('status', 1)->first();
 
-		if ($currency->count())
-		{
-			// Store currency information in the session
+		$currency = Currency::where('status', 1)->first();
+		if ($currency->count()) {
 			Session::put('currency', $currency);
-		}
-		else
-		{
+		} else {
 			session(['currency' => ['symbol' => '$']]);
 		}
 	}

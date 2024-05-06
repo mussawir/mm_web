@@ -180,7 +180,7 @@
 			<div class="box-flex bds-c-navbar__bottom">
 				<div class="bds-c-tabs vertical-switcher-tabs">
 					<div class="bds-c-tabs__container">
-						<ul class="bds-c-tabs__list" role="tablist">
+						<ul class="bds-c-tabs__list align-items-center gap-2" role="tablist">
 							<li class="bds-c-tab" x-on:click="selectedTab = 'all', selectedType='food'" :class="{ 'is-selected': selectedTab === 'all' }" role="presentation">
 								<button role="tab">
 									<div class="bds-c-tab__icon">

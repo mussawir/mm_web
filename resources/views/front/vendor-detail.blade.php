@@ -36,8 +36,8 @@
 			</div>
 			<ul class="main-info__characteristics">
 				@foreach ($activeCategories as $category)
-					<div class="box-flex info-items-dot-separator"></div>
 					@if ($category->items->count() && $loop->iteration <= 5)
+						<div class="box-flex info-items-dot-separator"></div>
 						<li class="characteristic-list-item">
 							<span class="cl-neutral-secondary f-paragraph-small-font-size fw-paragraph-small-font-weight lh-paragraph-small-line-height ff-paragraph-small-font-family">
 								{{ $category->name }}
@@ -49,6 +49,16 @@
 			<button class="main-info__title border-0 m-0 p-0 bg-transparent">
 				<h1 class="sm:f-title-medium-font-size md:f-title-medium-font-size lg:f-title-medium-font-size xl:f-title-large-font-size f-title-xlarge-font-size sm:fw-title-medium-font-weight md:fw-title-medium-font-weight lg:fw-title-medium-font-weight xl:fw-title-large-font-weight fw-title-xlarge-font-weight sm:lh-title-medium-line-height md:lh-title-medium-line-height lg:lh-title-medium-line-height xl:lh-title-large-line-height lh-title-xlarge-line-height sm:ff-title-medium-font-family md:ff-title-medium-font-family lg:ff-title-medium-font-family xl:ff-title-large-font-family ff-title-xlarge-font-family">
 					{{ $vendor->company_name }}
+					<a
+						class="ps-2 favourite-vendor"
+						href="{{ route('customer.favourite.vendor', $vendor->id) }}"
+					>
+						@php
+							$heart = Auth::guard('customer')->user()->favouriteVendors->whereIn('id', [$vendor->id])->count() ? 'fa-solid' : 'fa-regular';
+							
+						@endphp
+						<i class="fa-heart {{ $heart }} text-primary fs-4"></i>
+					</a>
 				</h1>
 			</button>
 			{{-- <div class="box-flex main-info__tags ai-center fd-row mr-xs mt-xs">
@@ -316,6 +326,11 @@
 			// Update the modal content here using itemId and itemType
 			loadItemDetails(vendorId, itemId, itemType);
 		});
+
+		// const favouriteVendor = document.querySelector('.favourite-vendor');
+		// favouriteVendor.addEventListener('click', function (event) {
+		// 	alert ('Make this vendor favourite');
+		// });
 
 		cartForm.addEventListener('submit', function (event) {
 			let sessionVendor = @json(session('vendor'));

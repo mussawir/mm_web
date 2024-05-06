@@ -31,6 +31,7 @@
 
 		@yield('css')
 		@stack('styles')
+		@livewireStyles
 	</head>
 	<body class="vstack min-vh-100" @if(request()->is('/') || request()->is('home')) x-data="{ selectedTab: 'all', selectedType: 'food' }" x-cloak @endif>
 		@include('layouts.header')
@@ -417,6 +418,7 @@
 				placeSpan.textContent = placeName || '';
 			}
 		</script>
+		@livewireScripts
 		@yield('js')
 		@stack('scripts')
 	</body>

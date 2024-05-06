@@ -13,7 +13,7 @@ class Authenticate extends Middleware
 	 */
 	protected function redirectTo(Request $request): ?string
 	{
-		if ($request->routeIs('checkout.*'))
+		if ($request->routeIs('checkout.*') || $request->routeIs('customer.*'))
 		{
 			if (Auth::guard('admin')->check()) {
 				session()->flash('success', "Please login as a customer to order, Admin cannot place order.");
