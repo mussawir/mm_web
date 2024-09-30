@@ -63,7 +63,7 @@
 						</div>
 					</div>
 					<div class="row mb-3">
-						<div class="col-sm-6">
+						{{-- <div class="col-sm-6">
 							<label for="shop_number" class="form-label">
 								Shop Number
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -84,7 +84,7 @@
 								</strong>
 							</span>
 							@endif
-						</div>
+						</div> --}}
 						<div class="col-sm-6">
 							<label for="full_address" class="form-label">
 								Full Address
@@ -120,7 +120,7 @@
 							</span>
 							@endif
 						</div>
-						<div class="col-sm-6">
+						{{-- <div class="col-sm-6">
 							<label for="banners" class="form-label">
 								Banners (Upload exactly 3 images)
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -147,9 +147,9 @@
 								</strong>
 							</span>
 							@endif
-						</div>
+						</div> --}}
 					</div>
-					<div class="row mb-3">
+					{{-- <div class="row mb-3">
 						<div class="col-sm-6">
 							<label for="current_balance" class="form-label">
 								Current Balance
@@ -194,9 +194,9 @@
 							</span>
 							@endif
 						</div>
-					</div>
+					</div> --}}
 					<div class="row mb-3">
-						<div class="col-sm-6">
+						{{-- <div class="col-sm-6">
 							<label for="date_joining" class="form-label">
 								Date Joining
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -217,7 +217,7 @@
 								</strong>
 							</span>
 							@endif
-						</div>
+						</div> --}}
 						<div class="col-sm-6">
 							<label for="primary_contact" class="form-label">
 								Primary Contact Number
@@ -380,7 +380,7 @@
 						</div>
 					</div>
 					<div class="row mb-3">
-						<div class="col-sm-6">
+						{{-- <div class="col-sm-6">
 							<label for="vendor_type" class="form-label">
 								Vendor Type
 								<span class='text-danger' aria-hidden='true'>
@@ -404,7 +404,7 @@
 								</strong>
 							</span>
 							@endif
-						</div>
+						</div> --}}
 					</div>
 					<div class="divider text-start">
 						<div class="divider-text fw-bold">

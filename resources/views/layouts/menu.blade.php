@@ -2,10 +2,10 @@
 	<div class="app-brand demo">
 		<a href="{{ url('/admin/dashboard') }}" class="app-brand-link">
 			<span class="app-brand-logo demo">
-				<img src="{{ asset('/assets/images/favicon/favicon.svg') }}" class="navbar-brand-img" width="40" height="40" alt="MazaaMax">
+				<img src="{{ asset('/assets/images/favicon/favicon.svg') }}" class="navbar-brand-img" width="40" height="40" alt="Inventory App">
 			</span>
 			<span class="app-brand-text demo menu-text fw-bolder ms-2">
-				MazaaMax
+				Inventory App
 			</span>
 		</a>
 		<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -26,8 +26,8 @@
 		@can('admin')
 		<li class="menu-item {{ (request()->is('admin/operators') || request()->is('admin/operators/*')) ? 'active' : '' }}">
 			<a href="{{ url('/admin/operators') }}" class="menu-link">
-				<i class="menu-icon tf-icons bx bxs-user-circle"></i>
-				<div data-i18n="Operators">Operators</div>
+				<i class="menu-icon tf-icons bx bxs-truck"></i>
+				<div data-i18n="Suppliers">Suppliers</div>
 			</a>
 		</li>
 		<li class="menu-item {{ (request()->is('admin/categories') || request()->is('admin/categories/*')) ? 'active' : '' }}">

@@ -55,26 +55,26 @@ class VendorController extends Controller
 		$request->validate([
 			'name' => 'required|string|min:3',
 			'company_name' => 'required|string',
-			'shop_number' => 'required|numeric',
+			// 'shop_number' => 'required|numeric',
 			'full_address' => 'required|string',
-			'current_balance' => 'required|numeric',
-			'points_in_hand' => 'required|numeric',
-			'date_joining' => 'required|date',
+			// 'current_balance' => 'required|numeric',
+			// 'points_in_hand' => 'required|numeric',
+			// 'date_joining' => 'required|date',
 			'primary_contact' => 'required|numeric|unique:vendors,contact_number_primary',
-			'secondary_contact' => 'required|numeric|unique:vendors,contact_number_sec',
-			'commission_percentage' => 'required|numeric|min:2|max:20',
-			'delivery_free_after' => 'required|numeric',
-			'delivery_charges' => 'required|numeric',
-			'minimum_delivery_amount' => 'required|numeric',
+			'secondary_contact' => 'nullable|numeric|unique:vendors,contact_number_sec',
+			// 'commission_percentage' => 'required|numeric|min:2|max:20',
+			// 'delivery_free_after' => 'required|numeric',
+			// 'delivery_charges' => 'required|numeric',
+			// 'minimum_delivery_amount' => 'required|numeric',
 			'email' => 'required|email|unique:vendors,email',
 			'facebook' => 'nullable|string',
 			'website' => 'nullable|string',
 			'instagram' => 'nullable|string',
 			'twitter' => 'nullable|string',
-			'logo' => 'required|image|mimes:jpeg,png,jpg|min:100|max:500|dimensions:min_width=200,min_height=200',
-			'banners' => 'required|array|min:3|max:3',
-			'banners.*' => 'image|mimes:jpeg,png,jpg|max:500',
-			'vendor_type' => 'required',
+			'logo' => 'required|image|mimes:jpeg,png,jpg|min:50|max:500|dimensions:min_width=200,min_height=200',
+			// 'banners' => 'required|array|min:3|max:3',
+			// 'banners.*' => 'image|mimes:jpeg,png,jpg|max:500',
+			// 'vendor_type' => 'required',
 		]);
 
 		if($request->hasfile('logo')) {
@@ -107,30 +107,30 @@ class VendorController extends Controller
 
 		$vendor = new Vendor;
 
-		$vendor->name = $request->get('name');
-		$vendor->vendor_type_id = $request->get('vendor_type');
-		$vendor->company_name = $request->get('company_name');
-		$vendor->shop_number = $request->get('shop_number');
-		$vendor->full_address = $request->get('full_address');
-		$vendor->current_balance = $request->get('current_balance');
-		$vendor->points_in_hand = $request->get('points_in_hand');
-		$vendor->date_joining = $request->get('date_joining');
-		$vendor->contact_number_primary = $request->get('primary_contact');
-		$vendor->contact_number_sec = $request->get('secondary_contact');
-		$vendor->commission_percentage = $request->get('commission_percentage');
-		$vendor->delivery_free_after = $request->get('delivery_free_after');
-		$vendor->delivery_charges = $request->get('delivery_charges');
-		$vendor->minimum_delivery_amount = $request->get('minimum_delivery_amount');
-		$vendor->email = $request->get('email');
-		$vendor->facebook = $request->get('facebook');
-		$vendor->website = $request->get('website');
-		$vendor->instagram = $request->get('instagram');
-		$vendor->twitter_account = $request->get('twitter');
+		$vendor->name = $request->input('name');
+		$vendor->vendor_type_id = $request->input('vendor_type');
+		$vendor->company_name = $request->input('company_name');
+		$vendor->shop_number = $request->input('shop_number');
+		$vendor->full_address = $request->input('full_address');
+		$vendor->current_balance = $request->input('current_balance');
+		$vendor->points_in_hand = $request->input('points_in_hand');
+		$vendor->date_joining = $request->input('date_joining');
+		$vendor->contact_number_primary = $request->input('primary_contact');
+		$vendor->contact_number_sec = $request->input('secondary_contact');
+		$vendor->commission_percentage = $request->input('commission_percentage');
+		$vendor->delivery_free_after = $request->input('delivery_free_after');
+		$vendor->delivery_charges = $request->input('delivery_charges');
+		$vendor->minimum_delivery_amount = $request->input('minimum_delivery_amount');
+		$vendor->email = $request->input('email');
+		$vendor->facebook = $request->input('facebook');
+		$vendor->website = $request->input('website');
+		$vendor->instagram = $request->input('instagram');
+		$vendor->twitter_account = $request->input('twitter');
 
 		$vendor->logo = $filename;
-		$vendor->banner1 = $banners[0];
-		$vendor->banner2 = $banners[1];
-		$vendor->banner3 = $banners[2];
+		// $vendor->banner1 = $banners[0];
+		// $vendor->banner2 = $banners[1];
+		// $vendor->banner3 = $banners[2];
 
 		$vendor->operator_id = $request->get('operator_id');
 

@@ -9,7 +9,7 @@
 
 		{{-- CSRF Token --}}
 		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<title>MazaaMax</title>
+		<title>Inventory App</title>
 
 		{{-- Favicon --}}
 		<link rel="icon" href="/assets/images/favicon/favicon.png" sizes="any" />

@@ -78,8 +78,17 @@
 									@if ($orderDetail->is_deal)
 									<ul class="list-group">
 										@foreach ($orderDetail->orderDealOptions as $orderDealOption)
-										<li class="list-group-item">
+										<li class="list-group-item ps-5 fw-medium">
 											{{ $orderDealOption->item_name }}
+											@if ($orderDealOption->deal_price != 0)
+												<span>
+													{{ $orderDetail->qty }}
+												</span>
+												<span>x</span>
+												<span>
+													{{ intval($orderDealOption->deal_price) }}
+												</span>
+											@endif
 										</li>
 										@endforeach
 									</ul>

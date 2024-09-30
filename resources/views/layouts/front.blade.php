@@ -8,7 +8,7 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
 
-		<title>@yield('title', 'mazaamax')</title>
+		<title>@yield('title', 'Inventory App')</title>
 
 		@laravelPWA
 
@@ -29,7 +29,6 @@
 		<link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/toastify.min.css') }}">
 		<script type="text/javascript" src="{{ asset('/assets/js/toastify.js') }}"></script>
 
-		@yield('css')
 		@stack('styles')
 		@livewireStyles
 	</head>
@@ -98,7 +97,7 @@
 
 		{{-- Global Init --}}
 		<script src="{{ asset('/assets/js/custom.js') }}"></script>
-		<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize" async defer></script>
+		{{-- <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize" async defer></script> --}}
 		<script type="text/javascript">
 			$(".increase-quantity").click(function (e) {
 				e.preventDefault();
@@ -167,6 +166,8 @@
 			let openModalButton = document.querySelector('.location');
 			let cardTitle = document.getElementById('cardTitle');
 			let saveButton = document.querySelector('.save-option');
+			let citySelect = document.getElementById('citySelect');
+			let cityContainer = document.getElementById('cityContainer');
 
 			document.addEventListener('DOMContentLoaded', () => {
 				const selectedAddress = localStorage.getItem('formattedAddress');
@@ -194,15 +195,99 @@
 				updateButtonText();
 			});
 
-			function saveOption() {
-				const locationCoords = localStorage.getItem('locationCoords');
+			function saveOption()
+			{
+				const selectedCity = document.getElementById('citySelect');
+				const storedCity = localStorage.getItem('selectedCity');
 
-				if (locationCoords) {
-					saveSelectedLocationToSession(locationCoords);
-					updateButtonText();
-					myModal.hide();
+				if (storedCity)
+				{
+					if (selectedCity.value === storedCity)
+					{
+						myModal.hide();
+					}
+					else
+					{
+						// const cartItemCount = @json($cartItemCount);
+						// let shouldChange = false;
+
+						// if (cartItemCount > 0)
+						// {
+						// 	shouldChange = window.confirm("This will clear your cart. Are you sure you want to proceed?");
+						// }
+
+						// if (shouldChange)
+						// {
+						// 	// Clear the cart when the branch changes
+						// 	clearCart();
+						// }
+
+						localStorage.setItem('selectedCity', selectedCity.value);
+						localStorage.setItem('cityName', selectedCity.options[selectedCity.selectedIndex].textContent);
+
+						saveSelectedCityToSession(selectedCity.value);
+
+						fetchSuppliersForCity();
+
+						updateButtonText(selectedCity.options[selectedCity.selectedIndex].textContent);
+
+						myModal.hide();
+					}
 				}
 			}
+
+			function saveSelectedCityToSession(selectedCity) {
+				if (selectedCity)
+				{
+					$.ajax({
+						type: 'POST',
+						url: '{{ route('save.selectedCity') }}',
+						headers: {
+							'X-CSRF-TOKEN': "{{ csrf_token() }}"
+						},
+						data: {
+							selectedCity: selectedCity
+						},
+						success: function(response) {
+							if (response.data == true) {
+								fetchSuppliersForCity();
+							}
+						},
+						error: function(error) {
+							console.error('Error saving selected city:', error);
+						}
+					});
+				}
+			}
+
+			function fetchSuppliersForCity() {
+				const selectedCity = citySelect.value || localStorage.getItem('selectedCity');
+
+				if (!selectedCity) {
+					return;
+				}
+
+				$.ajax({
+					url: `/load-suppliers/${selectedCity}`,
+					type: 'GET',
+					success: function(response) {
+						updateSuppliersView(response.suppliers);
+					},
+					error: function(error) {
+						console.error('Error loading suppliers:', error);
+					}
+				});
+			}
+
+			// function saveOption() {
+			// 	const locationCoords = localStorage.getItem('locationCoords');
+
+			// 	if (locationCoords) {
+			// 		saveSelectedLocationToSession(locationCoords);
+			// 		updateButtonText();
+			// 		myModal.hide();
+			// 	}
+			// }
 
 			function fetchVendorsForLocation() {
 				const locationCoords = localStorage.getItem('locationCoords');
@@ -229,7 +314,7 @@
 				});
 			}
 
-			function updateVendorsView(vendors)
+			function updateSuppliersView(vendors)
 			{
 				const vendorContent = document.getElementById('vendorContent');
 				vendorContent.innerHTML = '';
@@ -386,29 +471,6 @@
 				return badge;
 			}
 
-			function saveSelectedLocationToSession(selectedCoords) {
-				if (selectedCoords) {
-					$.ajax({
-						type: 'POST',
-						url: '{{ route('save.selectedLocation') }}',
-						headers: {
-							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
-						},
-						data: {
-							selectedCoords: selectedCoords
-						},
-						success: function(response) {
-							if (response.data == true) {
-								fetchVendorsForLocation();
-							}
-						},
-						error: function(error) {
-							console.error('Error saving selected branch:', error);
-						}
-					});
-				}
-			}
-
 			function updateButtonText() {
 				const button = document.querySelector('.location');
 				const placeSpan = document.querySelector('.place');
@@ -419,7 +481,6 @@
 			}
 		</script>
 		@livewireScripts
-		@yield('js')
 		@stack('scripts')
 	</body>
 </html>

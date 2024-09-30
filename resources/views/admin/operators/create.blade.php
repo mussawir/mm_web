@@ -10,8 +10,6 @@
 			<div class="card-body">
 				<form class="add-operator-form" method="POST" action="/admin/operators" enctype="multipart/form-data">
 					@csrf
-					<input type="hidden" name="address_latitude" id="address-latitude" value="0" />
-					<input type="hidden" name="address_longitude" id="address-longitude" value="0" />
 					<div class="row mb-3">
 						<div class="col-md-3">
 							<label for="name" class="form-label">
@@ -166,13 +164,6 @@
 								</strong>
 							</span>
 							@endif
-						</div>
-					</div>
-					<div class="row mb-3">
-						<div class="col-md-12">
-							<div class="w-100 rounded-2 border" id="address-map-container" style="height:400px;">
-								<div class="h-100" id="address-map"></div>
-							</div>
 						</div>
 					</div>
 					<div class="row mb-3">
@@ -367,36 +358,3 @@
 	</div>
 </div>
 @endsection
-
-@push('scripts')
-<script src="{{ asset('assets/js/mapInput.js') }}"></script>
-<script async src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize" defer></script>
-<script>
-	document.addEventListener('DOMContentLoaded', () => {
-		const addOperatorForm = document.querySelector('.add-operator-form');
-		const saveOperatorButton = document.querySelector('.save-operator');
-
-		saveOperatorButton.addEventListener('click', function (event) {
-			event.preventDefault();
-
-			if (checkCoords()) {
-				addOperatorForm.submit();
-			}
-		});
-
-		function checkCoords() {
-			const address = document.getElementById('address-input');
-			const latitude = document.getElementById('address-latitude');
-			const longitude = document.getElementById('address-longitude');
-
-			if (latitude.value === '0' || longitude.value === '0') {
-				alert('Please select a valid location on the map.');
-				address.classList.add('is-invalid');
-				return false;
-			}
-
-			return true;
-		}
-	});
-</script>
-@endpush

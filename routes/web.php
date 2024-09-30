@@ -251,9 +251,9 @@ Route::controller(FrontController::class)->group(function () {
 	# Added by Sohail Asghar [25-Sept-2023]
 	Route::get('/load-deals-and-categories/{branch}', 'loadDealsAndCategories')
 		->name('load.deals.categories');
-	Route::post('/load-vendors', 'loadVendors')->name('load.vendors');
-	Route::post('/save-selected-location', 'saveSelectedLocation')
-		->name('save.selectedLocation');
+	Route::post('/load-suppliers', 'loadSuppliers')->name('load.suppliers');
+	Route::post('/save-selected-city', 'saveSelectedCity')
+		->name('save.selectedCity');
 });
 # Front End Routes End
 

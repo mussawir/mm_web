@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-	@if ($vendors->count())
+	{{-- @if ($vendors->count())
 	<div class="m-2 p-2">
 		<h3>
 			All
@@ -10,7 +10,7 @@
 		</h3>
 		@livewire('search-vendors')
 	</div>
-	@endif
+	@endif --}}
 	<div class="d-flex flex-wrap" id="vendorContent">
 		@forelse ($vendors as $vendor)
 			<div
