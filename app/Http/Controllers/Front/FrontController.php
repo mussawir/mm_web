@@ -122,24 +122,17 @@ class FrontController extends Controller
 		]);
 	}
 
-	public function loadVendors(Request $request)
+	public function loadSuppliers(Request $request)
 	{
-		$locationCoords = json_decode($request->get('locationCoords'));
-		$latitude = $locationCoords->lat;
-		$longitude = $locationCoords->long;
-
-		// user selected vendor type
-		// $vendorType = $request->input('vendorType');
+		$selectedCity = json_decode($request->input('selectedCity'));
 
 		$operators = OperatorMaster::with('details')->get();
 
-		// Filtering operators based on distance
+		// Filtering operators based on city
 		$filteredOperators=[];
 
 		foreach($operators as $operator) {
-			$operatorLocation = json_decode($operator->details->operation_geo_location);
-			$operatorRadius = $operator->details->operation_radius;
-
+			@dd ($operator);
 			if($operatorLocation && $operatorRadius) {
 				$distance = $this->getDistance($latitude, $longitude, $operatorLocation->latitude, $operatorLocation->longitude);
 
@@ -165,17 +158,17 @@ class FrontController extends Controller
 		]);
 	}
 
-	public function saveSelectedLocation(Request $request)
+	public function saveSelectedCity(Request $request)
 	{
-		$selectedCoords = json_decode($request->input('selectedCoords'));
+		$selectedCity = json_decode($request->input('selectedCity'));
 
-		// Store the selected branch in the session
-		$request->session()->put('selectedCoords', $selectedCoords);
+		// Store the selected city in the session
+		$request->session()->put('selectedCity', $selectedCity);
 
 		return response()->json([
 			'status' => 200,
 			'data' => true,
-			'message' => 'Selected location saved to session.'
+			'message' => 'Selected city saved to session.'
 		]);
 	}
 

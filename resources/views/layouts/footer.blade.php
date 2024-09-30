@@ -8,7 +8,7 @@
 			<div class="col-lg-6 col-xs-12">
 				<a href="{{ route('home') }}" class="d-flex align-items-center gap-2">
 					<img
-						src="{{ asset('assets/images/avatars/mazamax.svg') }}"
+						src="{{ asset('assets/images/avatars/logo.svg') }}"
 						class="w-25 img-fluid"
 						alt="Mazaa Max"
 						style="filter:grayscale(1)"

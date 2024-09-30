@@ -46,8 +46,8 @@ class OperatorController extends Controller
 			'area_name' => 'required|string',
 			'operation_radius' => 'required',
 			'operational_area' => 'required',
-			'logo' => 'required|image|mimes:jpeg,png,jpg|min:100|max:500',
-			'banner' => 'required|image|mimes:jpeg,png,jpg|min:100|max:500',
+			'logo' => 'required|image|mimes:jpeg,png,jpg|min:50|max:500',
+			// 'banner' => 'required|image|mimes:jpeg,png,jpg|min:100|max:500',
 		]);
 
 		if($request->hasfile('logo')) {
@@ -56,7 +56,7 @@ class OperatorController extends Controller
 			if ($file->isValid()) {
 				$logo = time() . '.' . $file->extension();
 
-				$file->move('images/operators/logos/', $logo);
+				$file->move('images/suppliers/logos/', $logo);
 			} else {
 				return redirect()
 					->back()
@@ -64,22 +64,22 @@ class OperatorController extends Controller
 			}
 		}
 
-		if ($request->hasFile('banner')) {
-			$file = $request->file('banner');
-			if ($file->isValid()) {
-				$banner = time() . '.' . $file->extension();
+		// if ($request->hasFile('banner')) {
+		// 	$file = $request->file('banner');
+		// 	if ($file->isValid()) {
+		// 		$banner = time() . '.' . $file->extension();
 
-				$file->move('images/operators/banners/', $banner);
-			} else {
-				return redirect()
-					->back()
-					->withErrors(['banner' => 'Invalid image file.']);
-			}
-		}
+		// 		$file->move('images/operators/banners/', $banner);
+		// 	} else {
+		// 		return redirect()
+		// 			->back()
+		// 			->withErrors(['banner' => 'Invalid image file.']);
+		// 	}
+		// }
 
-		$latitude = floatval($request->input('address_latitude'));
-		$longitude = floatval($request->input('address_longitude'));
-		$selectedCoords = json_encode(['latitude' => $latitude, 'longitude' => $longitude]);
+		// $latitude = floatval($request->input('address_latitude'));
+		// $longitude = floatval($request->input('address_longitude'));
+		// $selectedCoords = json_encode(['latitude' => $latitude, 'longitude' => $longitude]);
 
 		$operator = new OperatorMaster;
 
@@ -88,7 +88,7 @@ class OperatorController extends Controller
 		$operator->email = $request->get('email');
 		$operator->phone = $request->get('phone');
 		$operator->logo = $logo;
-		$operator->banner = $banner;
+		// $operator->banner = $banner;
 		$operator->single_vendor = $request->get('single_vendor');
 
 		$operator->save();
@@ -100,10 +100,10 @@ class OperatorController extends Controller
 			$operatorDetails->city_id = $request->get('city');
 			$operatorDetails->address = $request->get('address_address');
 			$operatorDetails->commission_percentage = $request->get('commission_percentage');
-			$operatorDetails->area_name = $request->get('area_name');
-			$operatorDetails->operation_radius = $request->get('operation_radius');
-			$operatorDetails->operational_area = $request->get('operational_area');
-			$operatorDetails->operation_geo_location = $selectedCoords;
+			// $operatorDetails->area_name = $request->get('area_name');
+			// $operatorDetails->operation_radius = $request->get('operation_radius');
+			// $operatorDetails->operational_area = $request->get('operational_area');
+			// $operatorDetails->operation_geo_location = $selectedCoords;
 
 			$operatorDetails->save();
 
@@ -119,7 +119,7 @@ class OperatorController extends Controller
 			}
 		}
 
-		return redirect()->route('operators.index')->with('message', 'Operator added successfully.');
+		return redirect()->route('operators.index')->with('message', 'Supplier added successfully.');
 	}
 
 	public function show($id)
@@ -254,7 +254,7 @@ class OperatorController extends Controller
 		}
 
 		return redirect()->route('operators.index')
-			->with('message', 'Operator updated successfully!');
+			->with('message', 'Supplier updated successfully!');
 	}
 
 	public function destroy($id)
@@ -265,6 +265,6 @@ class OperatorController extends Controller
 		// $operator->delete();
 
 		return redirect()->route('operators.index')
-			->with('message', 'Operator deleted successfully!');
+			->with('message', 'Supplier deleted successfully!');
 	}
 }

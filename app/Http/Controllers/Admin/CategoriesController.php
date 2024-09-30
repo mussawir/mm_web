@@ -25,19 +25,19 @@ class CategoriesController extends Controller
 
 	public function create()
 	{
-		$vendorTypes = VendorType::where('status', 1)->get();
-		// $parentCategories = Category::whereNull('parent_id')
-		// 	->get();
+		// $vendorTypes = VendorType::where('status', 1)->get();
+		$parentCategories = Category::whereNull('parent_id')
+			->get();
 
-		return view('admin.categories.create', compact('vendorTypes'));
+		return view('admin.categories.create', compact('parentCategories'));
 	}
 
 	public function store(Request $request)
 	{
 		$request->validate([
-			'vendor_type' => 'required',
+			// 'vendor_type' => 'required',
 			'name' => 'required|string|max:40',
-			'image' => 'required|image|mimes:jpeg,png,jpg|dimensions:min_width=500,min_height=500|min:100|max:4096',
+			// 'image' => 'required|image|mimes:jpeg,png,jpg|dimensions:min_width=500,min_height=500|min:100|max:4096',
 		]);
 
 		if($request->hasfile('image')) {
@@ -70,9 +70,9 @@ class CategoriesController extends Controller
 
 		$category = new Category;
 
-		$category->vendor_type_id = $request->get('vendor_type');
+		// $category->vendor_type_id = $request->get('vendor_type');
 		$category->name = $request->get('name');
-		$category->image = $filename;
+		// $category->image = $filename;
 
 		if ($request->input('category'))
 		{

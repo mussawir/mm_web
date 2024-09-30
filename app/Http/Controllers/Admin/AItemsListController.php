@@ -97,7 +97,7 @@ class AItemsListController extends Controller
 			$item->is_addon = $request->input('is_addon');
 		}
 
-		$item ->save();
+		$item->save();
 
 		$action = $request->input('action');
 

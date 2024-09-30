@@ -10,7 +10,7 @@
 			<div class="card-body">
 				<form method="POST" action="/admin/categories" enctype="multipart/form-data">
 					@csrf
-					<div class="row mb-3">
+					{{-- <div class="row mb-3">
 						<label for="vendor_type" class="col-sm-2 col-form-label">
 							Vendor Type
 							<span class='text-danger' aria-hidden='true'>
@@ -34,7 +34,7 @@
 							</span>
 							@endif
 						</div>
-					</div>
+					</div> --}}
 					<div class="row mb-3">
 						<label for="name" class="col-sm-2 col-form-label">
 							Category Name
@@ -61,7 +61,7 @@
 							@endif
 						</div>
 					</div>
-					<div class="row mb-3">
+					{{-- <div class="row mb-3">
 						<label for="image" class="col-sm-2 col-form-label">
 							Image
 							<span class='text-danger' aria-hidden='true'>
@@ -84,7 +84,7 @@
 							</span>
 							@endif
 						</div>
-					</div>
+					</div> --}}
 					<div class="row mb-3">
 						<label for="category" class="col-sm-2 col-form-label">
 							Parent Category
@@ -92,6 +92,11 @@
 						<div class="col-sm-10">
 							<select class="form-select" id="category" name="category">
 								<option value="">Select Parent Category</option>
+								@foreach ($parentCategories as $parentCategory)
+								<option value="{{ $parentCategory->id }}">
+									{{ $parentCategory->name }}
+								</option>
+								@endforeach
 							</select>
 						</div>
 					</div>

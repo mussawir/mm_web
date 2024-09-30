@@ -2,7 +2,7 @@
 
 @section('content')
 <h4 class="fw-bold mb-4">
-	Operator List
+	Supplier List
 </h4>
 <div class="card">
 	<div class="card-header">
@@ -70,7 +70,7 @@
 								<form action="{{ route('operators.destroy', ['id' => $operator->id]) }}" method="POST">
 									@csrf
 									@method('DELETE')
-									<button type="submit" onclick="return confirm('Are you sure you want to delete this operator?')" class="dropdown-item">
+									<button type="submit" onclick="return confirm('Are you sure you want to delete this supplier?')" class="dropdown-item">
 										<i class="bx bx-trash me-1"></i>
 										Delete
 									</button>
@@ -82,7 +82,7 @@
 				@empty
 				<tr class="fw-semibold lead my-0 alert alert-danger text-center">
 					<td colspan="5">
-						No operators available.
+						No suppliers available.
 					</td>
 				</tr>
 				@endforelse
