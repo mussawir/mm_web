@@ -120,7 +120,7 @@
 							</span>
 							@endif
 						</div>
-						{{-- <div class="col-sm-6">
+						<div class="col-sm-6">
 							<label for="banners" class="form-label">
 								Banners (Upload exactly 3 images)
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -147,7 +147,7 @@
 								</strong>
 							</span>
 							@endif
-						</div> --}}
+						</div>
 					</div>
 					{{-- <div class="row mb-3">
 						<div class="col-sm-6">

@@ -2,15 +2,14 @@
 
 @section('content')
 <div class="container">
-	{{-- @if ($vendors->count())
+	@if ($vendors->count())
 	<div class="m-2 p-2">
 		<h3>
 			All
-			<span x-text="selectedType === 'food' ? 'Restaurants' : 'Shops'"></span>
 		</h3>
 		@livewire('search-vendors')
 	</div>
-	@endif --}}
+	@endif
 	<div class="d-flex flex-wrap" id="vendorContent">
 		@forelse ($vendors as $vendor)
 			<div
@@ -24,7 +23,7 @@
 							<div class="d-flex align-items-center justify-content-center overflow-hidden" style="aspect-ratio: 16/9;border-top-left-radius:12px;border-top-right-radius:12px;background-color:#f7f7f7;">
 								<img src="{{ "/images/vendors/banners/{$vendor->banner1}" }}" class="card-img-bg position-relative" loading="lazy"/>
 							</div>
-							<div class="m-3 position-absolute" style="inset:0;">
+							{{-- <div class="m-3 position-absolute" style="inset:0;">
 								<div class="d-flex flex-column start-0 position-absolute top-0">
 									<div class="d-inline-flex align-items-center rounded-2 py-1 px-2 text-center mb-1 bds-c-tag--variant-gradient" style="column-gap:2px;height:24px;max-width:232px;width:max-content;">
 										<span class="d-flex">
@@ -46,7 +45,7 @@
 								<div class="d-inline-flex align-items-center text-center bottom-0 end-0 position-absolute" style="background-color:#333333cc;border-radius:9999px;height:16px;padding:2px 8px;column-gap:2px;max-width:232px;">
 									<span class="fw-semibold text-white" style="font-size:10px;">Featured</span>
 								</div>
-							</div>
+							</div> --}}
 						</div>
 						<div class="d-flex flex-column" style="margin:12px;">
 							<div class="mb-1 d-flex align-items-center fw-semibold fs-6 cl-neutral-primary justify-content-between">
@@ -77,7 +76,3 @@
 	</div>
 </div>
 @endsection
-
-@push('scripts')
-{{-- <script src="//unpkg.com/alpinejs" defer></script> --}}
-@endpush

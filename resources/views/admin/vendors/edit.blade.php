@@ -377,7 +377,7 @@
 						</div>
 					</div>
 					<div class="row mb-3">
-						<div class="col-sm-6">
+						{{-- <div class="col-sm-6">
 							<label for="vendor_type" class="form-label">
 								Vendor Type
 								<span class='text-danger' aria-hidden='true'>
@@ -401,7 +401,7 @@
 								</strong>
 							</span>
 							@endif
-						</div>
+						</div> --}}
 					</div>
 					<div class="divider text-start">
 						<div class="divider-text fw-bold">
