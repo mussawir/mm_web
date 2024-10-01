@@ -32,7 +32,7 @@
 		@stack('styles')
 		@livewireStyles
 	</head>
-	<body class="vstack min-vh-100" @if(request()->is('/') || request()->is('home')) x-data="{ selectedTab: 'all', selectedType: 'food' }" x-cloak @endif>
+	<body class="vstack min-vh-100" @if(request()->is('/') || request()->is('home')) x-data="{ selectedTab: 'all' }" x-cloak @endif>
 		@include('layouts.header')
 
 		<div class="custom-container m-0 p-0">
@@ -73,7 +73,7 @@
 				</script>
 			@endif
 			@yield('content')
-			@include('modals.choose-location')
+			{{-- @include('modals.choose-location') --}}
 			@php
 				$cartItemCount = count(session('cart', []));
 			@endphp

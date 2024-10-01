@@ -50,7 +50,7 @@
 					</div>
 					<div class="bds-c-navbar__center--filler d-flex"></div>
 				</div> --}}
-				<div class="bds-c-navbar__center--top d-flex flex-row">
+				{{-- <div class="bds-c-navbar__center--top d-flex flex-row">
 					<div class="bds-c-navbar__center--filler d-flex"></div>
 					<div class="bds-c-navbar__center d-flex flex-row align-items-center justify-content-center">
 						<div class="where-wrapper">
@@ -86,7 +86,7 @@
 						</div>
 					</div>
 					<div class="bds-c-navbar__center--filler d-flex"></div>
-				</div>
+				</div> --}}
 				<div class="bds-c-navbar__right d-flex">
 					@if (Auth::guard('customer')->check())
 					<div class="account-menu">
@@ -218,50 +218,26 @@
 				<div class="bds-c-tabs vertical-switcher-tabs">
 					<div class="bds-c-tabs__container">
 						<ul class="bds-c-tabs__list align-items-center gap-2" role="tablist">
-							{{-- <li class="bds-c-tab" x-on:click="selectedTab = 'all', selectedType='food'" :class="{ 'is-selected': selectedTab === 'all' }" role="presentation">
+							<li class="bds-c-tab" x-on:click="selectedTab = 'all'" :class="{ 'is-selected': selectedTab === 'all' }" role="presentation">
 								<button role="tab">
-									<div class="bds-c-tab__icon">
-										<x-icon name="food"/>
-									</div>
+									<div class="bds-c-tab__icon"></div>
 									<span class="bds-c-tab__label">
 										All
 									</span>
 								</button>
-							</li> --}}
-							{{-- <li class="bds-c-tab" x-on:click="selectedTab = 'food',selectedType='food'" :class="{ 'is-selected': selectedTab === 'food' }" role="presentation">
-								<button role="tab">
-									<div class="bds-c-tab__icon">
-										<x-icon name="food"/>
-									</div>
-									<span class="bds-c-tab__label">
-										Food
-									</span>
-								</button>
 							</li>
-							<li class="bds-c-tab"  x-on:click="selectedTab = 'shop',selectedType='shop'" :class="{ 'is-selected': selectedTab === 'shop' }" role="presentation">
+							@if ($categories->count())
+							@foreach ($categories as $category)
+							<li class="bds-c-tab"  x-on:click="selectedTab = '{{ strtolower($category->name) }}'" :class="{ 'is-selected': selectedTab === '{{ strtolower($category->name) }}' }" role="presentation">
 								<button role="tab">
-									<div class="bds-c-tab__icon">
-										<x-icon name="shop"/>
-									</div>
+									<div class="bds-c-tab__icon"></div>
 									<span class="bds-c-tab__label" id="rlp-vertical-switcher__tab-1-label">
-										Shops
-									</span>
-								</button>
-							</li> --}}
-							{{-- @if ($vendorTypes->count())
-							@foreach ($vendorTypes as $vendorType)
-							<li class="bds-c-tab"  x-on:click="selectedTab = '{{ strtolower($vendorType->type_name) }}',selectedType = '{{ $vendorType->is_food ? 'food' : 'shop' }}'" :class="{ 'is-selected': selectedTab === '{{ strtolower($vendorType->type_name) }}' }" role="presentation">
-								<button role="tab">
-									<div class="bds-c-tab__icon">
-
-									</div>
-									<span class="bds-c-tab__label" id="rlp-vertical-switcher__tab-1-label">
-										{{ $vendorType->type_name }}
+										{{ $category->name }}
 									</span>
 								</button>
 							</li>
 							@endforeach
-							@endif --}}
+							@endif
 						</ul>
 					</div>
 				</div>

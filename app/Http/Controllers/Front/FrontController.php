@@ -35,11 +35,9 @@ class FrontController extends Controller
 			->with('vendorType')
 			->get();
 
-		$vendorTypes = VendorType::where('status', 1)->get();
+		$categories = Category::whereNotNull('parent_id')->get();
 
-		$cities = City::all();
-
-		return view('home', compact('vendors', 'vendorTypes', 'cities'));
+		return view('home', compact('vendors', 'categories'));
 	}
 
 	public function vendorDetail(Request $request, $id)

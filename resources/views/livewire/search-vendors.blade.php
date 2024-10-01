@@ -8,7 +8,7 @@
 				wire:model.live='search'
 				id="search-vendors"
 				name="search-vendors"
-				placeholder="Search vendors..."
+				placeholder="Search suppliers..."
 				autocomplete="off"
 			/>
 			<span class="bds-c-search-input__search-icon">

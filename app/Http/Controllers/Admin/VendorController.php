@@ -72,8 +72,8 @@ class VendorController extends Controller
 			'instagram' => 'nullable|string',
 			'twitter' => 'nullable|string',
 			'logo' => 'required|image|mimes:jpeg,png,jpg|min:50|max:500|dimensions:min_width=200,min_height=200',
-			// 'banners' => 'required|array|min:3|max:3',
-			// 'banners.*' => 'image|mimes:jpeg,png,jpg|max:500',
+			'banners' => 'required|array|min:3|max:3',
+			'banners.*' => 'image|mimes:jpeg,png,jpg|max:500',
 			// 'vendor_type' => 'required',
 		]);
 
@@ -128,9 +128,9 @@ class VendorController extends Controller
 		$vendor->twitter_account = $request->input('twitter');
 
 		$vendor->logo = $filename;
-		// $vendor->banner1 = $banners[0];
-		// $vendor->banner2 = $banners[1];
-		// $vendor->banner3 = $banners[2];
+		$vendor->banner1 = $banners[0];
+		$vendor->banner2 = $banners[1];
+		$vendor->banner3 = $banners[2];
 
 		$vendor->operator_id = $request->get('operator_id');
 
@@ -178,18 +178,18 @@ class VendorController extends Controller
 		$request->validate([
 			'name' => 'required|string|min:3',
 			'company_name' => 'required|string',
-			'shop_number' => 'required|numeric',
+			// 'shop_number' => 'required|numeric',
 			'full_address' => 'required|string',
-			'current_balance' => 'required|numeric',
-			'points_in_hand' => 'required|numeric',
-			'date_joining' => 'required|date',
-			'primary_contact' => 'required|numeric|unique:vendors,contact_number_primary',
-			'secondary_contact' => 'required|numeric|unique:vendors,contact_number_sec',
-			'commission_percentage' => 'required|numeric|min:2|max:20',
-			'delivery_free_after' => 'required|numeric',
-			'delivery_charges' => 'required|numeric',
-			'minimum_delivery_amount' => 'required|numeric',
-			'email' => 'required|email|unique:vendors,email',
+			// 'current_balance' => 'required|numeric',
+			// 'points_in_hand' => 'required|numeric',
+			// 'date_joining' => 'required|date',
+			'primary_contact' => 'required|numeric|unique:vendors,contact_number_primary,' . $id,
+			'secondary_contact' => 'nullable|numeric|unique:vendors,contact_number_sec',
+			// 'commission_percentage' => 'required|numeric|min:2|max:20',
+			// 'delivery_free_after' => 'required|numeric',
+			// 'delivery_charges' => 'required|numeric',
+			// 'minimum_delivery_amount' => 'required|numeric',
+			'email' => 'required|email|unique:vendors,email,' . $id,
 			'facebook' => 'nullable|string',
 			'website' => 'nullable|string',
 			'instagram' => 'nullable|string',
@@ -197,7 +197,7 @@ class VendorController extends Controller
 			'logo' => 'image|mimes:jpeg,png,jpg|min:100|max:500|dimensions:min_width=200,min_height=200',
 			'banners' => 'array|min:3|max:3',
 			'banners.*' => 'image|mimes:jpeg,png,jpg|max:500',
-			'vendor_type' => 'required',
+			// 'vendor_type' => 'required',
 		]);
 
 		$vendor = Vendor::findOrFail($id);
