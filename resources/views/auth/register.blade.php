@@ -10,7 +10,7 @@
 						<img src="{{ asset('/assets/images/favicon/favicon.svg') }}" width="36" height="36" alt="Brand Logo"/>
 					</span>
 					<span class="app-brand-text demo text-body fw-bolder text-capitalize">
-						Inventory App
+						Inventory Ops
 					</span>
 				</a>
 			</div>

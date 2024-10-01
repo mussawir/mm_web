@@ -9,7 +9,7 @@
 
 		{{-- CSRF Token --}}
 		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<title>Inventory App</title>
+		<title>Inventory Ops</title>
 
 		{{-- Favicon --}}
 		<link rel="icon" href="/assets/images/favicon/favicon.png" sizes="any" />

@@ -2,10 +2,10 @@
 	<div class="app-brand demo">
 		<a href="{{ url('/admin/dashboard') }}" class="app-brand-link">
 			<span class="app-brand-logo demo">
-				<img src="{{ asset('/assets/images/favicon/favicon.svg') }}" class="navbar-brand-img" width="40" height="40" alt="Inventory App">
+				<img src="{{ asset('/assets/images/favicon/favicon.svg') }}" class="navbar-brand-img" width="40" height="40" alt="Inventory Ops">
 			</span>
 			<span class="app-brand-text demo menu-text fw-bolder ms-2">
-				Inventory App
+				Inventory Ops
 			</span>
 		</a>
 		<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
