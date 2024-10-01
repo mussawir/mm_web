@@ -4,11 +4,11 @@
 			<header class="bds-c-navbar__header d-flex flex-row align-items-center">
 				<nav class="bds-c-navbar__brand d-flex flex-row align-items-center">
 					<a href="/" aira-label="Home">
-						<span aria-label="Inventory App" class="d-flex justify-content-center" style="flex-shrink:0;line-height:0;align-items:flex-end;gap:8px;">
+						<span aria-label="Inventory Ops" class="d-flex justify-content-center" style="flex-shrink:0;line-height:0;align-items:flex-end;gap:8px;">
 							<img
 								src="/assets/images/avatars/logo.svg"
 								class="w-75 img-fluid"
-								alt="Inventory App">
+								alt="Inventory Ops">
 						</span>
 					</a>
 				</nav>

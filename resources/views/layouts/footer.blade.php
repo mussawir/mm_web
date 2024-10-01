@@ -47,7 +47,7 @@
 
 		<div class="row">
 			<div class="col-lg-3">
-				<p class="text-secondary">© {{ now()->format('Y') }} Inventory App</p>
+				<p class="text-secondary">© {{ now()->format('Y') }} Inventory Ops</p>
 			</div>
 			<div class="col-lg-3">
 				<ul class="direction-column">
@@ -58,12 +58,12 @@
 					</li>
 					<li>
 						<a href="javascript:void(0)">
-							<p>Refunds with Inventory App</p>
+							<p>Refunds with Inventory Ops</p>
 						</a>
 					</li>
 					<li class="d-flex">
 						<a href="javascript:void(0)">
-							<p>Inventory App User Account Terms and Conditions</p>
+							<p>Inventory Ops User Account Terms and Conditions</p>
 						</a>
 					</li>
 				</ul>
@@ -91,7 +91,7 @@
 				<ul class="direction-column">
 					<li class="d-flex">
 						<a href="javascript:void(0)">
-							<p>Download Inventory App Apps</p>
+							<p>Download Inventory Ops Apps</p>
 						</a>
 					</li>
 					<li class="d-flex">
