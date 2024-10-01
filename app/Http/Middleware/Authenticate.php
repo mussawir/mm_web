@@ -13,8 +13,17 @@ class Authenticate extends Middleware
 	 */
 	protected function redirectTo(Request $request): ?string
 	{
-		if ($request->routeIs('checkout.*') || $request->routeIs('customer.*'))
-		{
+		$action = $request->route()->getAction();
+		$middleware = array_filter($action['middleware'], fn($mid) => strpos($mid, 'auth:') !== false);
+
+		if (empty($middleware)) {
+			# Handle case when no auth middleware is found
+			return route('login');
+		}
+
+		$guard = explode(':', reset($middleware))[1];
+
+		if ($guard === 'customer') {
 			if (Auth::guard('admin')->check()) {
 				session()->flash('success', "Please login as a customer to order, Admin cannot place order.");
 
@@ -22,12 +31,7 @@ class Authenticate extends Middleware
 			}
 
 			return route('customer.login');
-		}
-
-		$path = $request->path();
-
-		if (str_contains($path, 'admin'))
-		{
+		} elseif ($guard === 'admin') {
 			return route('admin.login');
 		}
 

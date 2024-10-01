@@ -34,9 +34,11 @@ class RedirectIfAuthenticated
 		if ($guards == "admin" && Auth::guard($guards)->check()) {
 			return redirect('/admin/dashboard');
 		}
-		if ($guards == "rider" && Auth::guard($guards)->check()) {
-			return redirect('/rider/dashboard');
-		}
+
+		// if ($guards == "rider" && Auth::guard($guards)->check()) {
+		// 	return redirect('/rider/dashboard');
+		// }
+
 		if ($guards == "customer" && Auth::guard($guards)->check()) {
 			return redirect('/home');
 		}

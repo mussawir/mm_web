@@ -58,7 +58,14 @@
 							Please select your city
 						</h5>
 						<div id="cityContainer" class="mt-3">
-							<select id="citySelect" class="form-select my-4" aria-label="Select City"></select>
+							<select id="citySelect" class="form-select my-4" aria-label="Select City">
+								<option value="">Select City</option>
+								@foreach ($cities as $city)
+								<option value="{{ $city->id }}">
+									{{ $city->name }}
+								</option>
+								@endforeach
+							</select>
 						</div>
 					</div>
 				</div>

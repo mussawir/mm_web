@@ -4,36 +4,29 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\City;
 use Illuminate\Http\Request;
 use App\Models\DealMaster;
 use App\Models\Items_list;
 use App\Models\OperatorMaster;
 use App\Models\Vendor;
 use App\Models\VendorType;
+use Illuminate\Support\Facades\Auth;
 
 class FrontController extends Controller
 {
 	public function index()
 	{
-		$selectedCoords = session('selectedCoords') ?? null;
+		$customer = Auth::guard('customer')->user();
+		$userCity = $customer->city_id;
 
-		$latitude = $selectedCoords->lat ?? 0;
-		$longitude = $selectedCoords->long ?? 0;
+		// $sessionCity = session('selectedCity') ?? null;
 
 		$operators = OperatorMaster::with('details')->get();
 		$operatorIDs = [];
 
 		foreach($operators as $operator) {
-			$locationCoords = json_decode($operator->details->operation_geo_location);
-			$radius = $operator->details->operation_radius;
-
-			if($locationCoords && $radius) {
-				$distance = $this->getDistance($latitude, $longitude, $locationCoords->latitude, $locationCoords->longitude);
-
-				if( $distance > $radius ) {
-					continue;
-				}
-
+			if($operator->details->city_id == $userCity) {
 				$operatorIDs[] = $operator->id;
 			}
 		}
@@ -44,7 +37,9 @@ class FrontController extends Controller
 
 		$vendorTypes = VendorType::where('status', 1)->get();
 
-		return view('home', compact('vendors', 'vendorTypes'));
+		$cities = City::all();
+
+		return view('home', compact('vendors', 'vendorTypes', 'cities'));
 	}
 
 	public function vendorDetail(Request $request, $id)
@@ -129,18 +124,10 @@ class FrontController extends Controller
 		$operators = OperatorMaster::with('details')->get();
 
 		// Filtering operators based on city
-		$filteredOperators=[];
+		$filteredOperators = [];
 
 		foreach($operators as $operator) {
-			@dd ($operator);
-			if($operatorLocation && $operatorRadius) {
-				$distance = $this->getDistance($latitude, $longitude, $operatorLocation->latitude, $operatorLocation->longitude);
-
-				if($distance > $operatorRadius) {
-					continue;
-				}
-
-				// $operator->distance = $distance;
+			if($operator->details->city_id == $selectedCity) {
 				$filteredOperators[] = $operator;
 			}
 		}
@@ -153,7 +140,7 @@ class FrontController extends Controller
 
 		return response()->json([
 			'status' => 200,
-			'message' => 'Vendors retrieved successfully.',
+			'message' => 'Suppliers retrieved successfully.',
 			'vendors' => $vendors,
 		]);
 	}
@@ -170,19 +157,5 @@ class FrontController extends Controller
 			'data' => true,
 			'message' => 'Selected city saved to session.'
 		]);
-	}
-
-	private function getDistance($lat1, $lon1, $lat2, $lon2) {
-		$earthRadius = 6371; // In Kilometers
-
-		$dLat = deg2rad($lat2 - $lat1);
-		$dLon = deg2rad($lon2 - $lon1);
-
-		$a = sin($dLat / 2) * sin($dLat / 2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon / 2) * sin($dLon / 2);
-		$c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-
-		$distance = $earthRadius * $c;
-
-		return $distance;
 	}
 }
