@@ -236,40 +236,19 @@ Route::group(['middleware' => 'auth:admin'], function () {
 	});
 });
 
-# Front End Routes Start
-Route::controller(FrontController::class)->group(function () {
-	Route::get('/home', 'index')->name('home');
-	Route::get('/', 'index');
-	Route::get('/vendors/detail/{id}', 'vendorDetail')
-		->name('vendor.detail');
-	Route::get('/vendor/{vendorId}/items/detail/{itemId}', 'itemDetail')
-		->name('vendor.item.details');
-	Route::get('/vendor/{vendorId}/deals/detail/{dealId}', 'dealDetail')
-		->name('vendor.deal.details');
-	Route::get('/items/detail/{id}', 'itemDetail')->name('item.detail');
-	Route::get('/deals/detail/{id}', 'dealDetail')->name('deal.detail');
-	# Added by Sohail Asghar [25-Sept-2023]
-	Route::get('/load-deals-and-categories/{branch}', 'loadDealsAndCategories')
-		->name('load.deals.categories');
-	Route::post('/load-suppliers', 'loadSuppliers')->name('load.suppliers');
-	Route::post('/save-selected-city', 'saveSelectedCity')
-		->name('save.selectedCity');
-});
-# Front End Routes End
-
-Route::get('/thankyou', [ShopRegistrationController::class, 'thankYou']);
+// Route::get('/thankyou', [ShopRegistrationController::class, 'thankYou']);
 
 // Customer Routes Start
-Route::get('/customer-registration', [ShopRegistrationController::class, 'customerRegistationForm'])->name('customer.shop.register');
-Route::post('/customer/register', [ShopRegistrationController::class, 'customerRegistration']);
+// Route::get('/customer-registration', [ShopRegistrationController::class, 'customerRegistationForm'])->name('customer.shop.register');
+// Route::post('/customer/register', [ShopRegistrationController::class, 'customerRegistration']);
 // Customer Routes End
 
 // Rider Routes Start
-Route::get('/rider-registration', [ShopRegistrationController::class, 'riderRegistationForm']);
-Route::post('/rider/register', [ShopRegistrationController::class, 'riderRegistration']);
-// Rider Routes End
+// Route::get('/rider-registration', [ShopRegistrationController::class, 'riderRegistationForm']);
+// Route::post('/rider/register', [ShopRegistrationController::class, 'riderRegistration']);
+# Rider Routes End
 
-// Front Pages Routes Start
+# Front Pages Routes Start
 Route::controller(HomeController::class)->group(function () {
 	Route::get('/why-join-us', 'whyJoinUs');
 	Route::get('/testimonials', 'testimonials');
@@ -278,9 +257,9 @@ Route::controller(HomeController::class)->group(function () {
 	Route::get('/contact-us', 'contactUs');
 	Route::get('/privacy-policy', 'privacyPolicy');
 });
-// Front Pages Routes End
+# Front Pages Routes End
 
-// Customer Login Routes Start
+# Customer Login Routes Start
 Route::get('customer/login', [LoginController::class, 'showCustomerLoginForm'])
 	->name('customer.login');
 Route::post('login/customer', [LoginController::class, 'customerLogin'])
@@ -297,19 +276,40 @@ Route::get('customer/verify', [LoginController::class, 'verifyForm'])
 	->name('customer.verify');
 Route::post('customer/verify', [LoginController::class, 'verify'])
 	->name('customer.verify.submit');
-// Customer Login Routes End
-
-// Cart Routes Start
-Route::controller(CartController::class)->group(function () {
-	// Route::get('cart', 'cart')->name('cart');
-	Route::post('cart/add', 'addToCart')->name('cart.create');
-	Route::post('cart/update', 'update')->name('cart.update');
-	Route::post('cart/remove', 'remove')->name('cart.remove');
-	Route::post('/clear-cart', 'clearCart')->name('cart.clear');
-});
-// Cart Routes End
+# Customer Login Routes End
 
 Route::group(['middleware' => 'auth:customer'], function () {
+	# Front End Routes Start
+	Route::controller(FrontController::class)->group(function () {
+		Route::get('/home', 'index')->name('home');
+		Route::get('/', 'index');
+		Route::get('/vendors/detail/{id}', 'vendorDetail')
+			->name('vendor.detail');
+		Route::get('/vendor/{vendorId}/items/detail/{itemId}', 'itemDetail')
+			->name('vendor.item.details');
+		Route::get('/vendor/{vendorId}/deals/detail/{dealId}', 'dealDetail')
+			->name('vendor.deal.details');
+		Route::get('/items/detail/{id}', 'itemDetail')->name('item.detail');
+		Route::get('/deals/detail/{id}', 'dealDetail')->name('deal.detail');
+		# Added by Sohail Asghar [25-Sept-2023]
+		Route::get('/load-deals-and-categories/{branch}', 'loadDealsAndCategories')
+			->name('load.deals.categories');
+		Route::post('/load-suppliers', 'loadSuppliers')->name('load.suppliers');
+		Route::post('/save-selected-city', 'saveSelectedCity')
+			->name('save.selectedCity');
+	});
+	# Front End Routes End
+
+	# Cart Routes Start
+	Route::controller(CartController::class)->group(function () {
+		# Route::get('cart', 'cart')->name('cart');
+		Route::post('cart/add', 'addToCart')->name('cart.create');
+		Route::post('cart/update', 'update')->name('cart.update');
+		Route::post('cart/remove', 'remove')->name('cart.remove');
+		Route::post('/clear-cart', 'clearCart')->name('cart.clear');
+	});
+	# Cart Routes End
+
 	Route::controller(CheckoutController::class)->group(function () {
 		Route::get('/checkout', 'index')->name('checkout.page');
 		Route::post('/checkout', 'checkout')->name('checkout');

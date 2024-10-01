@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
 use App\Models\Customer;
 use App\Models\CustRegOtp;
 use App\Providers\RouteServiceProvider;
@@ -95,22 +96,26 @@ class LoginController extends Controller
 
 	public function showCustomerRegistrationForm()
 	{
-		return view('auth.register');
+		$cities = City::all();
+
+		return view('auth.register', compact('cities'));
 	}
 
 	public function customerRegister(Request $request)
 	{
 		$request->validate([
 			'name' => 'required|string',
+			'city' => 'required',
 			'phone' => 'required|numeric|unique:customers,phone_number',
 			'pin' => 'required|digits:4|confirmed',
 		]);
 
 		$customer = new Customer;
 
-		$customer->phone_number = $request->phone;
-		$customer->name = $request->name;
-		$customer->pin = $request->pin;
+		$customer->name = $request->input('name');
+		$customer->city_id = $request->input('city');
+		$customer->phone_number = $request->input('phone');
+		$customer->pin = $request->input('pin');
 		$customer->verified_customer = 0;
 
 		$customer->save();
@@ -136,7 +141,7 @@ class LoginController extends Controller
 			'pin' => 'required|digits:4|numeric',
 		]);
 
-		$customer = Customer::where("phone_number", $request->phone)->first();
+		$customer = Customer::where('phone_number', $request->phone)->first();
 
 		if (! $customer) {
 			return redirect()

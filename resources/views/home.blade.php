@@ -14,9 +14,9 @@
 	<div class="d-flex flex-wrap" id="vendorContent">
 		@forelse ($vendors as $vendor)
 			<div
-				x-show="(selectedTab === 'all' || selectedTab === '{{ strtolower($vendor->vendorType->type_name) }}') && ((selectedTab === 'all' && (selectedType === 'food' || selectedType === 'shop')) || (selectedType === '{{ $vendor->vendorType->is_food ? 'food' : 'shop' }}'))"
+				{{-- x-show="(selectedTab === 'all' || selectedTab === '{{ strtolower($vendor->vendorType->type_name) }}') && ((selectedTab === 'all' && (selectedType === 'food' || selectedType === 'shop')) || (selectedType === '{{ $vendor->vendorType->is_food ? 'food' : 'shop' }}'))" --}}
 				class="vendor-title col-12 col-lg-4 col-md-6 px-2"
-				data-vendor-type="{{ $vendor->vendorType->is_food ? 'food' : 'shop' }}"
+				{{-- data-vendor-type="{{ $vendor->vendorType->is_food ? 'food' : 'shop' }}" --}}
 			>
 				<div class="overflow-hidden mw-100 rounded-4 shadow-lg m-3 position-relative border border-secondary-subtle">
 					<a href="{{ route('vendor.detail', $vendor->id) }}">
@@ -60,9 +60,9 @@
 								<div class="fw-semibold fs-7 align-middle d-inline" style="margin-right:2px;color:#666666;">
 								</div>
 								<div class="fw-semibold d-inline fs-7 align-middle" style="margin-right:2px;color:#666666;">
-									<div class="fw-semibold d-inline fs-7">
+									{{-- <div class="fw-semibold d-inline fs-7">
 										{{ $vendor->vendorType->type_name }}
-									</div>
+									</div> --}}
 								</div>
 							</div>
 						</div>

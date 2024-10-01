@@ -4,11 +4,11 @@
 			<header class="bds-c-navbar__header d-flex flex-row align-items-center">
 				<nav class="bds-c-navbar__brand d-flex flex-row align-items-center">
 					<a href="/" aira-label="Home">
-						<span aria-label="mazaamax" class="d-flex justify-content-center" style="flex-shrink:0;line-height:0;align-items:flex-end;gap:8px;">
+						<span aria-label="Inventory App" class="d-flex justify-content-center" style="flex-shrink:0;line-height:0;align-items:flex-end;gap:8px;">
 							<img
 								src="/assets/images/avatars/logo.svg"
 								class="w-75 img-fluid"
-								alt="mazaamax">
+								alt="Inventory App">
 						</span>
 					</a>
 				</nav>
@@ -68,7 +68,7 @@
 														</span>
 														<span class="header-order-button-content cl-interaction-primary f-label-medium-font-size fw-label-medium-font-weight lh-label-medium-line-height ff-label-medium-font-family d-flex gap-1">
 															<span class="change-branch-location"></span>
-															<span class="address-label-highlighted-header cl-neutral-primary f-label-medium-font-size fw-label-medium-font-weight lh-label-medium-line-height ff-label-medium-font-family branch-city d-block">
+															<span class="address-label-highlighted-header cl-neutral-primary f-label-medium-font-size fw-label-medium-font-weight lh-label-medium-line-height ff-label-medium-font-family city-name d-block">
 															</span>
 														</span>
 													</div>

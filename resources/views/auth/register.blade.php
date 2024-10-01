@@ -10,7 +10,7 @@
 						<img src="{{ asset('/assets/images/favicon/favicon.svg') }}" width="36" height="36" alt="Brand Logo"/>
 					</span>
 					<span class="app-brand-text demo text-body fw-bolder text-capitalize">
-						MazaaMax
+						Inventory App
 					</span>
 				</a>
 			</div>
@@ -24,6 +24,48 @@
 			</p>
 			<form method="POST" action="{{ route('customer.register.submit') }}" aria-label="{{ __('Register') }}" id="formAuthentication" class="mb-3">
 				@csrf
+				<div class="mb-3">
+					<label for="name" class="form-label">
+						Name:
+					</label>
+					<input
+						type="text"
+						name="name"
+						id="name"
+						value="{{ old('name') }}"
+						class="form-control @error('name') is-invalid @enderror"
+					>
+					@error('name')
+					<span class="d-block invalid-feedback" role="alert">
+						<strong>
+							{{ $message }}
+						</strong>
+					</span>
+					@enderror
+				</div>
+
+				<div class="mb-3">
+					<label for="city" class="form-label">
+						City:
+					</label>
+					<select class="form-select" id="city" name="city">
+						<option value="">
+							Select Your City
+						</option>
+						@foreach ($cities as $city)
+						<option value="{{ $city->id }}">
+							{{ $city->name }}
+						</option>
+						@endforeach
+					</select>
+					@error('city')
+					<span class="d-block invalid-feedback" role="alert">
+						<strong>
+							{{ $message }}
+						</strong>
+					</span>
+					@enderror
+				</div>
 
 				<div class="mb-3">
 					<label for="phone" class="form-label">
@@ -37,26 +79,6 @@
 						class="form-control @error('phone') is-invalid @enderror"
 					>
 					@error('phone')
-					<span class="d-block invalid-feedback" role="alert">
-						<strong>
-							{{ $message }}
-						</strong>
-					</span>
-					@enderror
-				</div>
-
-				<div class="mb-3">
-					<label for="name" class="form-label">
-						Name:
-					</label>
-					<input
-						type="text"
-						name="name"
-						id="name"
-						value="{{ old('name') }}"
-						class="form-control @error('name') is-invalid @enderror"
-					>
-					@error('name')
 					<span class="d-block invalid-feedback" role="alert">
 						<strong>
 							{{ $message }}

@@ -170,29 +170,25 @@
 			let cityContainer = document.getElementById('cityContainer');
 
 			document.addEventListener('DOMContentLoaded', () => {
-				const selectedAddress = localStorage.getItem('formattedAddress');
-				const selectedCoords = localStorage.getItem('locationCoords');
+				const selectedCity = localStorage.getItem('selectedCity');
 
-				const sessionCoords = @js(session('selectedCoords'));
-				if (selectedCoords && (!sessionCoords)) {
-					saveSelectedLocationToSession(selectedCoords);
+				const sessionCity = @js(session('selectedCity'));
+				if (selectedCity && (!selectedCity)) {
+					saveSelectedCityToSession(selectedCity);
 				}
 
 				openModalButton.addEventListener('click', () => {
 					myModal.show();
 				});
 
-				if (selectedCoords) {
+				if (selectedCity) {
 					myModal.hide();
 				} else {
 					myModal.show();
 				}
 
-				if (selectedAddress) {
-					document.getElementById('address-input').value = selectedAddress;
-				}
-
-				updateButtonText();
+				const selectedCityName = localStorage.getItem('cityName')
+				updateButtonText(selectedCityName);
 			});
 
 			function saveOption()
@@ -200,14 +196,10 @@
 				const selectedCity = document.getElementById('citySelect');
 				const storedCity = localStorage.getItem('selectedCity');
 
-				if (storedCity)
-				{
-					if (selectedCity.value === storedCity)
-					{
+				if (storedCity) {
+					if (selectedCity.value === storedCity) {
 						myModal.hide();
-					}
-					else
-					{
+					} else {
 						// const cartItemCount = @json($cartItemCount);
 						// let shouldChange = false;
 
@@ -233,6 +225,17 @@
 
 						myModal.hide();
 					}
+				} else {
+					localStorage.setItem('selectedCity', citySelect.value);
+					localStorage.setItem('cityName', citySelect.options[citySelect.selectedIndex].textContent);
+
+					saveSelectedCityToSession(citySelect.value);
+
+					fetchSuppliersForCity();
+
+					updateButtonText(citySelect.options[citySelect.selectedIndex].textContent);
+
+					myModal.hide();
 				}
 			}
 
@@ -268,10 +271,16 @@
 				}
 
 				$.ajax({
-					url: `/load-suppliers/${selectedCity}`,
-					type: 'GET',
+					url: `/load-suppliers`,
+					type: 'POST',
+					headers: {
+						"X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+					},
+					data: {
+						selectedCity: selectedCity
+					},
 					success: function(response) {
-						updateSuppliersView(response.suppliers);
+						updateSuppliersView(response.vendors);
 					},
 					error: function(error) {
 						console.error('Error loading suppliers:', error);
@@ -289,30 +298,30 @@
 			// 	}
 			// }
 
-			function fetchVendorsForLocation() {
-				const locationCoords = localStorage.getItem('locationCoords');
+			// function fetchVendorsForLocation() {
+			// 	const locationCoords = localStorage.getItem('locationCoords');
 
-				if (!locationCoords) {
-					return;
-				}
+			// 	if (!locationCoords) {
+			// 		return;
+			// 	}
 
-				$.ajax({
-					url: `/load-vendors`,
-					method: "POST",
-					headers: {
-						"X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-					},
-					data: {
-						locationCoords: locationCoords
-					},
-					success: function(response) {
-						updateVendorsView(response.vendors);
-					},
-					error: function(error) {
-						console.error('Error loading vendors:', error);
-					}
-				});
-			}
+			// 	$.ajax({
+			// 		url: `/load-vendors`,
+			// 		method: "POST",
+			// 		headers: {
+			// 			"X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+			// 		},
+			// 		data: {
+			// 			locationCoords: locationCoords
+			// 		},
+			// 		success: function(response) {
+			// 			updateSuppliersView(response.vendors);
+			// 		},
+			// 		error: function(error) {
+			// 			console.error('Error loading vendors:', error);
+			// 		}
+			// 	});
+			// }
 
 			function updateSuppliersView(vendors)
 			{
@@ -323,8 +332,8 @@
 					vendors.forEach(vendor => {
 						const vendorElement = document.createElement('div');
 						vendorElement.classList.add('vendor-title', 'col-12', 'col-lg-4', 'col-md-6', 'px-2');
-						vendorElement.dataset.vendorType = (vendor.vendor_type.is_food == '1') ? 'food' : 'shop';
-						vendorElement.setAttribute('x-show', "(selectedTab === 'all' || selectedTab === '"+vendor.vendor_type.type_name.toLowerCase()+"') && ((selectedTab === 'all' && (selectedType === 'food' || selectedType === 'shop')) || (selectedType === '"+vendorElement.dataset.vendorType+"'))");
+						// vendorElement.dataset.vendorType = (vendor.vendor_type.is_food == '1') ? 'food' : 'shop';
+						// vendorElement.setAttribute('x-show', "(selectedTab === 'all' || selectedTab === '"+vendor.vendor_type.type_name.toLowerCase()+"') && ((selectedTab === 'all' && (selectedType === 'food' || selectedType === 'shop')) || (selectedType === '"+vendorElement.dataset.vendorType+"'))");
 
 						const vendorTitle = document.createElement('div');
 						vendorTitle.classList.add('overflow-hidden', 'mw-100', 'rounded-4', 'shadow-lg', 'm-3', 'position-relative', 'border', 'border-secondary-subtle');
@@ -408,7 +417,7 @@
 
 						const categoryValue = document.createElement('div');
 						categoryValue.classList.add('fw-semibold', 'd-inline', 'fs-7');
-						categoryValue.textContent = vendor.vendor_type.type_name;
+						// categoryValue.textContent = vendor.vendor_type.type_name;
 
 						categoryContainer.appendChild(categoryValue);
 
@@ -471,13 +480,11 @@
 				return badge;
 			}
 
-			function updateButtonText() {
-				const button = document.querySelector('.location');
-				const placeSpan = document.querySelector('.place');
-
-				const placeName = localStorage.getItem('address');
-
-				placeSpan.textContent = placeName || '';
+			function updateButtonText(cityName) {
+				// const button = document.querySelector('.location');
+				
+				const cityNameSpan = document.querySelector('.city-name');
+				cityNameSpan.textContent = cityName;
 			}
 		</script>
 		@livewireScripts
