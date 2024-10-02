@@ -2,7 +2,7 @@
 
 @section('content')
 <h4 class="fw-bold mb-4">
-	Vendor Item List
+	Supplier Item List
 </h4>
 <div class="card">
 	<div class="card-header">
