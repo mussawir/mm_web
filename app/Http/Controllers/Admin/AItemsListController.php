@@ -27,13 +27,13 @@ class AItemsListController extends Controller
 	{
 		$vendor = Vendor::findOrFail($vendorID);
 
-		$isFoodVendor = $vendor->vendorType->is_food;
+		// $isFoodVendor = $vendor->vendorType->is_food;
 
 		$categories = Category::whereNotNull('parent_id')
-			->where('vendor_type_id', $vendor->vendor_type_id)
+			// ->where('vendor_type_id', $vendor->vendor_type_id)
 			->get();
 
-		return view('admin.items.create', compact('vendor', 'categories', 'isFoodVendor'));
+		return view('admin.items.create', compact('vendor', 'categories'));
 	}
 
 	public function store(Request $request)
@@ -45,10 +45,10 @@ class AItemsListController extends Controller
 			'instock' => 'required|numeric',
 			'price' => 'required|numeric|between:0.00,9999999.99',
 			'description' => 'required|min:4|max:1000',
-			'main_image' => 'required|image|mimes:jpeg,png,jpg|dimensions:min_width=500,min_height=500|min:100|max:4096',
+			'main_image' => 'required|image|mimes:jpeg,png,jpg|dimensions:min_width=500,min_height=500|min:10|max:2048',
 			'quantity' => 'required|integer',
 			'max_order_quantity' => 'required|integer',
-			'preparation_time' => 'required',
+			// 'preparation_time' => 'required',
 		]);
 
 		$vendorID = $request->get('vendor');

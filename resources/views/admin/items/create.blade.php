@@ -338,7 +338,7 @@
 							@endif
 						</div>
 					</div>
-					@if ($isFoodVendor)
+					{{-- @if ($isFoodVendor)
 					<div class="row mb-3">
 						<label for="" class="col-sm-2 col-form-label">
 							Is Addon
@@ -380,7 +380,7 @@
 							@endif
 						</div>
 					</div>
-					@endif
+					@endif --}}
 					<div class="row justify-content-end">
 						<div class="col-sm-10 text-end">
 							<button type="submit" class="btn btn-primary" name="action" value="save">

@@ -4,13 +4,11 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\City;
 use Illuminate\Http\Request;
 use App\Models\DealMaster;
 use App\Models\Items_list;
 use App\Models\OperatorMaster;
 use App\Models\Vendor;
-use App\Models\VendorType;
 use Illuminate\Support\Facades\Auth;
 
 class FrontController extends Controller
@@ -31,13 +29,13 @@ class FrontController extends Controller
 			}
 		}
 
-		$vendors = Vendor::whereIn('operator_id', $operatorIDs)
-			->with('vendorType')
-			->get();
+		$vendors = Vendor::whereIn('operator_id', $operatorIDs)->get();
+
+		$items = Items_list::whereIn('vendor_id', $vendors->pluck('id'))->get();
 
 		$categories = Category::whereNotNull('parent_id')->get();
 
-		return view('home', compact('vendors', 'categories'));
+		return view('home', compact('items', 'categories'));
 	}
 
 	public function vendorDetail(Request $request, $id)
