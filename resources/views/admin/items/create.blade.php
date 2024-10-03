@@ -166,7 +166,7 @@
 								name="price"
 								id="price"
 								value="{{ old('price') }}"
-								type="number"
+								type="text"
 								placeholder="{{ session('currency')->symbol }}10"
 								aria-required="true"
 							>

@@ -3487,7 +3487,7 @@ body.using-mouse :focus-visible {
     background-repeat: no-repeat;
     background-size: cover;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     width: 100%;
 }
 

@@ -61,6 +61,29 @@ class FrontController extends Controller
 		return view('front.vendor-detail', compact('vendor', 'deals', 'activeCategories'));
 	}
 
+	public function categoryDetail(Request $request, $id)
+	{
+		$vendor = Vendor::findOrFail($id);
+
+		$categories = Category::with(['items' => function ($query) use ($id) {
+				$query->where('is_addon', 0)->where('vendor_id', $id);
+			}])
+			->orderBy('sort_by')
+			->get();
+
+		$activeCategories = $categories->filter(function ($value) {
+			return $value->items->count() > 0;
+		});
+
+		$deals = DealMaster::where('status', 1)
+			->where('vendor_id', $id)
+			->latest()
+			->take(12)
+			->get();
+
+		return view('front.vendor-detail', compact('vendor', 'deals', 'activeCategories'));
+	}
+
 	public function itemDetail($vendorId, $id)
 	{
 		$item = Items_list::with(['category', 'addons'])
@@ -153,5 +176,16 @@ class FrontController extends Controller
 			'data' => true,
 			'message' => 'Selected city saved to session.'
 		]);
+	}
+	
+	public function getCategories() {
+		$categories = Category::whereNotNull('parent_id')->get();
+
+		return view('front.categories', compact('categories'));
+	}
+
+	public function inventoryStatus()
+	{
+		return view('front.inventory-status');
 	}
 }

@@ -32,7 +32,7 @@
 		@stack('styles')
 		@livewireStyles
 	</head>
-	<body class="vstack min-vh-100" @if(request()->is('/') || request()->is('home')) x-data="{ selectedTab: 'all' }" x-cloak @endif>
+	<body class="vstack min-vh-100" @if(request()->is('/') || request()->is('home')) x-data="{ categoryTab: 'all' }" x-cloak @endif>
 		@include('layouts.header')
 
 		<div class="custom-container m-0 p-0">
@@ -162,44 +162,44 @@
 			});
 		</script>
 		<script type="text/javascript">
-			let myModal = new bootstrap.Modal('#myModal');
-			let openModalButton = document.querySelector('.location');
-			let cardTitle = document.getElementById('cardTitle');
-			let saveButton = document.querySelector('.save-option');
-			let citySelect = document.getElementById('citySelect');
-			let cityContainer = document.getElementById('cityContainer');
+			// let myModal = new bootstrap.Modal('#myModal');
+			// let openModalButton = document.querySelector('.location');
+			// let cardTitle = document.getElementById('cardTitle');
+			// let saveButton = document.querySelector('.save-option');
+			// let citySelect = document.getElementById('citySelect');
+			// let cityContainer = document.getElementById('cityContainer');
 
 			document.addEventListener('DOMContentLoaded', () => {
-				const selectedCity = localStorage.getItem('selectedCity');
+				// const selectedCity = localStorage.getItem('selectedCity');
 
-				const sessionCity = @js(session('selectedCity'));
-				if (selectedCity && (!selectedCity)) {
-					saveSelectedCityToSession(selectedCity);
-				}
+				// const sessionCity = @js(session('selectedCity'));
+				// if (selectedCity && (!selectedCity)) {
+				// 	saveSelectedCityToSession(selectedCity);
+				// }
 
-				openModalButton.addEventListener('click', () => {
-					myModal.show();
-				});
+				// openModalButton.addEventListener('click', () => {
+				// 	myModal.show();
+				// });
 
-				if (selectedCity) {
-					myModal.hide();
-				} else {
-					myModal.show();
-				}
+				// if (selectedCity) {
+				// 	myModal.hide();
+				// } else {
+				// 	myModal.show();
+				// }
 
-				const selectedCityName = localStorage.getItem('cityName')
-				updateButtonText(selectedCityName);
+				// const selectedCityName = localStorage.getItem('cityName')
+				// updateButtonText(selectedCityName);
 			});
 
 			function saveOption()
 			{
-				const selectedCity = document.getElementById('citySelect');
-				const storedCity = localStorage.getItem('selectedCity');
+				// const selectedCity = document.getElementById('citySelect');
+				// const storedCity = localStorage.getItem('selectedCity');
 
-				if (storedCity) {
-					if (selectedCity.value === storedCity) {
-						myModal.hide();
-					} else {
+				// if (storedCity) {
+				// 	if (selectedCity.value === storedCity) {
+				// 		myModal.hide();
+				// 	} else {
 						// const cartItemCount = @json($cartItemCount);
 						// let shouldChange = false;
 
@@ -214,278 +214,241 @@
 						// 	clearCart();
 						// }
 
-						localStorage.setItem('selectedCity', selectedCity.value);
-						localStorage.setItem('cityName', selectedCity.options[selectedCity.selectedIndex].textContent);
+				// 		localStorage.setItem('selectedCity', selectedCity.value);
+				// 		localStorage.setItem('cityName', selectedCity.options[selectedCity.selectedIndex].textContent);
 
-						saveSelectedCityToSession(selectedCity.value);
+				// 		saveSelectedCityToSession(selectedCity.value);
 
-						fetchSuppliersForCity();
+				// 		fetchSuppliersForCity();
 
-						updateButtonText(selectedCity.options[selectedCity.selectedIndex].textContent);
+				// 		updateButtonText(selectedCity.options[selectedCity.selectedIndex].textContent);
 
-						myModal.hide();
-					}
-				} else {
-					localStorage.setItem('selectedCity', citySelect.value);
-					localStorage.setItem('cityName', citySelect.options[citySelect.selectedIndex].textContent);
+				// 		myModal.hide();
+				// 	}
+				// } else {
+				// 	localStorage.setItem('selectedCity', citySelect.value);
+				// 	localStorage.setItem('cityName', citySelect.options[citySelect.selectedIndex].textContent);
 
-					saveSelectedCityToSession(citySelect.value);
+				// 	saveSelectedCityToSession(citySelect.value);
 
-					fetchSuppliersForCity();
+				// 	fetchSuppliersForCity();
 
-					updateButtonText(citySelect.options[citySelect.selectedIndex].textContent);
+				// 	updateButtonText(citySelect.options[citySelect.selectedIndex].textContent);
 
-					myModal.hide();
-				}
+				// 	myModal.hide();
+				// }
 			}
 
-			function saveSelectedCityToSession(selectedCity) {
-				if (selectedCity)
-				{
-					$.ajax({
-						type: 'POST',
-						url: '{{ route('save.selectedCity') }}',
-						headers: {
-							'X-CSRF-TOKEN': "{{ csrf_token() }}"
-						},
-						data: {
-							selectedCity: selectedCity
-						},
-						success: function(response) {
-							if (response.data == true) {
-								fetchSuppliersForCity();
-							}
-						},
-						error: function(error) {
-							console.error('Error saving selected city:', error);
-						}
-					});
-				}
-			}
-
-			function fetchSuppliersForCity() {
-				const selectedCity = citySelect.value || localStorage.getItem('selectedCity');
-
-				if (!selectedCity) {
-					return;
-				}
-
-				$.ajax({
-					url: `/load-suppliers`,
-					type: 'POST',
-					headers: {
-						"X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-					},
-					data: {
-						selectedCity: selectedCity
-					},
-					success: function(response) {
-						updateSuppliersView(response.vendors);
-					},
-					error: function(error) {
-						console.error('Error loading suppliers:', error);
-					}
-				});
-			}
-
-			// function saveOption() {
-			// 	const locationCoords = localStorage.getItem('locationCoords');
-
-			// 	if (locationCoords) {
-			// 		saveSelectedLocationToSession(locationCoords);
-			// 		updateButtonText();
-			// 		myModal.hide();
+			// function saveSelectedCityToSession(selectedCity) {
+			// 	if (selectedCity)
+			// 	{
+			// 		$.ajax({
+			// 			type: 'POST',
+			// 			url: '{{ route('save.selectedCity') }}',
+			// 			headers: {
+			// 				'X-CSRF-TOKEN': "{{ csrf_token() }}"
+			// 			},
+			// 			data: {
+			// 				selectedCity: selectedCity
+			// 			},
+			// 			success: function(response) {
+			// 				if (response.data == true) {
+			// 					fetchSuppliersForCity();
+			// 				}
+			// 			},
+			// 			error: function(error) {
+			// 				console.error('Error saving selected city:', error);
+			// 			}
+			// 		});
 			// 	}
 			// }
 
-			// function fetchVendorsForLocation() {
-			// 	const locationCoords = localStorage.getItem('locationCoords');
+			// function fetchSuppliersForCity() {
+			// 	const selectedCity = citySelect.value || localStorage.getItem('selectedCity');
 
-			// 	if (!locationCoords) {
+			// 	if (!selectedCity) {
 			// 		return;
 			// 	}
 
 			// 	$.ajax({
-			// 		url: `/load-vendors`,
-			// 		method: "POST",
+			// 		url: `/load-suppliers`,
+			// 		type: 'POST',
 			// 		headers: {
 			// 			"X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
 			// 		},
 			// 		data: {
-			// 			locationCoords: locationCoords
+			// 			selectedCity: selectedCity
 			// 		},
 			// 		success: function(response) {
 			// 			updateSuppliersView(response.vendors);
 			// 		},
 			// 		error: function(error) {
-			// 			console.error('Error loading vendors:', error);
+			// 			console.error('Error loading suppliers:', error);
 			// 		}
 			// 	});
 			// }
 
 			function updateSuppliersView(vendors)
 			{
-				const vendorContent = document.getElementById('vendorContent');
-				vendorContent.innerHTML = '';
+				// const vendorContent = document.getElementById('vendorContent');
+				// vendorContent.innerHTML = '';
 
-				if (vendors.length) {
-					vendors.forEach(vendor => {
-						const vendorElement = document.createElement('div');
-						vendorElement.classList.add('vendor-title', 'col-12', 'col-lg-4', 'col-md-6', 'px-2');
-						// vendorElement.dataset.vendorType = (vendor.vendor_type.is_food == '1') ? 'food' : 'shop';
-						// vendorElement.setAttribute('x-show', "(selectedTab === 'all' || selectedTab === '"+vendor.vendor_type.type_name.toLowerCase()+"') && ((selectedTab === 'all' && (selectedType === 'food' || selectedType === 'shop')) || (selectedType === '"+vendorElement.dataset.vendorType+"'))");
+				// if (vendors.length) {
+				// 	vendors.forEach(vendor => {
+				// 		const vendorElement = document.createElement('div');
+				// 		vendorElement.classList.add('vendor-title', 'col-12', 'col-lg-4', 'col-md-6', 'px-2');
 
-						const vendorTitle = document.createElement('div');
-						vendorTitle.classList.add('overflow-hidden', 'mw-100', 'rounded-4', 'shadow-lg', 'm-3', 'position-relative', 'border', 'border-secondary-subtle');
+				// 		const vendorTitle = document.createElement('div');
+				// 		vendorTitle.classList.add('overflow-hidden', 'mw-100', 'rounded-4', 'shadow-lg', 'm-3', 'position-relative', 'border', 'border-secondary-subtle');
 
-						const vendorLink = document.createElement('a');
-						vendorLink.href = 'vendors/detail/' + vendor.id;
+				// 		const vendorLink = document.createElement('a');
+				// 		vendorLink.href = 'vendors/detail/' + vendor.id;
 
-						const vendorImageContainer = document.createElement('div');
-						vendorImageContainer.classList.add('rounded-3', 'position-relative');
+				// 		const vendorImageContainer = document.createElement('div');
+				// 		vendorImageContainer.classList.add('rounded-3', 'position-relative');
 
-						const vendorImageContainer2 = document.createElement('div');
-						vendorImageContainer2.classList.add('d-flex', 'align-items-center', 'justify-content-center', 'overflow-hidden');
-						vendorImageContainer2.style.cssText = 'aspect-ratio: 16/9; border-top-left-radius: 12px; border-top-right-radius: 12px; background-color: #f7f7f7;';
+				// 		const vendorImageContainer2 = document.createElement('div');
+				// 		vendorImageContainer2.classList.add('d-flex', 'align-items-center', 'justify-content-center', 'overflow-hidden');
+				// 		vendorImageContainer2.style.cssText = 'aspect-ratio: 16/9; border-top-left-radius: 12px; border-top-right-radius: 12px; background-color: #f7f7f7;';
 
-						const vendorImage = document.createElement('img');
-						vendorImage.src = '/images/vendors/banners/' + vendor.banner1;
-						vendorImage.classList.add('card-img-bg', 'position-relative');
-						vendorImage.loading = 'lazy';
+				// 		const vendorImage = document.createElement('img');
+				// 		vendorImage.src = '/images/vendors/banners/' + vendor.banner1;
+				// 		vendorImage.classList.add('card-img-bg', 'position-relative');
+				// 		vendorImage.loading = 'lazy';
 
-						vendorImageContainer2.appendChild(vendorImage);
+				// 		vendorImageContainer2.appendChild(vendorImage);
 
-						const vendorDetails = document.createElement('div');
-						vendorDetails.classList.add('m-3', 'position-absolute');
-						vendorDetails.style.cssText = 'inset:0;';
+				// 		const vendorDetails = document.createElement('div');
+				// 		vendorDetails.classList.add('m-3', 'position-absolute');
+				// 		vendorDetails.style.cssText = 'inset:0;';
 
-						const wrapperDiv = document.createElement('div');
-						wrapperDiv.classList.add('d-flex', 'flex-column', 'start-0', 'position-absolute', 'top-0');
+				// 		const wrapperDiv = document.createElement('div');
+				// 		wrapperDiv.classList.add('d-flex', 'flex-column', 'start-0', 'position-absolute', 'top-0');
 
-						const discountBadge = createBadge('20% off');
-						const giftBadge = createBadge('Welcome gift: free de...');
+				// 		const discountBadge = createBadge('20% off');
+				// 		const giftBadge = createBadge('Welcome gift: free de...');
 
-						wrapperDiv.appendChild(discountBadge);
-						wrapperDiv.appendChild(giftBadge);
+				// 		wrapperDiv.appendChild(discountBadge);
+				// 		wrapperDiv.appendChild(giftBadge);
 
-						const featuredBadge = document.createElement('div');
-						featuredBadge.classList.add('d-inline-flex', 'align-items-center', 'text-center', 'bottom-0', 'end-0', 'position-absolute');
-						featuredBadge.style.cssText = 'background-color: #333333cc; border-radius: 9999px; height: 16px; padding: 2px 8px; column-gap: 2px; max-width: 232px;';
+				// 		const featuredBadge = document.createElement('div');
+				// 		featuredBadge.classList.add('d-inline-flex', 'align-items-center', 'text-center', 'bottom-0', 'end-0', 'position-absolute');
+				// 		featuredBadge.style.cssText = 'background-color: #333333cc; border-radius: 9999px; height: 16px; padding: 2px 8px; column-gap: 2px; max-width: 232px;';
 
-						const featuredText = document.createElement('span');
-						featuredText.classList.add('fw-semibold', 'text-white');
-						featuredText.style.fontSize = '10px';
-						featuredText.textContent = 'Featured';
+				// 		const featuredText = document.createElement('span');
+				// 		featuredText.classList.add('fw-semibold', 'text-white');
+				// 		featuredText.style.fontSize = '10px';
+				// 		featuredText.textContent = 'Featured';
 
-						featuredBadge.appendChild(featuredText);
+				// 		featuredBadge.appendChild(featuredText);
 
-						vendorDetails.appendChild(wrapperDiv);
-						vendorDetails.appendChild(featuredBadge);
+				// 		vendorDetails.appendChild(wrapperDiv);
+				// 		vendorDetails.appendChild(featuredBadge);
 
-						vendorImageContainer.appendChild(vendorImageContainer2);
-						vendorImageContainer.appendChild(vendorDetails);
+				// 		vendorImageContainer.appendChild(vendorImageContainer2);
+				// 		vendorImageContainer.appendChild(vendorDetails);
 
-						const vendorInfo = document.createElement('div');
-						vendorInfo.classList.add('d-flex', 'flex-column');
-						vendorInfo.style.cssText = 'margin: 12px;';
+				// 		const vendorInfo = document.createElement('div');
+				// 		vendorInfo.classList.add('d-flex', 'flex-column');
+				// 		vendorInfo.style.cssText = 'margin: 12px;';
 
-						const vendorName = document.createElement('div');
-						vendorName.classList.add('mb-1', 'd-flex', 'align-items-center', 'fw-semibold', 'fs-6');
-						vendorName.style.color = '#333333';
+				// 		const vendorName = document.createElement('div');
+				// 		vendorName.classList.add('mb-1', 'd-flex', 'align-items-center', 'fw-semibold', 'fs-6');
+				// 		vendorName.style.color = '#333333';
 
-						const nameText = document.createElement('div');
-						nameText.classList.add('vendor-name', 'f-title-small-font-size', 'fw-title-small-font-weight', 'lh-title-small-line-height', 'ff-title-small-font-family');
-						nameText.textContent = vendor.company_name;
+				// 		const nameText = document.createElement('div');
+				// 		nameText.classList.add('vendor-name', 'f-title-small-font-size', 'fw-title-small-font-weight', 'lh-title-small-line-height', 'ff-title-small-font-family');
+				// 		nameText.textContent = vendor.company_name;
 
-						vendorName.appendChild(nameText);
+				// 		vendorName.appendChild(nameText);
 
-						const priceAndCategory = document.createElement('div');
-						priceAndCategory.classList.add('ms-0', 'd-block', 'text-truncate');
-						priceAndCategory.style.lineHeight = '16px';
-						priceAndCategory.style.color = '#666666';
-						priceAndCategory.style.marginRight = 'unset';
+				// 		const priceAndCategory = document.createElement('div');
+				// 		priceAndCategory.classList.add('ms-0', 'd-block', 'text-truncate');
+				// 		priceAndCategory.style.lineHeight = '16px';
+				// 		priceAndCategory.style.color = '#666666';
+				// 		priceAndCategory.style.marginRight = 'unset';
 
-						const priceContainer = document.createElement('div');
-						priceContainer.classList.add('fw-semibold', 'fs-7', 'align-middle', 'd-inline');
-						priceContainer.style.marginRight = '2px';
-						priceContainer.style.color = '#666666';
+				// 		const priceContainer = document.createElement('div');
+				// 		priceContainer.classList.add('fw-semibold', 'fs-7', 'align-middle', 'd-inline');
+				// 		priceContainer.style.marginRight = '2px';
+				// 		priceContainer.style.color = '#666666';
 
-						const categoryContainer = document.createElement('div');
-						categoryContainer.classList.add('fw-semibold', 'd-inline', 'fs-7', 'align-middle');
-						categoryContainer.style.marginRight = '2px';
-						categoryContainer.style.color = '#666666';
+				// 		const categoryContainer = document.createElement('div');
+				// 		categoryContainer.classList.add('fw-semibold', 'd-inline', 'fs-7', 'align-middle');
+				// 		categoryContainer.style.marginRight = '2px';
+				// 		categoryContainer.style.color = '#666666';
 
-						const categoryValue = document.createElement('div');
-						categoryValue.classList.add('fw-semibold', 'd-inline', 'fs-7');
-						// categoryValue.textContent = vendor.vendor_type.type_name;
+				// 		const categoryValue = document.createElement('div');
+				// 		categoryValue.classList.add('fw-semibold', 'd-inline', 'fs-7');
+				// 		// categoryValue.textContent = vendor.vendor_type.type_name;
 
-						categoryContainer.appendChild(categoryValue);
+				// 		categoryContainer.appendChild(categoryValue);
 
-						priceAndCategory.appendChild(priceContainer);
-						priceAndCategory.appendChild(categoryContainer);
+				// 		priceAndCategory.appendChild(priceContainer);
+				// 		priceAndCategory.appendChild(categoryContainer);
 
-						vendorInfo.appendChild(vendorName);
-						vendorInfo.appendChild(priceAndCategory);
+				// 		vendorInfo.appendChild(vendorName);
+				// 		vendorInfo.appendChild(priceAndCategory);
 
-						vendorLink.appendChild(vendorImageContainer);
-						vendorLink.appendChild(vendorInfo);
+				// 		vendorLink.appendChild(vendorImageContainer);
+				// 		vendorLink.appendChild(vendorInfo);
 
-						vendorTitle.appendChild(vendorLink);
-						vendorElement.appendChild(vendorTitle);
+				// 		vendorTitle.appendChild(vendorLink);
+				// 		vendorElement.appendChild(vendorTitle);
 
-						vendorContent.appendChild(vendorElement);
-					});
-				}
-				else {
-					const headingElement = document.createElement('h3');
-					headingElement.classList.add('m-3', 'p-3');
-					headingElement.textContent = 'We are coming to this area soon.'
+				// 		vendorContent.appendChild(vendorElement);
+				// 	});
+				// }
+				// else {
+				// 	const headingElement = document.createElement('h3');
+				// 	headingElement.classList.add('m-3', 'p-3');
+				// 	headingElement.textContent = 'We are coming to this area soon.'
 
-					vendorContent.appendChild(headingElement);
-				}
+				// 	vendorContent.appendChild(headingElement);
+				// }
 			}
 
-			function createBadge(text) {
-				const badge = document.createElement('div');
-				badge.classList.add('d-inline-flex', 'align-items-center', 'rounded-2', 'py-1', 'px-2', 'text-center', 'mb-1', 'bds-c-tag--variant-gradient');
-				badge.style.cssText = 'column-gap: 2px; height: 24px; max-width: 232px; width: max-content;';
+			// function createBadge(text) {
+			// 	const badge = document.createElement('div');
+			// 	badge.classList.add('d-inline-flex', 'align-items-center', 'rounded-2', 'py-1', 'px-2', 'text-center', 'mb-1', 'bds-c-tag--variant-gradient');
+			// 	badge.style.cssText = 'column-gap: 2px; height: 24px; max-width: 232px; width: max-content;';
 
-				const badgeIcon = document.createElement('span');
-				badgeIcon.classList.add('d-flex');
+			// 	const badgeIcon = document.createElement('span');
+			// 	badgeIcon.classList.add('d-flex');
 
-				const badgeSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-				badgeSvg.setAttribute('aria-hidden', 'true');
-				badgeSvg.setAttribute('focusable', 'false');
-				badgeSvg.setAttribute('width', '16');
-				badgeSvg.setAttribute('height', '16');
-				badgeSvg.setAttribute('viewBox', '0 0 16 16');
-				badgeSvg.style.fill = '#FFFFFF';
+			// 	const badgeSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+			// 	badgeSvg.setAttribute('aria-hidden', 'true');
+			// 	badgeSvg.setAttribute('focusable', 'false');
+			// 	badgeSvg.setAttribute('width', '16');
+			// 	badgeSvg.setAttribute('height', '16');
+			// 	badgeSvg.setAttribute('viewBox', '0 0 16 16');
+			// 	badgeSvg.style.fill = '#FFFFFF';
 
-				const badgePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-				badgePath.setAttribute('fill-rule', 'evenodd');
-				badgePath.setAttribute('clip-rule', 'evenodd');
-				badgePath.setAttribute('d', 'M9.34515 2.56637C8.60771 1.8104 7.39229 1.8104 6.65485 2.56637L6.60681 2.61562C6.25315 2.97816 5.76812 3.1826 5.26165 3.1826H5.06237C4.02454 3.1826 3.18321 4.02393 3.18321 5.06177V5.26105C3.18321 5.76751 2.97877 6.25254 2.61623 6.6062L2.56698 6.65424C1.81101 7.39168 1.81101 8.6071 2.56698 9.34454L2.61623 9.39258C2.97877 9.74624 3.18321 10.2313 3.18321 10.7377V10.937C3.18321 11.9748 4.02454 12.8162 5.06238 12.8162H5.26166C5.76812 12.8162 6.25315 13.0206 6.60681 13.3832L6.65485 13.4324C7.39229 14.1884 8.60771 14.1884 9.34515 13.4324L9.39319 13.3832C9.74685 13.0206 10.2319 12.8162 10.7383 12.8162H10.9376C11.9755 12.8162 12.8168 11.9748 12.8168 10.937V10.7377C12.8168 10.2313 13.0212 9.74624 13.3838 9.39258L13.433 9.34454C14.189 8.6071 14.189 7.39168 13.433 6.65424L13.3838 6.6062C13.0212 6.25254 12.8168 5.76751 12.8168 5.26104V5.06176C12.8168 4.02393 11.9755 3.1826 10.9376 3.1826H10.7383C10.2319 3.1826 9.74685 2.97816 9.39319 2.61562L9.34515 2.56637ZM6.25 7.24939C6.80228 7.24939 7.25 6.80167 7.25 6.24939C7.25 5.6971 6.80228 5.24939 6.25 5.24939C5.69772 5.24939 5.25 5.6971 5.25 6.24939C5.25 6.80167 5.69772 7.24939 6.25 7.24939ZM10.1214 5.87833C9.92611 5.68307 9.60953 5.68307 9.41427 5.87833L5.87873 9.41387C5.68347 9.60913 5.68347 9.92571 5.87873 10.121C6.074 10.3162 6.39058 10.3162 6.58584 10.121L10.1214 6.58544C10.3166 6.39018 10.3166 6.0736 10.1214 5.87833ZM10.75 9.74939C10.75 10.3017 10.3023 10.7494 9.75 10.7494C9.19772 10.7494 8.75 10.3017 8.75 9.74939C8.75 9.1971 9.19772 8.74939 9.75 8.74939C10.3023 8.74939 10.75 9.1971 10.75 9.74939Z');
+			// 	const badgePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+			// 	badgePath.setAttribute('fill-rule', 'evenodd');
+			// 	badgePath.setAttribute('clip-rule', 'evenodd');
+			// 	badgePath.setAttribute('d', 'M9.34515 2.56637C8.60771 1.8104 7.39229 1.8104 6.65485 2.56637L6.60681 2.61562C6.25315 2.97816 5.76812 3.1826 5.26165 3.1826H5.06237C4.02454 3.1826 3.18321 4.02393 3.18321 5.06177V5.26105C3.18321 5.76751 2.97877 6.25254 2.61623 6.6062L2.56698 6.65424C1.81101 7.39168 1.81101 8.6071 2.56698 9.34454L2.61623 9.39258C2.97877 9.74624 3.18321 10.2313 3.18321 10.7377V10.937C3.18321 11.9748 4.02454 12.8162 5.06238 12.8162H5.26166C5.76812 12.8162 6.25315 13.0206 6.60681 13.3832L6.65485 13.4324C7.39229 14.1884 8.60771 14.1884 9.34515 13.4324L9.39319 13.3832C9.74685 13.0206 10.2319 12.8162 10.7383 12.8162H10.9376C11.9755 12.8162 12.8168 11.9748 12.8168 10.937V10.7377C12.8168 10.2313 13.0212 9.74624 13.3838 9.39258L13.433 9.34454C14.189 8.6071 14.189 7.39168 13.433 6.65424L13.3838 6.6062C13.0212 6.25254 12.8168 5.76751 12.8168 5.26104V5.06176C12.8168 4.02393 11.9755 3.1826 10.9376 3.1826H10.7383C10.2319 3.1826 9.74685 2.97816 9.39319 2.61562L9.34515 2.56637ZM6.25 7.24939C6.80228 7.24939 7.25 6.80167 7.25 6.24939C7.25 5.6971 6.80228 5.24939 6.25 5.24939C5.69772 5.24939 5.25 5.6971 5.25 6.24939C5.25 6.80167 5.69772 7.24939 6.25 7.24939ZM10.1214 5.87833C9.92611 5.68307 9.60953 5.68307 9.41427 5.87833L5.87873 9.41387C5.68347 9.60913 5.68347 9.92571 5.87873 10.121C6.074 10.3162 6.39058 10.3162 6.58584 10.121L10.1214 6.58544C10.3166 6.39018 10.3166 6.0736 10.1214 5.87833ZM10.75 9.74939C10.75 10.3017 10.3023 10.7494 9.75 10.7494C9.19772 10.7494 8.75 10.3017 8.75 9.74939C8.75 9.1971 9.19772 8.74939 9.75 8.74939C10.3023 8.74939 10.75 9.1971 10.75 9.74939Z');
 
-				badgeSvg.appendChild(badgePath);
-				badgeIcon.appendChild(badgeSvg);
+			// 	badgeSvg.appendChild(badgePath);
+			// 	badgeIcon.appendChild(badgeSvg);
 
-				const badgeText = document.createElement('span');
-				badgeText.classList.add('overflow-hidden', 'fw-semibold');
-				badgeText.style.cssText = 'text-overflow:ellipsis; white-space: nowrap; font-size: 12px;';
-				badgeText.textContent = text;
+			// 	const badgeText = document.createElement('span');
+			// 	badgeText.classList.add('overflow-hidden', 'fw-semibold');
+			// 	badgeText.style.cssText = 'text-overflow:ellipsis; white-space: nowrap; font-size: 12px;';
+			// 	badgeText.textContent = text;
 
-				badge.appendChild(badgeIcon);
-				badge.appendChild(badgeText);
+			// 	badge.appendChild(badgeIcon);
+			// 	badge.appendChild(badgeText);
 
-				return badge;
-			}
+			// 	return badge;
+			// }
 
-			function updateButtonText(cityName) {
-				// const button = document.querySelector('.location');
+			// function updateButtonText(cityName) {
+			// 	// const button = document.querySelector('.location');
 				
-				const cityNameSpan = document.querySelector('.city-name');
-				cityNameSpan.textContent = cityName;
-			}
+			// 	const cityNameSpan = document.querySelector('.city-name');
+			// 	cityNameSpan.textContent = cityName;
+			// }
 		</script>
 		@livewireScripts
 		@stack('scripts')

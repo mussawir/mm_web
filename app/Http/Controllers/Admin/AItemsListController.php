@@ -40,12 +40,12 @@ class AItemsListController extends Controller
 	{
 		$request->validate([
 			'category' => 'required',
-			'name' => 'required|max:40',
+			'name' => 'required|max:160',
 			'discount' => 'required|numeric|between:0,99.99',
 			'instock' => 'required|numeric',
 			'price' => 'required|numeric|between:0.00,9999999.99',
 			'description' => 'required|min:4|max:1000',
-			'main_image' => 'required|image|mimes:jpeg,png,jpg|dimensions:min_width=500,min_height=500|min:10|max:2048',
+			'main_image' => 'required|image|mimes:jpeg,png,jpg|dimensions:min_width=300,min_height=300|min:10|max:2048',
 			'quantity' => 'required|integer',
 			'max_order_quantity' => 'required|integer',
 			// 'preparation_time' => 'required',
@@ -129,7 +129,7 @@ class AItemsListController extends Controller
 	{
 		$request->validate([
 			'category' => 'required',
-			'name' => 'required|max:40',
+			'name' => 'required|max:160',
 			'discount' => 'required|numeric|between:0,99.99',
 			'instock' => 'required|numeric',
 			'price' => 'required|numeric|between:0.00,9999.99',
@@ -137,7 +137,7 @@ class AItemsListController extends Controller
 			'main_image' => 'image|mimes:jpeg,png,jpg|dimensions:min_width=500,min_height=500|min:100|max:4096',
 			'quantity' => 'required|integer',
 			'max_order_quantity' => 'required|integer',
-			'preparation_time' => 'required',
+			// 'preparation_time' => 'required',
 		]);
 
 		$item = Items_list::findOrFail($request->id);
@@ -182,25 +182,24 @@ class AItemsListController extends Controller
 			}
 		}
 
-		$item->name = $request->get('name');
+		$item->name = $request->input('name');
 
-		if (isset($filename))
-		{
+		if (isset($filename)) {
 			$item->main_image = $filename;
 		}
 
-		$item->discount = $request->get('discount');
-		$item->price = $request->get('price');
-		$item->discription = $request->get('description');
-		$item->qty = $request->get('quantity');
-		$item->max_order_qty = $request->get('max_order_quantity');
+		$item->discount = $request->input('discount');
+		$item->price = $request->input('price');
+		$item->discription = $request->input('description');
+		$item->qty = $request->input('quantity');
+		$item->max_order_qty = $request->input('max_order_quantity');
 		$item->preparation_time = $request->input('preparation_time');
-		$item->category_id = $request->get('category');
+		$item->category_id = $request->input('category');
 		$item->vendor_id = $vendorID;
-		$item->instock = $request->get('instock');
+		$item->instock = $request->input('instock');
 
-		if ($request->get('isaddon')) {
-			$item->is_addon = $request->get('instock');
+		if ($request->input('isaddon')) {
+			$item->is_addon = $request->input('instock');
 		}
 
 		$item ->save();
