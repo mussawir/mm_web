@@ -283,6 +283,12 @@ Route::group(['middleware' => 'auth:customer'], function () {
 	Route::controller(FrontController::class)->group(function () {
 		Route::get('/home', 'index')->name('home');
 		Route::get('/', 'index');
+		Route::get('/categories', 'getCategories')->name('categories');
+		Route::get('/categories/detail/{id}', 'categoryDetail')
+		->name('category.detail');
+		Route::get('/inventory-status', 'inventoryStatus')
+			->name('inventory.status');
+
 		Route::get('/vendors/detail/{id}', 'vendorDetail')
 			->name('vendor.detail');
 		Route::get('/vendor/{vendorId}/items/detail/{itemId}', 'itemDetail')

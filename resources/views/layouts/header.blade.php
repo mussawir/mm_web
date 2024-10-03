@@ -129,7 +129,7 @@
 											</svg>
 										</div>
 										<div class="f-label-medium-font-size fw-label-medium-font-weight lh-label-medium-line-height ff-label-medium-font-family">
-											<span>Orders</span>
+											<span>Order History</span>
 										</div>
 									</a>
 								</li>
@@ -213,12 +213,53 @@
 					</div>
 				</div>
 			</header>
-			@if(request()->is('/') || request()->is('home'))
 			<div class="box-flex bds-c-navbar__bottom">
 				<div class="bds-c-tabs vertical-switcher-tabs">
 					<div class="bds-c-tabs__container">
 						<ul class="bds-c-tabs__list align-items-center gap-2" role="tablist">
-							<li class="bds-c-tab" x-on:click="selectedTab = 'all'" :class="{ 'is-selected': selectedTab === 'all' }" role="presentation">
+							<li class="bds-c-tab {{ (request()->is('/') || request()->is('home')) ? 'is-selected' : '' }}" role="presentation">
+								{{-- No red underline without anchor being a button --}}
+								<button role="tab" onclick="window.location.href='{{ route('home') }}'">
+									<div class="bds-c-tab__icon"></div>
+									<span class="bds-c-tab__label">
+										All Items
+									</span>
+								</button>
+							</li>
+							<li class="bds-c-tab {{ (request()->is('categories')) ? 'is-selected' : '' }}" role="presentation">
+								<button role="tab" onclick="window.location.href='{{ route('categories') }}'">
+									<div class="bds-c-tab__icon"></div>
+									<span class="bds-c-tab__label">
+										Categories
+									</span>
+								</button>
+							</li>
+							<li class="bds-c-tab {{ (request()->is('inventory-status')) ? 'is-selected' : '' }}" onclick="window.location.href='{{ route('inventory.status') }}'" role="presentation">
+								<button role="tab" >
+									<div class="bds-c-tab__icon"></div>
+									<span class="bds-c-tab__label">
+										Inventory Status
+									</span>
+								</button>
+							</li>
+							<li class="bds-c-tab {{ (request()->is('order.history')) ? 'is-selected' : '' }}" role="presentation">
+								<button role="tab" >
+									<div class="bds-c-tab__icon"></div>
+									<span class="bds-c-tab__label">
+										Order History
+									</span>
+								</button>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			{{-- @if(request()->is('/') || request()->is('home'))
+			<div class="box-flex bds-c-navbar__bottom">
+				<div class="bds-c-tabs vertical-switcher-tabs">
+					<div class="bds-c-tabs__container">
+						<ul class="bds-c-tabs__list align-items-center gap-2" role="tablist">
+							<li class="bds-c-tab" x-on:click="categoryTab = 'all'" :class="{ 'is-selected': categoryTab === 'all' }" role="presentation">
 								<button role="tab">
 									<div class="bds-c-tab__icon"></div>
 									<span class="bds-c-tab__label">
@@ -228,7 +269,7 @@
 							</li>
 							@if ($categories->count())
 							@foreach ($categories as $category)
-							<li class="bds-c-tab"  x-on:click="selectedTab = '{{ strtolower($category->name) }}'" :class="{ 'is-selected': selectedTab === '{{ strtolower($category->name) }}' }" role="presentation">
+							<li class="bds-c-tab"  x-on:click="categoryTab = '{{ strtolower($category->name . '-' . $category->id) }}'" :class="{ 'is-selected': categoryTab === '{{ strtolower($category->name . '-' . $category->id) }}' }" role="presentation">
 								<button role="tab">
 									<div class="bds-c-tab__icon"></div>
 									<span class="bds-c-tab__label" id="rlp-vertical-switcher__tab-1-label">
@@ -242,7 +283,7 @@
 					</div>
 				</div>
 			</div>
-			@endif
+			@endif --}}
 		</section>
 	</div>
 </div>
