@@ -94,7 +94,7 @@ class MobileShopDealController extends Controller
 							$dealOptions->deal_detail_id = $dealDetails->id;
 							$dealOptions->item_id = $list['id'];
 							$dealOptions->item_name = $list['name'];
-							$dealOptions->item_description = $list['discription'];
+							$dealOptions->item_description = $list['description'];
 							$dealOptions->item_image = $list['main_image'];
 							$dealOptions->item_original_price = $list['price'];
 
@@ -200,7 +200,7 @@ class MobileShopDealController extends Controller
 							$dealOptions->deal_detail_id = $dealDetails->id;
 							$dealOptions->item_id = $dealOption->id;
 							$dealOptions->item_name = $dealOption->name;
-							$dealOptions->item_description = $dealOption->discription;
+							$dealOptions->item_description = $dealOption->description;
 							$dealOptions->item_image = $dealOption->main_image;
 							$dealOptions->item_original_price = $dealOption->price;
 							if($dealOption->additionalPrice ?? null)

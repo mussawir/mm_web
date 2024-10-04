@@ -26,12 +26,12 @@ class Category extends Model
 
 	public function items()
 	{
-		return $this->hasMany('App\Models\Items_list', 'category_id');
+		return $this->hasMany('App\Models\Item', 'category_id');
 	}
 
 	public function addons()
 	{
-		return $this->hasMany('App\Models\Items_list')->where('is_addon', 1);
+		return $this->hasMany('App\Models\Item')->where('is_addon', 1);
 	}
 
 	public function parentCategory()

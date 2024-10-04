@@ -6,31 +6,27 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Items_list extends Model
+class Item extends Model
 {
 	use HasFactory;
 	use SoftDeletes;
 
-	protected $table = 'items_lists';
+	protected $table = 'Items';
 
 	protected $fillable = [
 		'category_id',
-		'branch_id',
 		'vendor_id',
 		'name',
-		'discription',
+		'description',
 		'discount',
 		'instock',
 		'price',
-		'qty',
-		'measuring_unit',
+		'quantity',
 		'qty_reorder',
 		'max_order_qty',
 		'sort_by',
-		'main_image',
-		'is_addon',
-		'is_grocery',
-		'preparation_time',
+		'image',
+		'sku_code',
 	];
 	
 	public function category()
@@ -45,6 +41,6 @@ class Items_list extends Model
 
 	public function addons()
 	{
-		return $this->belongsToMany(Items_list::class, 'item_addons', 'item_id', 'addon_id');
+		return $this->belongsToMany(Item::class, 'item_addons', 'item_id', 'addon_id');
 	}
 }

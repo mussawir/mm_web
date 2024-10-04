@@ -49,11 +49,11 @@ final class ItemTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             // ->add('id')
-            ->add('main_image', fn ($item) => '<img class="w-25 rounded-full" src="' . asset("images/vendors/{$item->vendor_id}/items/250x250/{$item->main_image}") . '">')
+            ->add('image', fn ($item) => '<img class="w-25 rounded-full" src="' . asset("images/vendors/{$item->vendor_id}/items/250x250/{$item->image}") . '">')
             ->add('category', fn ($item) => $item->category->name)
             // ->add('vendor_id')
             ->add('name')
-            // ->add('discription')
+            // ->add('description')
             // ->add('discount')
             ->add('instock')
             ->add('price')
@@ -73,7 +73,7 @@ final class ItemTable extends PowerGridComponent
         return [
             Column::make('Id', 'id')->index(),
 
-            Column::make('Image', 'main_image'),
+            Column::make('Image', 'image'),
             
             Column::make('Category', 'category')
                 ->sortable()
@@ -84,7 +84,7 @@ final class ItemTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            // Column::make('Discription', 'discription')
+            // Column::make('description', 'description')
             //     ->sortable()
             //     ->searchable(),
 

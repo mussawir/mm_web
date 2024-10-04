@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Currency;
 use Illuminate\Http\Request;
-use App\Models\Items_list;
+use App\Models\Item;
 use Illuminate\Support\Facades\DB;
 
 class MobileShopsItemsListController extends Controller
@@ -15,7 +15,7 @@ class MobileShopsItemsListController extends Controller
 
 	public function productRemoveItem($id)
 	{
-		$item = Items_list::find($id)->delete();
+		$item = Item::find($id)->delete();
 
 		return response()->json([
 			'status' => 200,
@@ -55,7 +55,7 @@ class MobileShopsItemsListController extends Controller
 
 	public function getAllItemList($vendor)
 	{
-		$items = Items_list::where('vendor_id', $vendor)
+		$items = Item::where('vendor_id', $vendor)
 			->where('is_addon', 0)
 			->latest()
 			->get();
@@ -159,7 +159,7 @@ class MobileShopsItemsListController extends Controller
 	/** List of all items in one category **/
 	public function getItemsByCategory($categroyId, $vendorId)
 	{
-		$categoryItems = Items_list::where('category_id', $categroyId)
+		$categoryItems = Item::where('category_id', $categroyId)
 			->where('vendor_id', $vendorId)
 			->where('is_addon', 0)
 			->latest()
@@ -174,7 +174,7 @@ class MobileShopsItemsListController extends Controller
 
 	public function getItemsByCat($categroyId)
 	{
-		$categoryItems = Items_list::where('category_id', $categroyId)
+		$categoryItems = Item::where('category_id', $categroyId)
 			->where('is_addon', 0)
 			->latest()
 			->get();
@@ -188,7 +188,7 @@ class MobileShopsItemsListController extends Controller
 
 	public function show($id)
 	{
-		$find_items = Items_list::where('shop_id', $id)
+		$find_items = Item::where('shop_id', $id)
 			->get();
 
 		return response()->json([
@@ -261,11 +261,11 @@ class MobileShopsItemsListController extends Controller
 	// 	}
 
 	// 	$shop_logo_url = ($get_image_name) ? '/images/branch-products/'. $shop_id . '/'. $get_image_name : '';
-	// 	$shop_additem = new Items_list;
+	// 	$shop_additem = new Item;
 	// 	$shop_additem->branch_id = $request->input('shop_id');
 	// 	$shop_additem->category_id = $request->input('category');
 	// 	$shop_additem->name = $request->input('name');
-	// 	$shop_additem->discription = $request->input('discription');
+	// 	$shop_additem->description = $request->input('description');
 	// 	$shop_additem->price = $request->input('price');
 	// 	$shop_additem->discount = $request->input('discount');
 	// 	$shop_additem->main_image = $shop_logo_url;
@@ -281,7 +281,7 @@ class MobileShopsItemsListController extends Controller
 
 	public function getItem($item)
 	{
-		$item = Items_list::findorFail($item);
+		$item = Item::findorFail($item);
 
 		return response()->json([
 			'status' => 200,
@@ -354,10 +354,10 @@ class MobileShopsItemsListController extends Controller
 	// 		}
 
 	// 		$shop_logo_url = '/images/branch-products/' . $shop_id . '/'. $image_name;
-	// 		$update_item = Items_list::where('id', $id)
+	// 		$update_item = Item::where('id', $id)
 	// 			->update([
 	// 				'name' => $request->input('name'),
-	// 				'discription' => $request->input('discription'),
+	// 				'description' => $request->input('description'),
 	// 				'discount' => $request->input('discount'),
 	// 				'price' => $request->input('price'),
 	// 				'main_image' => $shop_logo_url
@@ -365,10 +365,10 @@ class MobileShopsItemsListController extends Controller
 	// 	}
 	// 	else
 	// 	{
-	// 		$update_item = Items_list::where('id', $id)
+	// 		$update_item = Item::where('id', $id)
 	// 			->update([
 	// 				'name' => $request->input('name'),
-	// 				'discription' => $request->input('discription'),
+	// 				'description' => $request->input('description'),
 	// 				'discount' => $request->input('discount'),
 	// 				'price' => $request->input('price')
 	// 			]);
@@ -381,10 +381,10 @@ class MobileShopsItemsListController extends Controller
 
 	public function cloneItem(Request $request, $shop_id)
 	{
-		$CloneItem = Items_list::where('name', $request->name)
+		$CloneItem = Item::where('name', $request->name)
 			->get();
 		$object = json_decode(json_encode($CloneItem), FALSE);
-		// if(Items_list::where('name', $request->name)
+		// if(Item::where('name', $request->name)
 		// 	->where('shop_id', $request->shop_id)
 		// 	->exists())
 		// {
@@ -460,10 +460,10 @@ class MobileShopsItemsListController extends Controller
 			}
 
 			$product_image = '/images/shop-products/' . $shop_id . '/' . $product_name;
-			$shop_cloneitem = new Items_list;
+			$shop_cloneitem = new Item;
 			$shop_cloneitem->shop_id = $request->input('shop_id');
 			$shop_cloneitem->name = $request->input('name');
-			$shop_cloneitem->discription = $request->input('discription');
+			$shop_cloneitem->description = $request->input('description');
 			$shop_cloneitem->price = $request->input('price');
 			$shop_cloneitem->discount = $request->input('discount');
 			$shop_cloneitem->main_image = $product_image;

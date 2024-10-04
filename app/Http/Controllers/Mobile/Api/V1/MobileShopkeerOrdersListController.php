@@ -232,7 +232,7 @@ class MobileShopkeerOrdersListController extends Controller
 				$orderAddonsArray[] = [
 					'id' => $orderAddon->addonItem->id,
 					'name' => $orderAddon->addonItem->name,
-					'description' => $orderAddon->addonItem->discription,
+					'description' => $orderAddon->addonItem->description,
 					'price' => $orderAddon->addonItem->price,
 					'main_image' => $orderAddon->addonItem->main_image,
 					'quantity' => $orderAddon->quantity,
@@ -303,7 +303,7 @@ class MobileShopkeerOrdersListController extends Controller
 				return [
 					'id' => $orderAddon->addonItem->id,
 					'name' => $orderAddon->addonItem->name,
-					'description' => $orderAddon->addonItem->discription,
+					'description' => $orderAddon->addonItem->description,
 					'price' => $orderAddon->addonItem->price,
 					'image' => $orderAddon->addonItem->main_image,
 					'quantity' => $orderAddon->quantity,

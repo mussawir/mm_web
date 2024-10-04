@@ -58,7 +58,7 @@
 				<tr>
 					<td>{{ $loop->iteration }}</td>
 					<td>
-						<img src="{{ '/images/branch-products/' . $branchId . '/250x250/' . $item->main_image }}" class="rounded" alt="Item" style="width:08rem;height:08rem;object-fit:cover;" />
+						<img src="{{ '/images/branch-products/' . $branchId . '/250x250/' . $item->image }}" class="rounded" alt="Item" style="width:08rem;height:08rem;object-fit:cover;" />
 					</td>
 					<td>
 						{{ $item->name }}

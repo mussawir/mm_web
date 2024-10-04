@@ -5,7 +5,7 @@ namespace App\Http\Controllers\ShopKeeper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Shop;
-use App\Models\Items_list;
+use App\Models\Item;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Imports\ItemsListImport;
@@ -27,14 +27,14 @@ class ShopController extends Controller
     
     public function showProductList(){
      $id = Auth::id();
-     $get_products = Items_list::where('shop_id','=',$id)->get();
+     $get_products = Item::where('shop_id','=',$id)->get();
      return view('shop.uploadBulkProducts',compact('get_products','id'));
     }
     
     public function storeItems(Request $request,$id)
     {
         $shop_id = $id;
-        $items = DB::table('items_lists')->where('shop_id','=',$shop_id)->delete();
+        $items = DB::table('Items')->where('shop_id','=',$shop_id)->delete();
         if($items > 0)
         {
             $excel = Excel::import(new ItemsListImport($shop_id), $request->file('myFile'));

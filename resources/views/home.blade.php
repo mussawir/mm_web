@@ -41,7 +41,7 @@
 										</span>
 									</h3>
 									<p class="product-tile__description cl-neutral-secondary f-paragraph-small-font-size fw-paragraph-small-font-weight lh-paragraph-small-line-height ff-paragraph-small-font-family mt-xs">
-										{{ substr($item->discription, 0, 50) }}
+										{{ substr($item->description, 0, 50) }}
 									</p>
 								</div>
 								<div class="d-flex align-items-center product-tile__price-row fw-wrap mt-xs">
@@ -61,7 +61,7 @@
 							<div class="d-flex flex-column product-tile__right-side-wrapper no-shrink ml-st gap-1">
 								<picture class="product-tile__image">
 									@php
-										$img150 = asset("/images/vendors/{$item->vendor_id}/items/150x150/{$item->main_image}");
+										$img150 = asset("/images/vendors/{$item->vendor_id}/items/150x150/{$item->image}");
 									@endphp
 									<div class="lazy-loaded-dish-photo" style="background-image: url({{ $img150 }});"></div>
 								</picture>
@@ -100,7 +100,7 @@
 					<a href="{{ route('vendor.detail', $item->id) }}">
 						<div class="rounded-3 position-relative">
 							<div class="d-flex align-items-center justify-content-center overflow-hidden" style="aspect-ratio: 16/9;border-top-left-radius:12px;border-top-right-radius:12px;background-color:#f7f7f7;">
-								<img src="{{ "/images/vendors/{$item->vendor_id}/items/500x500/{$item->main_image}" }}" class="card-img-bg position-relative" loading="lazy" style="object-fit:contain;" />
+								<img src="{{ "/images/vendors/{$item->vendor_id}/items/500x500/{$item->image}" }}" class="card-img-bg position-relative" loading="lazy" style="object-fit:contain;" />
 							</div>
 						</div>
 						<div class="d-flex flex-column" style="margin:12px;">
@@ -259,11 +259,11 @@
 
 					$('#addToCartModal .product-information-title').html(data.item.name);
 
-					$('#addToCartModal .product-description').html(data.item.discription);
+					$('#addToCartModal .product-description').html(data.item.description);
 
 					$('#addToCartModal .product-price').html(currency + ' ' + parseInt(data.item.price));
 
-					$('#addToCartModal .product-information-image').attr('src', '/images/vendors/' + data.item.vendor_id + '/items/500x500/' + data.item.main_image);
+					$('#addToCartModal .product-information-image').attr('src', '/images/vendors/' + data.item.vendor_id + '/items/500x500/' + data.item.image);
 
 					$('#addToCartModal .deal-options-section').hide();
 					$('#addToCartModal .deal-options-section').find('*').hide();

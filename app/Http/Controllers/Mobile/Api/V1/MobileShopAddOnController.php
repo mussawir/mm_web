@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Mobile\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\ItemAddon;
-use App\Models\Items_list;
+use App\Models\Item;
 use App\Models\DealMaster;
 use App\Models\DealAddOn;
 use Illuminate\Http\Request;
@@ -13,7 +13,7 @@ class MobileShopAddOnController extends Controller
 {
 	public function getAllItems($item)
 	{
-		$items = Items_list::whereNot('id', $item)
+		$items = Item::whereNot('id', $item)
 			->get();
 
 		return response()->json([
@@ -25,7 +25,7 @@ class MobileShopAddOnController extends Controller
 
 	public function getCategoryAddons($category)
 	{
-		$addons = Items_list::where('is_addon', 1)
+		$addons = Item::where('is_addon', 1)
 			->orderByRaw('category_id = ? desc', [$category])
 			->get();
 
@@ -38,7 +38,7 @@ class MobileShopAddOnController extends Controller
 
 	public function getItemAddons($item)
 	{
-		$item = Items_list::find($item);
+		$item = Item::find($item);
 		
 		if ($item)
 		{

@@ -13,7 +13,7 @@ use App\Models\CartMaster;
 use App\Models\CartDetail;
 use App\Models\CustomerOperator;
 use App\Models\FavouriteVendor;
-use App\Models\Items_list;
+use App\Models\Item;
 use App\Models\OperatorDues;
 use App\Models\OperatorMaster;
 use App\Models\OrderAddon;
@@ -217,7 +217,7 @@ class CheckoutController extends Controller
 				}
 			}
 
-			$preparationTime = Items_list::whereIn('id', $itemsArray)
+			$preparationTime = Item::whereIn('id', $itemsArray)
 				->max('preparation_time');
 
 			$cart->delete();

@@ -9,7 +9,7 @@ use App\Models\CartDealOption;
 use App\Models\CartDetail;
 use App\Models\CartMaster;
 use App\Models\Category;
-use App\Models\Items_list;
+use App\Models\Item;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -46,7 +46,7 @@ class SettingController extends Controller
 
 	public function reorderItems($categoryId)
 	{
-		$items = Items_list::where('category_id', $categoryId)
+		$items = Item::where('category_id', $categoryId)
 			->where('is_addon', 0)
 			->orderBy('sort_by')
 			->get();
@@ -74,7 +74,7 @@ class SettingController extends Controller
 		$order = $request->input('order');
 
 		foreach ($order as $value) {
-			$item = Items_list::findOrFail($value['itemId']);
+			$item = Item::findOrFail($value['itemId']);
 
 			$item->sort_by = $value['sortId'];
 

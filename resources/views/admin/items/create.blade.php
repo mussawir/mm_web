@@ -57,8 +57,8 @@
 						</div>
 					</div>
 					<div class="row mb-3">
-						<label for="main_image" class="col-sm-2 col-form-label">
-							Main Image
+						<label for="image" class="col-sm-2 col-form-label">
+							Image
 							<span class="text-danger" aria-hidden="true">
 								*
 							</span>
@@ -69,12 +69,12 @@
 									<i class='bx bxs-image'></i>
 									{{-- Upload --}}
 								</span>
-								<input type="file" class="form-control @error('main_image') is-invalid @enderror" name="main_image" id="main_image" aria-required='true'>
+								<input type="file" class="form-control @error('image') is-invalid @enderror" name="image" id="image" aria-required='true'>
 							</div>
-							@if($errors->has('main_image'))
+							@if($errors->has('image'))
 							<span class="d-block invalid-feedback" role="alert">
 								<strong>
-									{{ $errors->first('main_image') }}
+									{{ $errors->first('image') }}
 								</strong>
 							</span>
 							@endif

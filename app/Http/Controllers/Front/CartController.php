@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CartAddon;
 use App\Models\CartDealOption;
 use Illuminate\Http\Request;
-use App\Models\Items_list;
+use App\Models\Item;
 use App\Models\CartMaster;
 use App\Models\CartDetail;
 use App\Models\DealDetail;
@@ -48,7 +48,7 @@ class CartController extends Controller
 			$itemPriceColumn = 'grand_total';
 			$uniqueKey = $id . '-' . implode('-', Arr::flatten($request->input('options')));
 		} elseif ($type === 'item') {
-			$item = Items_list::findOrFail($id);
+			$item = Item::findOrFail($id);
 			$itemImageColumn = 'main_image';
 			$itemPriceColumn = 'price';
 			$uniqueKey = $id;
@@ -133,7 +133,7 @@ class CartController extends Controller
 		// Loop through selectedAddons to add new addons to the cart
 		foreach ($selectedAddons as $addonId => $selected) {
 			if ($selected) {
-				$addon = Items_list::findOrFail($addonId);
+				$addon = Item::findOrFail($addonId);
 				$addonQuantity = $addonQuantities[$addonId] ?? 0;
 	
 				$existingAddon = null;
@@ -292,7 +292,7 @@ class CartController extends Controller
 		if ($type === 'deal') {
 			$deal = DealMaster::with('vendor')->findOrFail($id);
 		} elseif ($type === 'item') {
-			$item = Items_list::with('vendor')->findOrFail($id);
+			$item = Item::with('vendor')->findOrFail($id);
 		}
 
 		$cartMaster = CartMaster::firstOrNew([

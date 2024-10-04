@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\DealMaster;
-use App\Models\Items_list;
+use App\Models\Item;
 use App\Models\OperatorMaster;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +31,7 @@ class FrontController extends Controller
 
 		$vendors = Vendor::whereIn('operator_id', $operatorIDs)->get();
 
-		$items = Items_list::whereIn('vendor_id', $vendors->pluck('id'))->get();
+		$items = Item::whereIn('vendor_id', $vendors->pluck('id'))->get();
 
 		$categories = Category::whereNotNull('parent_id')->get();
 
@@ -86,7 +86,7 @@ class FrontController extends Controller
 
 	public function itemDetail($vendorId, $id)
 	{
-		$item = Items_list::with(['category', 'addons'])
+		$item = Item::with(['category', 'addons'])
 			->findorFail($id);
 
 		return response()->json([

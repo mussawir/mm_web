@@ -24,6 +24,6 @@ class OrderAddon extends Model
 
 	public function addonItem()
 	{
-		return $this->belongsTo('App\Models\Items_list', 'addon_id');
+		return $this->belongsTo('App\Models\Item', 'addon_id');
 	}
 }

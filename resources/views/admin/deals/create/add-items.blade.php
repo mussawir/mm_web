@@ -374,8 +374,8 @@
 						checkboxInput.name = 'items[]';
 						checkboxInput.value = item.id;
 						checkboxInput.setAttribute('data-name', item.name);
-						checkboxInput.setAttribute('data-description', item.discription);
-						checkboxInput.setAttribute('data-image', item.main_image);
+						checkboxInput.setAttribute('data-description', item.description);
+						checkboxInput.setAttribute('data-image', item.image);
 						checkboxInput.setAttribute('data-original-price', item.price)
 						checkboxDiv.appendChild(checkboxInput);
 
