@@ -10,6 +10,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\MessageBag;
@@ -77,21 +78,35 @@ class LoginController extends Controller
 
 	public function customerLogin(Request $request)
 	{
-		$request->validate([
-			'phone' => 'required|numeric',
+		$this->validate($request, [
+			'email' => 'required|email',
+			'password' => 'required|min:6'
 		]);
 
-		$customer = Customer::where('phone_number', $request->phone)->first();
-
-		if ($customer) {
-			return redirect()
-				->route('customer.verify.pin')
-				->withInput(['phone' => $request->phone]);
-		} else {
-			return redirect()
-				->route('customer.register')
-				->withInput(['phone' => $request->phone]);
+		if (Auth::guard('customer')->attempt(['email' => $request->input('email'), 'password' => $request->input('password')], $request->get('remember'))) {
+			return redirect()->intended('/home');
 		}
+
+		$errors = new MessageBag(['password' => ['Email and/or password invalid.']]);
+
+		return Redirect::back()->withErrors($errors)
+			->withInput($request->only('email', 'remember'));
+
+		// $request->validate([
+		// 	'phone' => 'required|numeric',
+		// ]);
+
+		// $customer = Customer::where('phone_number', $request->phone)->first();
+
+		// if ($customer) {
+		// 	return redirect()
+		// 		->route('customer.verify.pin')
+		// 		->withInput(['phone' => $request->phone]);
+		// } else {
+		// 	return redirect()
+		// 		->route('customer.register')
+		// 		->withInput(['phone' => $request->phone]);
+		// }
 	}
 
 	public function showCustomerRegistrationForm()
@@ -105,28 +120,32 @@ class LoginController extends Controller
 	{
 		$request->validate([
 			'name' => 'required|string',
+			'email' => 'required|email|unique:customers,email',
 			'city' => 'required',
-			'phone' => 'required|numeric|unique:customers,phone_number',
-			'pin' => 'required|digits:4|confirmed',
+			'phone' => 'nullable|numeric|unique:customers,phone_number',
+			'password' => 'required|min:6|confirmed',
 		]);
 
 		$customer = new Customer;
 
 		$customer->name = $request->input('name');
+		$customer->email = $request->input('email');
 		$customer->city_id = $request->input('city');
 		$customer->phone_number = $request->input('phone');
-		$customer->pin = $request->input('pin');
+		$customer->password = Hash::make($request->input('password'));
 		$customer->verified_customer = 0;
 
 		$customer->save();
 
-		$otp = $this->generateOTP();
-		$this->sendOTP($customer->id, $customer->phone_number, $otp);
+		// $otp = $this->generateOTP();
+		// $this->sendOTP($customer->id, $customer->phone_number, $otp);
 
-		Session::put('otp', $otp);
-		Session::put('phone', $request->phone);
+		// Session::put('otp', $otp);
+		// Session::put('phone', $request->phone);
 
-		return redirect()->route('customer.verify');
+		// return redirect()->route('customer.verify');
+
+		return redirect()->route('customer.login')->with('message', 'Registration successful! Please login.');
 	}
 
 	public function showPinVerificationForm()

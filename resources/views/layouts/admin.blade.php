@@ -7,7 +7,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<title>Inventory Ops</title>
+		<title>Inventory Ops</title>
 
 		{{-- Favicon --}}
 		<link rel="icon" href="/assets/images/favicon/favicon.ico" sizes="any" />
@@ -82,85 +82,80 @@
 		{{-- Main JS --}}
 		<script src="{{ asset('assets/js/main.js') }}"></script>
 		<script async defer src="{{ asset('assets/js/buttons.js') }}"></script>
-		<script src="{{ asset('assets/js/jquery.tablednd.js') }}"></script>
+		{{-- <script src="{{ asset('assets/js/jquery.tablednd.js') }}"></script> --}}
 		<script>
-		$(document).ready(function()
-		{
-			function saveCategoryOrder() {
-				var order = [];
-				$("#searching_table tbody tr").each(function () {
-					var categoryID = $(this).attr('data-category-id');
-					var sortID = $(this).index() + 1;
+		$(document).ready(function() {
+			// function saveCategoryOrder() {
+			// 	var order = [];
+			// 	$("#searching_table tbody tr").each(function () {
+			// 		var categoryID = $(this).attr('data-category-id');
+			// 		var sortID = $(this).index() + 1;
 
-					order.push({ categoryId: categoryID, sortId: sortID });
-				});
+			// 		order.push({ categoryId: categoryID, sortId: sortID });
+			// 	});
 
-				// Send an AJAX request to update the category order
-				$.ajax({
-					url: "/admin/settings/update-category-order",
-					method: "POST",
-					data: {
-						_token: $('meta[name="csrf-token"]').attr("content"),
-						order: order,
-					},
-					success: function (response) {
-						if (response.success) {
-							// console.log("Category order updated successfully");
-						}
-					},
-					error: function (error) {
-						console.error("Error updating category order");
-					}
-				});
-			}
+			// 	// Send an AJAX request to update the category order
+			// 	$.ajax({
+			// 		url: "/admin/settings/update-category-order",
+			// 		method: "POST",
+			// 		data: {
+			// 			_token: $('meta[name="csrf-token"]').attr("content"),
+			// 			order: order,
+			// 		},
+			// 		success: function (response) {
+			// 			if (response.success) {
+			// 				// console.log("Category order updated successfully");
+			// 			}
+			// 		},
+			// 		error: function (error) {
+			// 			console.error("Error updating category order");
+			// 		}
+			// 	});
+			// }
 
-			function saveItemOrder() {
-				var order = [];
-				$("#searching_table tbody tr").each(function () {
-					var itemID = $(this).attr('data-item-id');
-					var sortID = $(this).index() + 1;
+			// function saveItemOrder() {
+			// 	var order = [];
+			// 	$("#searching_table tbody tr").each(function () {
+			// 		var itemID = $(this).attr('data-item-id');
+			// 		var sortID = $(this).index() + 1;
 
-					order.push({ itemId: itemID, sortId: sortID });
-				});
+			// 		order.push({ itemId: itemID, sortId: sortID });
+			// 	});
 
-				// Send an AJAX request to update the category order
-				$.ajax({
-					url: "/admin/settings/update-item-order",
-					method: "POST",
-					data: {
-						_token: $('meta[name="csrf-token"]').attr("content"),
-						order: order,
-					},
-					success: function (response) {
-						if (response.success) {
-							// console.log("Category order updated successfully");
-						}
-					},
-					error: function (error) {
-						console.error("Error updating category order");
-					}
-				});
-			}
+			// 	// Send an AJAX request to update the category order
+			// 	$.ajax({
+			// 		url: "/admin/settings/update-item-order",
+			// 		method: "POST",
+			// 		data: {
+			// 			_token: $('meta[name="csrf-token"]').attr("content"),
+			// 			order: order,
+			// 		},
+			// 		success: function (response) {
+			// 			if (response.success) {
+			// 				// console.log("Category order updated successfully");
+			// 			}
+			// 		},
+			// 		error: function (error) {
+			// 			console.error("Error updating category order");
+			// 		}
+			// 	});
+			// }
 
-			function search_table(value)
+			function searchTable(value)
 			{
 				$('#searching_table tbody tr').each(function()
 				{
 					var found = 'false';
 					$(this).each(function()
 					{
-						if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)
-						{
+						if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
 							found = 'true';
 						}
 					});
 
-					if(found == 'true')
-					{
+					if(found == 'true') {
 						$(this).show();
-					}
-					else
-					{
+					} else {
 						$(this).hide();
 					}
 				});
@@ -168,20 +163,20 @@
 
 			$('#search').keyup(function()
 			{
-				search_table($(this).val());
+				searchTable($(this).val());
 			});
 
-			$(".reorder-categories").tableDnD({
-				onDrop: function () {
-					saveCategoryOrder();
-				}
-			});
+			// $(".reorder-categories").tableDnD({
+			// 	onDrop: function () {
+			// 		saveCategoryOrder();
+			// 	}
+			// });
 
-			$(".reorder-items").tableDnD({
-				onDrop: function () {
-					saveItemOrder();
-				}
-			});
+			// $(".reorder-items").tableDnD({
+			// 	onDrop: function () {
+			// 		saveItemOrder();
+			// 	}
+			// });
 
 			$(".date-selector").flatpickr();
 		});

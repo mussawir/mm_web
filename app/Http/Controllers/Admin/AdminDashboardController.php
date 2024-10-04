@@ -11,12 +11,6 @@ use Illuminate\Support\Facades\Session;
 
 class AdminDashboardController extends Controller
 {
-	/**
-	* Dashboard Order Detials page 
-	* @return \Controllers\Admin\AdminDashboard\index
-	* Created by Musavir 20-2-2023
-	* The index function will return order master
-	*/ 
 	public function index()
 	{
 		$user = Auth::user();
