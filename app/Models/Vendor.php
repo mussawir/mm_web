@@ -50,12 +50,12 @@ class Vendor extends Model
 
 	public function categories()
 	{
-		return $this->hasManyThrough(Category::class, Items_list::class, 'vendor_id', 'id', 'id', 'category_id')->distinct();
+		return $this->hasManyThrough(Category::class, Item::class, 'vendor_id', 'id', 'id', 'category_id')->distinct();
 	}
 
 	public function items()
 	{
-		return $this->hasMany('App\Models\Items_list');
+		return $this->hasMany('App\Models\Item');
 	}
 
 	public function orders()

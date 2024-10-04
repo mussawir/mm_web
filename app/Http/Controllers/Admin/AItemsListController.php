@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Items_list;
 use App\Models\Category;
+use App\Models\Item;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
@@ -19,7 +19,7 @@ class AItemsListController extends Controller
 
 	public function getItemList()
 	{
-		$ItemsList = Items_list::all();
+		$ItemsList = Item::all();
 		return view('admin.ItemList', compact('ItemsList'));
 	}
 
@@ -45,7 +45,7 @@ class AItemsListController extends Controller
 			'instock' => 'required|numeric',
 			'price' => 'required|numeric|between:0.00,9999999.99',
 			'description' => 'required|min:4|max:1000',
-			'main_image' => 'required|image|mimes:jpeg,png,jpg|dimensions:min_width=300,min_height=300|min:10|max:2048',
+			'image' => 'required|image|mimes:jpeg,png,jpg|dimensions:min_width=300,min_height=300|min:10|max:2048',
 			'quantity' => 'required|integer',
 			'max_order_quantity' => 'required|integer',
 			// 'preparation_time' => 'required',
@@ -53,9 +53,9 @@ class AItemsListController extends Controller
 
 		$vendorID = $request->get('vendor');
 
-		if($request->hasfile('main_image'))
+		if($request->hasfile('image'))
 		{
-			$file = $request->file('main_image');
+			$file = $request->file('image');
 
 			if ($file->isValid()) {
 				$filename = time() . '.' . $file->extension();
@@ -79,19 +79,19 @@ class AItemsListController extends Controller
 			}
 		}
 
-		$item = new Items_list;
+		$item = new Item;
 
 		$item->category_id = $request->input('category');
 		$item->vendor_id = $vendorID;
 		$item->name = $request->input('name');
-		$item->discription = $request->input('description');
+		$item->description = $request->input('description');
 		$item->discount = $request->input('discount');
 		$item->instock = $request->input('instock');
 		$item->price = $request->input('price');
 		$item->qty = $request->input('quantity');
 		$item->max_order_qty = $request->input('max_order_quantity');
 		$item->preparation_time = $request->input('preparation_time');
-		$item->main_image = $filename;
+		$item->image = $filename;
 
 		if ($request->input('is_addon')) {
 			$item->is_addon = $request->input('is_addon');
@@ -116,7 +116,7 @@ class AItemsListController extends Controller
 
 	public function edit($id)
 	{
-		$item = Items_list::findOrFail($id);
+		$item = Item::findOrFail($id);
 
 		$categories = Category::whereNotNull('parent_id')
 			->where('vendor_type_id', $item->vendor->vendor_type_id)
@@ -134,18 +134,18 @@ class AItemsListController extends Controller
 			'instock' => 'required|numeric',
 			'price' => 'required|numeric|between:0.00,9999.99',
 			'description' => 'required|min:4|max:1000',
-			'main_image' => 'image|mimes:jpeg,png,jpg|dimensions:min_width=500,min_height=500|min:100|max:4096',
+			'image' => 'image|mimes:jpeg,png,jpg|dimensions:min_width=500,min_height=500|min:100|max:4096',
 			'quantity' => 'required|integer',
 			'max_order_quantity' => 'required|integer',
 			// 'preparation_time' => 'required',
 		]);
 
-		$item = Items_list::findOrFail($request->id);
+		$item = Item::findOrFail($request->id);
 		$vendorID = $request->get('vendor');
 
-		if($request->hasfile('main_image'))
+		if($request->hasfile('image'))
 		{
-			$file = $request->file('main_image');
+			$file = $request->file('image');
 
 			if ($file->isValid()) {
 				$filename = time() . '.' . $file->extension();
@@ -161,9 +161,9 @@ class AItemsListController extends Controller
 						File::makeDirectory($path, 0755, true, true);
 					}
 
-					if ($item->main_image)
+					if ($item->image)
 					{
-						$oldImage = public_path($path . $item->main_image);
+						$oldImage = public_path($path . $item->image);
 					}
 
 					$image->resize($size, null, function ($constraint) {
@@ -185,12 +185,12 @@ class AItemsListController extends Controller
 		$item->name = $request->input('name');
 
 		if (isset($filename)) {
-			$item->main_image = $filename;
+			$item->image = $filename;
 		}
 
 		$item->discount = $request->input('discount');
 		$item->price = $request->input('price');
-		$item->discription = $request->input('description');
+		$item->description = $request->input('description');
 		$item->qty = $request->input('quantity');
 		$item->max_order_qty = $request->input('max_order_quantity');
 		$item->preparation_time = $request->input('preparation_time');
@@ -210,13 +210,13 @@ class AItemsListController extends Controller
 
 	public function status()
 	{
-		$status = Items_list::all();
+		$status = Item::all();
 		return view('admin.status', compact('status'));
 	}
 
 	public function destroy($id)
 	{
-		$item = Items_list::findOrFail($id);
+		$item = Item::findOrFail($id);
 
 		if (!$item) {
 			return redirect()->back()->with('error', 'Item not found.');

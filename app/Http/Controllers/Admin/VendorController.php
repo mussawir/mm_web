@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\DealMaster;
-use App\Models\Items_list;
+use App\Models\Item;
 use App\Models\OperatorCommissionHistory;
 use App\Models\OrderMaster;
 use App\Models\Vendor;
@@ -324,7 +324,7 @@ class VendorController extends Controller
 
 	public function vendorItemList($vendorID)
 	{
-		$items = Items_list::where('vendor_id', $vendorID)
+		$items = Item::where('vendor_id', $vendorID)
 			->where('is_addon', 0)
 			->with('category')
 			->latest()

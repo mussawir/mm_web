@@ -9,7 +9,7 @@ use App\Models\DealDetail;
 use App\Models\DealMaster;
 use App\Models\DealOption;
 use Illuminate\Http\Request;
-use App\Models\Items_list;
+use App\Models\Item;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
@@ -607,7 +607,7 @@ class DealController extends Controller
 
 		foreach($selectedAddOns as $selectedAddOn)
 		{
-			$item = Items_list::find($selectedAddOn->item_id);
+			$item = Item::find($selectedAddOn->item_id);
 			$selectedCategories[] = $item->category->id;
 		}
 		if ($selectedCategories)
@@ -656,7 +656,7 @@ class DealController extends Controller
 
 		foreach($selectedAddOns as $selectedAddOn)
 		{
-			$item = Items_list::find($selectedAddOn->item_id);
+			$item = Item::find($selectedAddOn->item_id);
 			$selectedCategories[] = $item->category->id;
 		}
 

@@ -74,7 +74,7 @@
             <!--            </tfoot>-->
                     
             <!--            <tbody>-->
-            <!--                @forelse($Items_list as $key => $list)-->
+            <!--                @forelse($Item as $key => $list)-->
             <!--           <tr>-->
             <!--         <td>{{$key + 1}}</td>-->
             <!--        <td>{{$list->name}}</td>-->
@@ -144,7 +144,7 @@
                         </tfoot>
                     
                         <tbody>
-                            @forelse($Items_list as $key => $list)
+                            @forelse($Item as $key => $list)
                        <tr>
                      <td>{{$key + 1}}</td>
                     <td>{{$list->name}}</td>
@@ -158,7 +158,7 @@
                     </th>
                     <td>{{$list->price}} Rs</td>
                     
-                    <td><img src={{$list->main_image}} height="50px"/></td>
+                    <td><img src={{$list->image}} height="50px"/></td>
                     </tr>
                         @empty
                       <tr>

@@ -32,7 +32,7 @@
                     <th>S.NO</th>
 					<th>Image</th>
                     <th>Name</th>
-                    <th>Discription</th>
+                    <th>description</th>
                     <th>Price</th>
                     <th>Discount</th>
                     <th>Instock</th>
@@ -48,9 +48,9 @@
                      @forelse ($ItemsList as $key => $list )
                   <tr>
                     <td>{{ $key + 1 }}</td>
-					<td>  <img src="{{$list->main_image}}" class="img-fluid w-75" alt="Product-image"></img></td>
+					<td>  <img src="{{$list->image}}" class="img-fluid w-75" alt="Product-image"></img></td>
                     <td>{{$list->name}}</td>
-                    <td>{{$list->discription}}</td>
+                    <td>{{$list->description}}</td>
                     <td>{{$list->price}}</td>
                     <td>{{$list->discount}}</td>
 					

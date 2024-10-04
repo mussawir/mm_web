@@ -4,7 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ItemAddon;
-use App\Models\Items_list;
+use App\Models\Item;
 use Illuminate\Http\Request;
 
 class AddonController extends Controller
@@ -16,7 +16,7 @@ class AddonController extends Controller
 
 	public function getAddons($category)
 	{
-		$addons = Items_list::where('is_addon', 1)
+		$addons = Item::where('is_addon', 1)
 			->orderByRaw('category_id = ? desc', [$category])
 			->get();
 
@@ -25,7 +25,7 @@ class AddonController extends Controller
 
 	public function getAddedAddons($itemId)
 	{
-		$item = Items_list::find($itemId);
+		$item = Item::find($itemId);
 
 		if ($item)
 		{

@@ -31,6 +31,6 @@ class DealOption extends Model
 
     public function item()
     {
-        return $this->belongsTo('App\Models\Items_list', 'item_id');
+        return $this->belongsTo('App\Models\Item', 'item_id');
     }
 }

@@ -37,7 +37,7 @@
 					<div class="row mb-4">
 						<div class="col-md-5">
 							<div class="mt-md-5 mt-0 ms-md-5 ms-0 p-5">
-								<img src='{{ "/images/branch-products/{$item->branch_id}/500x500/{$item->main_image}" }}' id="main-image" class="rounded img-fluid shadow-0" width="350" alt="Item Image" />
+								<img src='{{ "/images/branch-products/{$item->branch_id}/500x500/{$item->image}" }}' id="main-image" class="rounded img-fluid shadow-0" width="350" alt="Item Image" />
 							</div>
 						</div>
 						<div class="col-md-7">
@@ -124,7 +124,7 @@
 				<div class="row m-md-5 mt-1 py-4 rounded bg-secondary-subtle">
 					<div class="col-lg-12 ps-5">
 						<p class="fs-6 fw-semibold">
-							{{ $item->discription ?? "No description." }}
+							{{ $item->description ?? "No description." }}
 						</p>
 					</div>
 				</div>

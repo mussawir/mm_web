@@ -87,7 +87,7 @@
                     </th>
                     <td>{{$list->price}} Rs</td>
                     
-                    <td><img src={{$list->main_image}} height="50px"/></td>
+                    <td><img src={{$list->image}} height="50px"/></td>
                     </tr>
                         @empty
                       <tr>

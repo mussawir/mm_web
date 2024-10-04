@@ -15,22 +15,18 @@ class Item extends Model
 
 	protected $fillable = [
 		'category_id',
-		'branch_id',
 		'vendor_id',
 		'name',
-		'discription',
+		'description',
 		'discount',
 		'instock',
 		'price',
-		'qty',
-		'measuring_unit',
+		'quantity',
 		'qty_reorder',
 		'max_order_qty',
 		'sort_by',
-		'main_image',
-		'is_addon',
-		'is_grocery',
-		'preparation_time',
+		'image',
+		'sku_code',
 	];
 	
 	public function category()
@@ -45,6 +41,6 @@ class Item extends Model
 
 	public function addons()
 	{
-		return $this->belongsToMany(Items_list::class, 'item_addons', 'item_id', 'addon_id');
+		return $this->belongsToMany(Item::class, 'item_addons', 'item_id', 'addon_id');
 	}
 }

@@ -80,7 +80,7 @@ class MobileShopItemGroupController extends Controller
 		$create_group = new Group;
 		$create_group->shop_id  = $request->input('shop_id');
 		$create_group->name  = $request->input('name');
-		$create_group->discription  = $request->input('discription');
+		$create_group->description  = $request->input('description');
 		$create_group->image  = $shop_logo_url;
 		$create_group->save();
 		return response()->json(['status' => 200, 'data' => $create_group, 'message' => 'CreatedGroup Retrived Succesfully']);
@@ -128,8 +128,8 @@ class MobileShopItemGroupController extends Controller
 	public function getGroupItemList($id)
 	{
 		$getOrdersShop = DB::table('group_items')
-			->join('items_lists', 'items_lists.id', '=', 'group_items.item_id')
-			->select('items_lists.*', 'group_items.*')
+			->join('Items', 'Items.id', '=', 'group_items.item_id')
+			->select('Items.*', 'group_items.*')
 			->where('group_id', $id)
 			->get();
 
@@ -230,7 +230,7 @@ class MobileShopItemGroupController extends Controller
 			$update_item = Group::where('id', $groupid)
 				->update([
 					'name' => $request->input('name'),
-					'discription' => $request->input('discription'),
+					'description' => $request->input('description'),
 					'image' => $shop_logo_url1
 				]);
 		}
@@ -239,7 +239,7 @@ class MobileShopItemGroupController extends Controller
 			$update_item = Group::where('id', $groupid)
 				->update([
 					'name' => $request->input('name'),
-					'discription' => $request->input('discription')
+					'description' => $request->input('description')
 				]);
 		}
 

@@ -41,7 +41,7 @@
                      @forelse ($Status as $key => $list )
                   <tr>
                     <td>{{ $key + 1 }}</td>
-					<td>  <img src='{{($list->main_image)}}' class="img-fluid w-25" alt="Product-image"></img></td>
+					<td>  <img src='{{($list->image)}}' class="img-fluid w-25" alt="Product-image"></img></td>
                     <td>{{$list->instock}}</td>
                     <td>{{$list->qty}}</td>
                     <td>{{$list->qty_reorder}}</td>

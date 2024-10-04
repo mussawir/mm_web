@@ -50,20 +50,20 @@
 						</div>
 					</div>
 					<div class="row mb-3">
-						<label for="main_image" class="col-sm-2 col-form-label">
-							Main Image
+						<label for="image" class="col-sm-2 col-form-label">
+							Image
 						</label>
 						<div class="col-sm-10">
 							<input
-								class="form-control @error('main_image') is-invalid @enderror"
+								class="form-control @error('image') is-invalid @enderror"
 								type="file"
-								name="main_image"
-								id="main_image"
+								name="image"
+								id="image"
 							/>
-							@if($errors->has('main_image'))
+							@if($errors->has('image'))
 							<span class="d-block invalid-feedback" role="alert">
 								<strong>
-									{{ $errors->first('main_image') }}
+									{{ $errors->first('image') }}
 								</strong>
 							</span>
 							@endif
@@ -97,7 +97,7 @@
 							Description
 						</label>
 						<div class="col-sm-10">
-							<input class="form-control" name="description" id="description" value="{{ old('description', $item->discription) }}" type="text" placeholder="Type description">
+							<input class="form-control" name="description" id="description" value="{{ old('description', $item->description) }}" type="text" placeholder="Type description">
 							@if($errors->has('description'))
 							<span class="d-block invalid-feedback" role="alert">
 								<strong>

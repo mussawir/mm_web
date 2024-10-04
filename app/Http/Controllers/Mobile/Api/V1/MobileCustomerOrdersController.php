@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\OrderDetails;
 use App\Models\OrderMaster;
-use App\Models\Items_list;
+use App\Models\Item;
 use App\Models\OrderAddon;
 use App\Models\OrderDealOption;
 use App\Models\Vendor;
@@ -20,7 +20,7 @@ class MobileCustomerOrdersController extends Controller
 {
 	public function productdetails($id)
 	{
-		$proddetails = Items_list::findOrFail($id);
+		$proddetails = Item::findOrFail($id);
 
 		return response()->json([
 			'status' => '200',
@@ -212,7 +212,7 @@ class MobileCustomerOrdersController extends Controller
 			}
 		}
 
-		$preparationTime = Items_list::whereIn('id', $itemsArray)->max('preparation_time');
+		$preparationTime = Item::whereIn('id', $itemsArray)->max('preparation_time');
 
 		$existingToken = DB::table('admins')
 			->where('user_id', $request->data['userobj']['vendorId'])
@@ -411,7 +411,7 @@ class MobileCustomerOrdersController extends Controller
 				return [
 					'id' => $orderAddon->addonItem->id,
 					'name' => $orderAddon->addonItem->name,
-					'description' => $orderAddon->addonItem->discription,
+					'description' => $orderAddon->addonItem->description,
 					'price' => $orderAddon->addonItem->price,
 					'image' => $orderAddon->addonItem->main_image,
 					'quantity' => $orderAddon->quantity,
