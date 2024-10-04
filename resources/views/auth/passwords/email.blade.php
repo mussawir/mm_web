@@ -14,10 +14,10 @@
 			<div class="app-brand justify-content-center">
 				<a href="{{ route('home') }}" class="app-brand-link gap-2">
 					<span class="app-brand-logo demo">
-						<img src="{{ asset('/assets/images/avatars/fastfood.png') }}" width="40" height="40" alt="Brand Logo"/>
+						<img src="{{ asset('/assets/images/favicon/favicon.svg') }}" width="36" height="36" alt="Brand Logo"/>
 					</span>
 					<span class="app-brand-text demo text-body fw-bolder">
-						Fast Food
+						Inventory Ops
 					</span>
 				</a>
 			</div>

@@ -6,7 +6,6 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\AShopsListController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AItemsListController;
-use App\Http\Controllers\ShopRegistrationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\CategoriesController;
@@ -175,9 +174,9 @@ Route::group(['middleware' => 'auth:admin'], function () {
 		Route::controller(SettingController::class)->group(function () {
 			Route::get('/settings/reorder', 'getReorderingView');
 			Route::get('/settings/reorder/categories/{branch}', 'reorderCategories');
-			Route::post('/settings/update-category-order', 'updateCategoryOrder');
+			// Route::post('/settings/update-category-order', 'updateCategoryOrder');
 			Route::get('/settings/reorder/items/{category}', 'reorderItems');
-			Route::post('/settings/update-item-order', 'updateItemOrder');
+			// Route::post('/settings/update-item-order', 'updateItemOrder');
 			Route::get('/settings/show-old-cart', 'showOldCart')
 				->name('settings.show-old-cart');
 			Route::post('/settings/clean-old-cart', 'cleanOldCart')

@@ -46,9 +46,9 @@
 										@if ($role == '0')
 											Admin
 										@elseif($role == '1')
-											Operator
-										@elseif ($role == '2')
-											Vendor
+											Supplier
+										{{-- @elseif ($role == '2')
+											Vendor --}}
 										@endif
 									</small>
 								</div>

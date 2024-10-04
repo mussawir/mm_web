@@ -10,7 +10,7 @@
 						<img src="{{ asset('/assets/images/favicon/favicon.svg') }}" width="36" height="36" alt="Brand Logo"/>
 					</span>
 					<span class="app-brand-text demo text-body fw-bolder text-capitalize">
-						Inventory Ops
+						Inventory Ops
 					</span>
 				</a>
 			</div>
@@ -26,7 +26,10 @@
 				@csrf
 				<div class="mb-3">
 					<label for="name" class="form-label">
-						Name:
+						{{ __('Name') }}
+						<span class='text-danger' aria-hidden='true'>
+							*
+						</span>
 					</label>
 					<input
 						type="text"
@@ -46,9 +49,12 @@
 
 				<div class="mb-3">
 					<label for="city" class="form-label">
-						City:
+						{{ __('City') }}
+						<span class='text-danger' aria-hidden='true'>
+							*
+						</span>
 					</label>
-					<select class="form-select" id="city" name="city">
+					<select class="form-select @error('city') is-invalid @enderror" id="city" name="city">
 						<option value="">
 							Select Your City
 						</option>
@@ -68,8 +74,31 @@
 				</div>
 
 				<div class="mb-3">
+					<label for="email" class="form-label">
+						{{ __('Email') }}
+						<span class='text-danger' aria-hidden='true'>
+							*
+						</span>
+					</label>
+					<input
+						type="text"
+						name="email"
+						id="email"
+						value="{{ old('email', session('email')) }}"
+						class="form-control @error('email') is-invalid @enderror"
+					>
+					@error('email')
+					<span class="d-block invalid-feedback" role="alert">
+						<strong>
+							{{ $message }}
+						</strong>
+					</span>
+					@enderror
+				</div>
+
+				<div class="mb-3">
 					<label for="phone" class="form-label">
-						Phone Number:
+						{{ __('Phone Number') }}
 					</label>
 					<input
 						type="text"
@@ -88,16 +117,19 @@
 				</div>
 
 				<div class="mb-3">
-					<label for="pin" class="form-label">
-						PIN:
+					<label for="password" class="form-label">
+						{{ __('Password') }}
+						<span class='text-danger' aria-hidden='true'>
+							*
+						</span>
 					</label>
 					<input
 						type="password"
-						name="pin"
-						id="pin"
-						class="form-control @error('pin') is-invalid @enderror"
+						name="password"
+						id="password"
+						class="form-control @error('password') is-invalid @enderror"
 					>
-					@error('pin')
+					@error('password')
 					<span class="d-block invalid-feedback" role="alert">
 						<strong>
 							{{ $message }}
@@ -107,36 +139,19 @@
 				</div>
 
 				<div class="mb-3">
-					<label for="pin_confirmation" class="form-label">
-						Confirm PIN:
+					<label for="password_confirmation" class="form-label">
+						{{ __('Confirm Password') }}
+						<span class='text-danger' aria-hidden='true'>
+							*
+						</span>
 					</label>
 					<input
 						type="password"
-						name="pin_confirmation"
-						id="pin_confirmation"
-						class="form-control @error('pin_confirmation') is-invalid @enderror"
+						name="password_confirmation"
+						id="password_confirmation"
+						class="form-control @error('password_confirmation') is-invalid @enderror"
 					>
 				</div>
-
-				{{-- <div class="mb-3">
-					<label for="address" class="form-label">
-						Address:
-					</label>
-					<input
-						type="text"
-						name="address"
-						id="address"
-						value="{{ old('address') }}"
-						class="form-control @error('address') is-invalid @enderror"
-					/>
-					@error('address')
-					<span class="d-block invalid-feedback" role="alert">
-						<strong>
-							{{ $message }}
-						</strong>
-					</span>
-					@enderror
-				</div> --}}
 
 				<div class="mb-3">
 					<button class="btn btn-primary d-grid w-100" type="submit">

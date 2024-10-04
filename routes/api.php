@@ -16,7 +16,6 @@ use App\Http\Controllers\Mobile\Api\V1\MobileNsaLeadsController;
 use App\Http\Controllers\Mobile\Api\V1\MobileRiderController;
 use App\Http\Controllers\Mobile\Api\V1\MobileShopAddOnController;
 use App\Http\Controllers\Mobile\Api\V1\MobileShopDealController;
-use App\Http\Controllers\Mobile\Api\V1\MobileShopReservationController;
 use App\Http\Controllers\Mobile\Api\V1\MobileShopsCategoryController;
 use App\Http\Controllers\Mobile\Api\V1\MobileVendorController;
 use App\Http\Controllers\Mobile\Api\V1\MobileOperatorController;
@@ -150,11 +149,6 @@ Route::prefix('v1')->group(function () {
 	Route::post('/shopkeeper/update/deal/{deal}/{branch}', [MobileShopDealController::class, 'updateDeal']);
 	Route::get('/shopkeeper/remove/deal/{deal}/{branch}', [MobileShopDealController::class, 'removeDeal']);
 	# Deals Endpoints End
-	# Reservation Endpoints Start
-	Route::post('/reservation/add/{branch}',[MobileShopReservationController::class, 'store']);
-	Route::get('/reservation/list/{customerId}',[MobileShopReservationController::class,'getReservations']);
-	Route::get('/reservation/list/branch/{branch}',[MobileShopReservationController::class,'getBranchReservations']);
-	# Reservation Endpoints End
 	Route::get('/shopkeeper/item/{item}',[MobileShopsItemsListController::class, 'getItem']);
 	Route::post('/shopkeeper/update/item/{id}/{name}',[MobileShopsItemsListController::class, 'update']);
 	Route::get('/shopkeeper/item/list/all/{vendor}',[MobileShopsItemsListController::class, 'getAllItemList']);

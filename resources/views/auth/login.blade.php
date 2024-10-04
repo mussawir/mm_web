@@ -10,15 +10,15 @@
 			<div class="app-brand justify-content-center">
 				<a href="{{ route('home') }}" class="app-brand-link gap-2">
 					<span class="app-brand-logo demo">
-						<img class="img-fluid" src="{{ asset('/assets/images/favicon/favicon.svg') }}" width="36" height="36" alt="Inventory Ops"/>
+						<img class="img-fluid" src="{{ asset('/assets/images/favicon/favicon.svg') }}" width="36" height="36" alt="Inventory Ops"/>
 					</span>
 					<span class="app-brand-text demo text-body fw-bolder text-capitalize">
-						Inventory Ops
+						Inventory Ops
 					</span>
 				</a>
 			</div>
 			@if (session('message'))
-				<div class="alert alert-success" role="alert">
+				<div class="alert alert-success fw-semibold" role="alert">
 					{{ session('message') }}
 				</div>
 			@endif
@@ -38,8 +38,8 @@
 			<form method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
 			@endisset
 				@csrf
-				@if (isset($url) && $url === 'customer')
-				<div class="mb-3">
+				{{-- @if (isset($url) && $url === 'customer') --}}
+				{{-- <div class="mb-3">
 					<label for="phone" class="form-label">
 						Phone Number:
 					</label>
@@ -57,8 +57,8 @@
 						</strong>
 					</span>
 					@enderror
-				</div>
-				@else
+				</div> --}}
+				{{-- @else --}}
 				<div class="mb-3">
 					<label for="email" class="form-label">
 						{{ __('Email') }}
@@ -112,8 +112,8 @@
 						@enderror
 					</div>
 				</div>
-				@endif
-				@if (! (isset($url) && $url === 'customer'))
+				{{-- @endif --}}
+				{{-- @if (! (isset($url) && $url === 'customer')) --}}
 				<div class="mb-3">
 					<div class="form-check">
 						<input
@@ -128,7 +128,7 @@
 						</label>
 					</div>
 				</div>
-				@endif
+				{{-- @endif --}}
 				<div class="mb-3">
 					<button class="btn btn-primary d-grid w-100" type="submit">
 						{{ __('Login') }}

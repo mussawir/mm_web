@@ -6,7 +6,7 @@
 </h4>
 <div class="card">
 	<h4 class="d-flex align-items-center justify-content-center py-4">
-		Operator Statistics Here (Sales, Commission, Receive & Handle Payments)
+		Statistics Here
 	</h4>
 </div>
 @endsection

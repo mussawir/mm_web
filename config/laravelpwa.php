@@ -1,17 +1,17 @@
 <?php
 
 return [
-    'name' => 'Fast Food App',
+    'name' => 'Inventory Ops App',
     'manifest' => [
-        'name' => 'Fast Food App',
-        'short_name' => 'Fast Food',
+        'name' => 'Inventory Ops App',
+        'short_name' => 'Inventory Ops',
         'start_url' => '/',
         'background_color' => '#047fb8',
         'theme_color' => '#ffffff',
         'display' => 'standalone',
         'orientation'=> 'any',
         'status_bar'=> 'black',
-		"description" => "Fast Food App to enjoy meals from your favourite restaurants.",
+		"description" => "Inventory Ops App to manage your inventory.",
 		"dir" => "ltr",
 		"lang" => "en",
         'icons' => [
