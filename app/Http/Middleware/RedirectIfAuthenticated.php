@@ -16,31 +16,22 @@ class RedirectIfAuthenticated
 	 * @param  string|null  ...$guards
 	 * @return mixed
 	 */
-	// public function handle(Request $request, Closure $next, ...$guards)
-	// {
-	//     $guards = empty($guards) ? [null] : $guards;
-
-	//     foreach ($guards as $guard) {
-	//         if (Auth::guard($guard)->check()) {
-	//             return redirect(RouteServiceProvider::HOME);
-	//         }
-	//     }
-
-	//     return $next($request);
-	// }
-
 	public function handle(Request $request, Closure $next, $guards = null)
 	{
-		if ($guards == "admin" && Auth::guard($guards)->check()) {
-			return redirect('/admin/dashboard');
-		}
+		$guards = is_array($guards) ? $guards : [$guards];
 
-		// if ($guards == "rider" && Auth::guard($guards)->check()) {
-		// 	return redirect('/rider/dashboard');
-		// }
-
-		if ($guards == "customer" && Auth::guard($guards)->check()) {
-			return redirect('/home');
+		foreach ($guards as $guard) {
+			if ($guard == 'admin' && Auth::guard($guard)->check()) {
+				return redirect('/admin/dashboard');
+			}
+	
+			if ($guard == 'customer' && Auth::guard($guard)->check()) {
+				return redirect('/home');
+			}
+	
+			if (is_null($guard) && Auth::guard()->check()) {
+				return redirect('/home');
+			}
 		}
 
 		return $next($request);

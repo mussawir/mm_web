@@ -11,7 +11,7 @@ class AddonController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('can:operator');
+		$this->middleware('can:supplier');
 	}
 
 	public function getAddons($category)

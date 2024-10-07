@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RiderEarning extends Model
+class InventoryMap extends Model
 {
 	use HasFactory;
-
-	protected $table = 'rider_earnings';
+	
+	protected $table = 'inventory_maps';
 
 	protected $fillable = [
-		'rider_id',
-		'delivery_id',
-		'commission_rate_id',
-		'earnings_amount',
+		'quantity',
 	];
 }

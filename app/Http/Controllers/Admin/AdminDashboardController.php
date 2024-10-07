@@ -28,15 +28,6 @@ class AdminDashboardController extends Controller
 
 			return view('admin.orders.order-master', compact('orders'));
 		}
-		elseif ($user->role == 2) {
-			$orders = OrderMaster::with(['customer', 'branch'])
-			->where('status', 1)
-			->where('vendor_id', $user->vendor_id)
-			->latest()
-			->paginate(25);
-
-			return view('admin.orders.vendor-orders', compact('orders'));
-		}
 	}
 	
 	/**

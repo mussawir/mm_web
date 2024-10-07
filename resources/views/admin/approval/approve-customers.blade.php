@@ -2,7 +2,7 @@
 
 @section('content')
 <h4 class="fw-bold mb-4">
-	User List
+	Customer Approval List
 </h4>
 <div class="card">
 	<div class="card-header">
@@ -29,11 +29,6 @@
 					/>
 				</div>
 			</div>
-			<div class="col-md-6 text-md-end text-center">
-				<a href="/admin/addnew/user" class="btn btn-primary">
-					New
-				</a>
-			</div>
 		</div>
 	</div>
 	{{-- Hoverable Table Rows --}}
@@ -41,49 +36,39 @@
 		<table id="searching_table" class="table table-hover">
 			<thead>
 				<tr>
-					<th scope="col">S.No</th>
-					<th scope="col">First Name</th>
-					<th scope="col">Last Name</th>
-					<th scope="col">Role</th>
-					<th scope="col">Branch</th>
-					<th scope="col" class="d-flex justify-content-start">
-						Actions
-					</th>
+					<th scope="col">Name</th>
+					<th scope="col">Email</th>
+					<th scope="col">Actions</th>
 				</tr>
 			</thead>
 			<tbody class="table-border-bottom-0">
-				@forelse ($users as $user)
+				@forelse ($customers as $customer)
 				<tr>
-					<td>{{ $loop->iteration }}</td>
-					<td>{{ $user->first_name }}</td>
-					<td>{{ $user->last_name }}</td>
+					<td>{{ $customer->name }}</td>
+					<td>{{ $customer->email }}</td>
 					<td>
-						@if ($user->role == '1')
-							Admin
-						@elseif ($user->role == '2')
-							Manager
-						@endif
-					</td>
-					<td>
-						{{ $user->branch->name }}
-					</td>
-					<td>
-						<div class="d-flex gap-2">
-							<a href="javascript:void(0)" class="btn btn-primary">
-								Edit
-							</a>
-							<a href="javascript:void(0)" class="btn btn-danger">
-								Delete
-							</a>
+						<div class="btn-group btn-group-sm gap-2" role="group">
+							<form action="{{ route('approve.customer', $customer->id) }}" method="POST">
+								@csrf
+								<button type="submit" class="btn btn-success">
+									<i class="bx bx-check me-1"></i>
+									Approve
+								</button>
+							</form>
+							<form action="{{ route('reject.customer', $customer->id) }}" method="POST">
+								@csrf
+								<button type="submit" class="btn btn-danger">
+									<i class="bx bx-x me-1"></i>
+									Reject
+								</button>
+							</form>
 						</div>
 					</td>
 				</tr>
 				@empty
-				<tr>
-					<td colspan="6">
-						<div class="d-flex justify-content-center font-weight-600 lead my-0 alert alert-danger">
-							No users available.
-						</div>
+				<tr class="fw-semibold lead my-0 alert alert-danger text-center">
+					<td colspan="5">
+						No approvals pending.
 					</td>
 				</tr>
 				@endforelse

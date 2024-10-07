@@ -12,7 +12,7 @@
 						<img class="img-fluid" src="{{ asset('/assets/images/favicon/favicon.svg') }}" width="36" height="36" alt="Inventory Ops"/>
 					</span>
 					<span class="app-brand-text demo text-body fw-bolder text-capitalize">
-						Inventory Ops
+						Inventory Ops
 					</span>
 				</a>
 			</div>

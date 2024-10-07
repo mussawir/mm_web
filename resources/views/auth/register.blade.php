@@ -14,6 +14,11 @@
 					</span>
 				</a>
 			</div>
+			@if (session('message'))
+				<div class="alert alert-success fw-semibold" role="alert">
+					{{ session('message') }}
+				</div>
+			@endif
 			<h4 class="mb-2">
 				<span>
 					{{ __('Register') }}
@@ -157,6 +162,14 @@
 					<button class="btn btn-primary d-grid w-100" type="submit">
 						{{ __('Register') }}
 					</button>
+				</div>
+				<p class="mb-2">
+					Already registered?
+				</p>
+				<div class="mb-3">
+					<a href="{{ route('customer.login') }}" class="btn btn-primary d-grid w-100">
+						{{ __('Login') }}
+					</a>
 				</div>
 			</form>
 		</div>

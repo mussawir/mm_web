@@ -9,7 +9,6 @@ use App\Models\Item;
 use App\Models\OperatorCommissionHistory;
 use App\Models\OrderMaster;
 use App\Models\Vendor;
-use App\Models\VendorType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -19,13 +18,12 @@ class VendorController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('can:operator');
+		$this->middleware('can:supplier');
 	}
 
 	public function index()
 	{
 		$user = Auth::user();
-
 		$vendors = Vendor::latest()
 			->where('operator_id', $user->user_id)
 			->get();
@@ -44,7 +42,6 @@ class VendorController extends Controller
 			}
 		}
 		$operatorID = Auth::user()->user_id;
-		$vendorTypes = VendorType::where('status', 1)->get();
 		$randomPassword = '12345678';
 
 		return view('admin.vendors.create', compact('operatorID', 'vendorTypes', 'randomPassword'));
@@ -55,17 +52,9 @@ class VendorController extends Controller
 		$request->validate([
 			'name' => 'required|string|min:3',
 			'company_name' => 'required|string',
-			// 'shop_number' => 'required|numeric',
 			'full_address' => 'required|string',
-			// 'current_balance' => 'required|numeric',
-			// 'points_in_hand' => 'required|numeric',
-			// 'date_joining' => 'required|date',
 			'primary_contact' => 'required|numeric|unique:vendors,contact_number_primary',
 			'secondary_contact' => 'nullable|numeric|unique:vendors,contact_number_sec',
-			// 'commission_percentage' => 'required|numeric|min:2|max:20',
-			// 'delivery_free_after' => 'required|numeric',
-			// 'delivery_charges' => 'required|numeric',
-			// 'minimum_delivery_amount' => 'required|numeric',
 			'email' => 'required|email|unique:vendors,email',
 			'facebook' => 'nullable|string',
 			'website' => 'nullable|string',
@@ -74,7 +63,6 @@ class VendorController extends Controller
 			'logo' => 'required|image|mimes:jpeg,png,jpg|min:50|max:500|dimensions:min_width=200,min_height=200',
 			'banners' => 'required|array|min:3|max:3',
 			'banners.*' => 'image|mimes:jpeg,png,jpg|max:500',
-			// 'vendor_type' => 'required',
 		]);
 
 		if($request->hasfile('logo')) {
@@ -168,7 +156,6 @@ class VendorController extends Controller
 			->with('operator')
 			->firstOrFail();
 		$operatorID = $vendor->operator->id ?? Auth::user()->user_id;
-		$vendorTypes = VendorType::where('status', 1)->get();
 
 		return view('admin.vendors.edit', compact('vendor', 'operatorID', 'vendorTypes'));
 	}
@@ -178,17 +165,9 @@ class VendorController extends Controller
 		$request->validate([
 			'name' => 'required|string|min:3',
 			'company_name' => 'required|string',
-			// 'shop_number' => 'required|numeric',
 			'full_address' => 'required|string',
-			// 'current_balance' => 'required|numeric',
-			// 'points_in_hand' => 'required|numeric',
-			// 'date_joining' => 'required|date',
 			'primary_contact' => 'required|numeric|unique:vendors,contact_number_primary,' . $id,
 			'secondary_contact' => 'nullable|numeric|unique:vendors,contact_number_sec',
-			// 'commission_percentage' => 'required|numeric|min:2|max:20',
-			// 'delivery_free_after' => 'required|numeric',
-			// 'delivery_charges' => 'required|numeric',
-			// 'minimum_delivery_amount' => 'required|numeric',
 			'email' => 'required|email|unique:vendors,email,' . $id,
 			'facebook' => 'nullable|string',
 			'website' => 'nullable|string',
@@ -197,7 +176,6 @@ class VendorController extends Controller
 			'logo' => 'image|mimes:jpeg,png,jpg|min:100|max:500|dimensions:min_width=200,min_height=200',
 			'banners' => 'array|min:3|max:3',
 			'banners.*' => 'image|mimes:jpeg,png,jpg|max:500',
-			// 'vendor_type' => 'required',
 		]);
 
 		$vendor = Vendor::findOrFail($id);

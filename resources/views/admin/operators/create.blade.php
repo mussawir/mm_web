@@ -144,29 +144,29 @@
 					</div>
 					<div class="row mb-3">
 						<div class="col-md-12">
-							<label for="address_address" class="form-label">
+							<label for="address" class="form-label">
 								Address
 								<span class='text-danger' aria-hidden='true'>*</span>
 							</label>
 							<input
-								class="form-control map-input @error('address_address') is-invalid @enderror"
+								class="form-control map-input @error('address') is-invalid @enderror"
 								type="text"
 								id="address-input"
-								name="address_address"
+								name="address"
 								placeholder="Enter Address"
 								aria-required='true'
-								value="{{ old('address_address') }}"
+								value="{{ old('address') }}"
 							/>
-							@if ($errors->has('address_address'))
+							@if ($errors->has('address'))
 							<span class="invalid-feedback" role="alert">
 								<strong>
-									{{ $errors->first('address_address') }}
+									{{ $errors->first('address') }}
 								</strong>
 							</span>
 							@endif
 						</div>
 					</div>
-					<div class="row mb-3">
+					{{-- <div class="row mb-3">
 						<div class="col-md-4">
 							<label for="operational_area" class="form-label">
 								Operational Area
@@ -221,7 +221,7 @@
 							</span>
 							@endif
 						</div>
-					</div>
+					</div> --}}
 					<div class="row mb-3">
 						<div class="col-md-4">
 							<label for="city" class="form-label">
@@ -248,7 +248,7 @@
 							</span>
 							@endif
 						</div>
-						<div class="col-md-4">
+						{{-- <div class="col-md-4">
 							<label for="commission_percentage" class="form-label">
 								Commission Percentage
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -269,8 +269,8 @@
 								</strong>
 							</span>
 							@endif
-						</div>
-						<div class="col-md-4">
+						</div> --}}
+						{{-- <div class="col-md-4">
 							<label for="area_name" class="form-label">
 								Area Name
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -291,10 +291,10 @@
 								</strong>
 							</span>
 							@endif
-						</div>
+						</div> --}}
 					</div>
 					<div class="divider text-start">
-						<div class="divider-text fw-bold">Operator Login</div>
+						<div class="divider-text fw-bold">Supplier Login</div>
 					</div>
 					<div class="row mb-3">
 						<div class="col-md-4">
@@ -309,40 +309,6 @@
 								value="{{ trim($randomPassword) }}"
 								readonly
 							>
-						</div>
-						<div class="col-md-4">
-							<label for="" class="col-sm-4 col-form-label">
-								Single Vendor
-							</label>
-							<div class="col-sm-8">
-								<div class="form-check form-check-inline">
-									<input
-										class="form-check-input"
-										type="radio"
-										name="single_vendor"
-										value="1"
-										id="yes"
-										{{ (old('single_vendor') == '1') ? 'checked' : '' }}
-									>
-									<label class="form-check-label" for="yes">
-										Yes
-									</label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input
-										class="form-check-input"
-										type="radio"
-										name="single_vendor"
-										value="0"
-										id="no"
-										{{ (old('single_vendor') == '0') ? 'checked' : '' }}
-										{{ ((old('single_vendor', null))) ? '' : 'checked' }}
-									>
-									<label class="form-check-label" for="no">
-										No
-									</label>
-								</div>
-							</div>
 						</div>
 					</div>
 					<div class="row justify-content-end">

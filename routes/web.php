@@ -3,18 +3,17 @@
 use App\Http\Controllers\Admin\AddonController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Admin\AShopsListController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AItemsListController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\ApprovalController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\DealController;
+use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\OperatorController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\VendorController;
-use App\Http\Controllers\Admin\VendorTypeController;
 use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CheckoutController;
@@ -76,16 +75,16 @@ Route::group(['middleware' => 'auth:admin'], function () {
 		});
 		// Admin Operators Routes End
 
-		// Admin Shops List Routes Start
-		Route::controller(AShopsListController::class)->group(function () {
-			Route::get('/new-shops-list', 'showNewShopList');
-			Route::get('/new-rider-list', 'showNewRiderList');
-			Route::get('/open-store/rider/{id}', 'openStoreRider');
-			Route::get('/assignarea/rider/{id}', 'assignareaRider');
-			Route::get('/open-store/rider/approved/{id}', 'openStoreRiderApproved');
-			Route::get('/customer/list', 'customerList');
+		// Admin User Approval Routes Start
+		Route::controller(ApprovalController::class)->group(function () {
+			Route::get('/approve-customers', 'index')
+				->name('approve.index');
+			Route::post('/approve-customer/{id}', 'approve')
+				->name('approve.customer');
+			Route::post('/reject-customer/{id}', 'reject')
+				->name('reject.customer');
 		});
-		// Admin Shops List Routes End
+		// Admin User Approval Routes End
 
 		// Admin Category Routes Start
 		Route::controller(CategoriesController::class)->group(function () {
@@ -104,7 +103,6 @@ Route::group(['middleware' => 'auth:admin'], function () {
 			Route::get('/store/{id}', 'index');
 			Route::post('/upload-store-items/store/{id}', 'storeItems');
 			Route::get('/inventory/status', 'status');
-			// Route::get('/branch/itemlist/{branch}', 'branchItemList');
 			Route::get('/inventory/itemlist', 'getItemList');
 			Route::get('/addnew/item/{vendor}', 'create')->name('item.create');
 			Route::post('/addnew/item', 'store')->name('item.store');
@@ -114,13 +112,23 @@ Route::group(['middleware' => 'auth:admin'], function () {
 		});
 		// Admin Items List Routes End
 
-		// Admin User Routes Start
-		Route::controller(UserController::class)->group(function () {
-			Route::get('/addnew/user', 'create')->name('user.create');
-			Route::post('/addnew/user', 'store')->name('user.store');
-			Route::get('/user/list', 'index')->name('user.index');
+		// Admin Inventory Mapping Routes Start
+		Route::controller(InventoryController::class)->group(function () {
+			// Route::prefix('inventory')->group(function () {});
+			Route::get('/inventory', 'index')->name('inventory.index');
+			Route::get('/inventory/create', 'create')->name('inventory.create');
+			Route::post('/inventory', 'store')->name('inventory.store');
+			Route::get('/inventory/{id}', 'show')->name('inventory.show');
+			Route::get('/inventory/{id}/edit', 'edit')->name('inventory.edit');
+			Route::patch('/inventory/{id}', 'update')->name('inventory.update');
+			Route::delete('/inventory/{id}', 'destroy')->name('inventory.destroy');
+			
+			// Route::prefix('mapping')->group(function () {});
+			Route::get('/mapping', 'mapping')->name('inventory.mapping.index');
+			Route::get('/mapping/create', 'mappingCreate')->name('inventory.mapping.create');
+			Route::post('/mapping', 'mappingStore')->name('inventory.mapping.store');
 		});
-		// Admin User Routes End
+		// Admin Inventory Mapping Routes End
 
 		// Admin Deal Routes Start
 		Route::controller(DealController::class)->group(function () {
@@ -172,7 +180,6 @@ Route::group(['middleware' => 'auth:admin'], function () {
 
 		// Admin Settings Routes Start
 		Route::controller(SettingController::class)->group(function () {
-			Route::get('/settings/reorder', 'getReorderingView');
 			Route::get('/settings/reorder/categories/{branch}', 'reorderCategories');
 			// Route::post('/settings/update-category-order', 'updateCategoryOrder');
 			Route::get('/settings/reorder/items/{category}', 'reorderItems');
@@ -213,39 +220,10 @@ Route::group(['middleware' => 'auth:admin'], function () {
 				->name('vendors.deals');
 		});
 		// Admin Vendors Routes End
-
-		// Admin Vendor Type Routes Start
-		Route::controller(VendorTypeController::class)->group(function () {
-			Route::get('/vendor-types', 'index')
-				->name('vendorTypes.index');
-			Route::get('/vendor-types/create', 'create')
-				->name('vendorTypes.create');
-			Route::post('/vendor-types', 'store')
-				->name('vendorTypes.store');
-			Route::get('/vendor-types/{id}', 'show')
-				->name('vendorTypes.show');
-			Route::get('/vendor-types/{id}/edit', 'edit')
-				->name('vendorTypes.edit');
-			Route::put('/vendor-types/{id}', 'update')
-				->name('vendorTypes.update');
-			Route::delete('/vendor-types/{id}', 'destroy')
-				->name('vendorTypes.destroy');
-		});
-		// Admin Vendor Type Routes End
 	});
 });
 
 // Route::get('/thankyou', [ShopRegistrationController::class, 'thankYou']);
-
-// Customer Routes Start
-// Route::get('/customer-registration', [ShopRegistrationController::class, 'customerRegistationForm'])->name('customer.shop.register');
-// Route::post('/customer/register', [ShopRegistrationController::class, 'customerRegistration']);
-// Customer Routes End
-
-// Rider Routes Start
-// Route::get('/rider-registration', [ShopRegistrationController::class, 'riderRegistationForm']);
-// Route::post('/rider/register', [ShopRegistrationController::class, 'riderRegistration']);
-# Rider Routes End
 
 # Front Pages Routes Start
 Route::controller(HomeController::class)->group(function () {
@@ -287,7 +265,6 @@ Route::group(['middleware' => 'auth:customer'], function () {
 		->name('category.detail');
 		Route::get('/inventory-status', 'inventoryStatus')
 			->name('inventory.status');
-
 		Route::get('/vendors/detail/{id}', 'vendorDetail')
 			->name('vendor.detail');
 		Route::get('/vendor/{vendorId}/items/detail/{itemId}', 'itemDetail')
@@ -296,7 +273,6 @@ Route::group(['middleware' => 'auth:customer'], function () {
 			->name('vendor.deal.details');
 		Route::get('/items/detail/{id}', 'itemDetail')->name('item.detail');
 		Route::get('/deals/detail/{id}', 'dealDetail')->name('deal.detail');
-		# Added by Sohail Asghar [25-Sept-2023]
 		Route::get('/load-deals-and-categories/{branch}', 'loadDealsAndCategories')
 			->name('load.deals.categories');
 		Route::post('/load-suppliers', 'loadSuppliers')->name('load.suppliers');

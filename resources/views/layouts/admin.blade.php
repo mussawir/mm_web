@@ -82,65 +82,8 @@
 		{{-- Main JS --}}
 		<script src="{{ asset('assets/js/main.js') }}"></script>
 		<script async defer src="{{ asset('assets/js/buttons.js') }}"></script>
-		{{-- <script src="{{ asset('assets/js/jquery.tablednd.js') }}"></script> --}}
 		<script>
 		$(document).ready(function() {
-			// function saveCategoryOrder() {
-			// 	var order = [];
-			// 	$("#searching_table tbody tr").each(function () {
-			// 		var categoryID = $(this).attr('data-category-id');
-			// 		var sortID = $(this).index() + 1;
-
-			// 		order.push({ categoryId: categoryID, sortId: sortID });
-			// 	});
-
-			// 	// Send an AJAX request to update the category order
-			// 	$.ajax({
-			// 		url: "/admin/settings/update-category-order",
-			// 		method: "POST",
-			// 		data: {
-			// 			_token: $('meta[name="csrf-token"]').attr("content"),
-			// 			order: order,
-			// 		},
-			// 		success: function (response) {
-			// 			if (response.success) {
-			// 				// console.log("Category order updated successfully");
-			// 			}
-			// 		},
-			// 		error: function (error) {
-			// 			console.error("Error updating category order");
-			// 		}
-			// 	});
-			// }
-
-			// function saveItemOrder() {
-			// 	var order = [];
-			// 	$("#searching_table tbody tr").each(function () {
-			// 		var itemID = $(this).attr('data-item-id');
-			// 		var sortID = $(this).index() + 1;
-
-			// 		order.push({ itemId: itemID, sortId: sortID });
-			// 	});
-
-			// 	// Send an AJAX request to update the category order
-			// 	$.ajax({
-			// 		url: "/admin/settings/update-item-order",
-			// 		method: "POST",
-			// 		data: {
-			// 			_token: $('meta[name="csrf-token"]').attr("content"),
-			// 			order: order,
-			// 		},
-			// 		success: function (response) {
-			// 			if (response.success) {
-			// 				// console.log("Category order updated successfully");
-			// 			}
-			// 		},
-			// 		error: function (error) {
-			// 			console.error("Error updating category order");
-			// 		}
-			// 	});
-			// }
-
 			function searchTable(value)
 			{
 				$('#searching_table tbody tr').each(function()
@@ -165,18 +108,6 @@
 			{
 				searchTable($(this).val());
 			});
-
-			// $(".reorder-categories").tableDnD({
-			// 	onDrop: function () {
-			// 		saveCategoryOrder();
-			// 	}
-			// });
-
-			// $(".reorder-items").tableDnD({
-			// 	onDrop: function () {
-			// 		saveItemOrder();
-			// 	}
-			// });
 
 			$(".date-selector").flatpickr();
 		});

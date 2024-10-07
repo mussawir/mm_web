@@ -5,14 +5,12 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\City;
 use App\Models\Customer;
-use App\Models\CustRegOtp;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\MessageBag;
 
 class LoginController extends Controller
@@ -45,30 +43,35 @@ class LoginController extends Controller
 	public function __construct()
 	{
 		$this->middleware('guest')->except('logout');
-		$this->middleware('guest:admin')->except('logout');
-		$this->middleware('guest:customer')->except('logout');
+		// $this->middleware('guest:admin')->except('logout');
+		// $this->middleware('guest:customer')->except('logout');
 	}
 
 	public function showAdminLoginForm()
 	{
-		return view('auth.login', ['url' => 'admin']);
+		$url = 'admin';
+
+		return view('auth.login', compact('url'));
 	}
 
 	public function adminLogin(Request $request)
 	{
 		$this->validate($request, [
 			'email' => 'required|email',
-			'password' => 'required|min:6'
+			'password' => 'required',
 		]);
 
-		if (Auth::guard('admin')->attempt(['email' => $request->input('email'), 'password' => $request->input('password')], $request->get('remember'))) {
+		$credentials = $request->only('email', 'password');
+
+		if (Auth::guard('admin')->attempt($credentials, $request->has('remember'))) {
 			return redirect()->intended('/admin/dashboard');
 		}
 
-		$errors = new MessageBag(['password' => ['Email and/or password invalid.']]);
+		$errors = new MessageBag(['email' => ['These credentials do not match our records.']]);
 
-		return Redirect::back()->withErrors($errors)
-			->withInput($request->only('email', 'remember'));
+		return Redirect::back()
+			->withInput($request->only('email', 'remember'))
+			->withErrors($errors);
 	}
 
 	public function showCustomerLoginForm()
@@ -80,33 +83,27 @@ class LoginController extends Controller
 	{
 		$this->validate($request, [
 			'email' => 'required|email',
-			'password' => 'required|min:6'
+			'password' => 'required',
 		]);
 
-		if (Auth::guard('customer')->attempt(['email' => $request->input('email'), 'password' => $request->input('password')], $request->get('remember'))) {
+		$credentials = $request->only('email', 'password');
+
+		if (Auth::guard('customer')->attempt($credentials, $request->has('remember'))) {
+			$customer = Auth::guard('customer')->user();
+
+			if (!$customer->is_approved) {
+				Auth::guard('customer')->logout();
+
+				return redirect()->back()->withErrors(['email' => 'Your account is not approved by administrator yet.']);
+			}
 			return redirect()->intended('/home');
 		}
 
-		$errors = new MessageBag(['password' => ['Email and/or password invalid.']]);
+		$errors = new MessageBag(['email' => ['These credentials do not match our records.']]);
 
-		return Redirect::back()->withErrors($errors)
-			->withInput($request->only('email', 'remember'));
-
-		// $request->validate([
-		// 	'phone' => 'required|numeric',
-		// ]);
-
-		// $customer = Customer::where('phone_number', $request->phone)->first();
-
-		// if ($customer) {
-		// 	return redirect()
-		// 		->route('customer.verify.pin')
-		// 		->withInput(['phone' => $request->phone]);
-		// } else {
-		// 	return redirect()
-		// 		->route('customer.register')
-		// 		->withInput(['phone' => $request->phone]);
-		// }
+		return Redirect::back()
+			->withInput($request->only('email', 'remember'))
+			->withErrors($errors);
 	}
 
 	public function showCustomerRegistrationForm()
@@ -126,117 +123,107 @@ class LoginController extends Controller
 			'password' => 'required|min:6|confirmed',
 		]);
 
-		$customer = new Customer;
-
-		$customer->name = $request->input('name');
-		$customer->email = $request->input('email');
-		$customer->city_id = $request->input('city');
-		$customer->phone_number = $request->input('phone');
-		$customer->password = Hash::make($request->input('password'));
-		$customer->verified_customer = 0;
-
-		$customer->save();
-
-		// $otp = $this->generateOTP();
-		// $this->sendOTP($customer->id, $customer->phone_number, $otp);
-
-		// Session::put('otp', $otp);
-		// Session::put('phone', $request->phone);
-
-		// return redirect()->route('customer.verify');
-
-		return redirect()->route('customer.login')->with('message', 'Registration successful! Please login.');
-	}
-
-	public function showPinVerificationForm()
-	{
-		return view('auth.verify-pin');
-	}
-
-	public function verifyPin(Request $request)
-	{
-		$request->validate([
-			'phone' => 'required|numeric',
-			'pin' => 'required|digits:4|numeric',
+		$customer = Customer::create([
+			'name' => $request->input('name'),
+			'email' => $request->input('email'),
+			'city_id' => $request->input('city'),
+			'phone_number' => $request->input('phone'),
+			'password' => Hash::make($request->input('password')),
+			'is_approved' => 0,
 		]);
 
-		$customer = Customer::where('phone_number', $request->phone)->first();
-
-		if (! $customer) {
-			return redirect()
-				->back()
-				->with('message', 'Customer not found.')
-				->withInput(['phone' => $request->phone]);
-		}
-
-		if ($customer->pin != $request->pin) {
-			return redirect()
-				->back()
-				->with('message', 'Wrong PIN.')
-				->withInput(['phone' => $customer->phone_number]);
-		}
-
-		Auth::guard('customer')->login($customer);
-
-		return redirect()->intended();
+		return redirect()->back()->with('message', 'Registration successful! Please wait for admin approval.');
 	}
 
-	public function verifyForm()
-	{
-		return view('auth.verify');
-	}
+	// public function showPinVerificationForm()
+	// {
+	// 	return view('auth.verify-pin');
+	// }
 
-	public function verify(Request $request)
-	{
-		$request->validate([
-			'otp' => 'required|digits:4|numeric',
-		]);
+	// public function verifyPin(Request $request)
+	// {
+	// 	$request->validate([
+	// 		'phone' => 'required|numeric',
+	// 		'pin' => 'required|digits:4|numeric',
+	// 	]);
 
-		$otp = $request->input('otp');
-		$phone = Session::get('phone');
+	// 	$customer = Customer::where('phone_number', $request->phone)->first();
 
-		$otpModel = CustRegOtp::where('otp_number', $otp)
-			->where('phone_number', $phone)
-			->first();
+	// 	if (! $customer) {
+	// 		return redirect()
+	// 			->back()
+	// 			->with('message', 'Customer not found.')
+	// 			->withInput(['phone' => $request->phone]);
+	// 	}
 
-		if ($otpModel && $otp == $otpModel->otp_number) {
-			$customer = Customer::where('phone_number', $phone)->first();
+	// 	if ($customer->pin != $request->pin) {
+	// 		return redirect()
+	// 			->back()
+	// 			->with('message', 'Wrong PIN.')
+	// 			->withInput(['phone' => $customer->phone_number]);
+	// 	}
 
-			if ($customer) {
-				$otpModel->delete();
-				$customer->verified_customer = 1;
+	// 	Auth::guard('customer')->login($customer);
 
-				$customer->save();
+	// 	return redirect()->intended();
+	// }
 
-				Session::forget(['phone', 'otp']);
+	// public function verifyForm()
+	// {
+	// 	return view('auth.verify');
+	// }
 
-				return redirect()
-					->route('customer.login')
-					->with('message', 'Successfully verified OTP.');
-			} else {
-				return redirect()
-					->back()
-					->with('message', 'Customer not found.');
-			}
-		}
+	// public function verify(Request $request)
+	// {
+	// 	$request->validate([
+	// 		'otp' => 'required|digits:4|numeric',
+	// 	]);
+
+	// 	$otp = $request->input('otp');
+	// 	$phone = Session::get('phone');
+
+	// 	$otpModel = CustRegOtp::where('otp_number', $otp)
+	// 		->where('phone_number', $phone)
+	// 		->first();
+
+	// 	if ($otpModel && $otp == $otpModel->otp_number) {
+	// 		$customer = Customer::where('phone_number', $phone)->first();
+
+	// 		if ($customer) {
+	// 			$otpModel->delete();
+	// 			$customer->verified_customer = 1;
+
+	// 			$customer->save();
+
+	// 			Session::forget(['phone', 'otp']);
+
+	// 			return redirect()
+	// 				->route('customer.login')
+	// 				->with('message', 'Successfully verified OTP.');
+	// 		} else {
+	// 			return redirect()
+	// 				->back()
+	// 				->with('message', 'Customer not found.');
+	// 		}
+	// 	}
 	
-		return redirect()->back()->withErrors(['otp' => 'Invalid OTP']);
-	}
+	// 	return redirect()->back()->withErrors(['otp' => 'Invalid OTP']);
+	// }
 
-	private function generateOTP()
-	{
-		// Generate a 4-digit random OTP
-		return mt_rand(1000, 9999);
-	}
+	// private function generateOTP()
+	// {
+	// 	// Generate a 4-digit random OTP
+	// 	return mt_rand(1000, 9999);
+	// }
 
-	private function sendOTP($customerID, $phone, $otp)
-	{
-		CustRegOtp::updateOrCreate(
-			['customer_id' => $customerID, 'phone_number' => $phone],
-			['otp_number' => $otp]
-		);
+	// private function sendOTP($customerID, $phone, $otp)
+	// {
+		// CustRegOtp::updateOrCreate(
+		// 	['customer_id' => $customerID, 'phone_number' => $phone],
+		// 	['otp_number' => $otp]
+		// );
 
 		// Use the SMS package or any other SMS gateway to send the OTP to the customer's phone number
 		// SMS::to($phone)->send("Your OTP is: $otp");
-	}
+	// }
 }
