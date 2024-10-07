@@ -2,7 +2,7 @@
 
 @section('content')
 <h4 class="fw-bold mb-4">
-	Update Operator
+	Update Supplier
 </h4>
 <div class="row">
 	<div class="col-xxl">
@@ -11,8 +11,6 @@
 				<form class="edit-operator-form" method="POST" action="/admin/operators/{{ $operator->id }}" enctype="multipart/form-data">
 					@csrf
 					@method('PUT')
-					<input type="hidden" name="address_latitude" id="address-latitude" value="{{ $latitude }}" />
-					<input type="hidden" name="address_longitude" id="address-longitude" value="{{ $longitude }}" />
 					<div class="row mb-3">
 						<div class="col-md-3">
 							<label for="name" class="form-label">
@@ -123,7 +121,7 @@
 							</span>
 							@endif
 						</div>
-						<div class="col-md-6">
+						{{-- <div class="col-md-6">
 							<label for="banner" class="form-label">
 								Banner
 							</label>
@@ -141,40 +139,33 @@
 								</strong>
 							</span>
 							@endif
-						</div>
+						</div> --}}
 					</div>
 					<div class="row mb-3">
 						<div class="col-sm-12">
-							<label for="address_address" class="form-label">
+							<label for="address" class="form-label">
 								Address
 								<span class='text-danger' aria-hidden='true'>*</span>
 							</label>
 							<input
-								class="form-control map-input @error('address_address') is-invalid @enderror"
+								class="form-control map-input @error('address') is-invalid @enderror"
 								type="text"
 								id="address-input"
-								name="address_address"
+								name="address"
 								placeholder="Enter Address"
 								aria-required='true'
-								value="{{ old('address_address', $operator->details->address) }}"
+								value="{{ old('address', $operator->details->address) }}"
 							>
-							@if ($errors->has('address_address'))
+							@if ($errors->has('address'))
 							<span class="invalid-feedback">
 								<strong>
-									{{ $errors->first('address_address') }}
+									{{ $errors->first('address') }}
 								</strong>
 							</span>
 							@endif
 						</div>
 					</div>
-					<div class="row mb-3">
-						<div class="col-md-12">
-							<div class="w-100 rounded-2 border" id="address-map-container" style="height:400px;">
-								<div class="h-100" id="address-map"></div>
-							</div>
-						</div>
-					</div>
-					<div class="row mb-3">
+					{{-- <div class="row mb-3">
 						<div class="col-md-4">
 							<label for="operational_area" class="form-label">
 								Operational Area
@@ -229,7 +220,7 @@
 							</span>
 							@endif
 						</div>
-					</div>
+					</div> --}}
 					<div class="row mb-3">
 						<div class="col-md-4">
 							<label for="city" class="form-label">
@@ -256,7 +247,7 @@
 							</span>
 							@endif
 						</div>
-						<div class="col-md-4">
+						{{-- <div class="col-md-4">
 							<label for="commission_percentage" class="form-label">
 								Commission Percentage
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -277,8 +268,8 @@
 								</strong>
 							</span>
 							@endif
-						</div>
-						<div class="col-md-4">
+						</div> --}}
+						{{-- <div class="col-md-4">
 							<label for="area_name" class="form-label">
 								Area Name
 								<span class='text-danger' aria-hidden='true'>*</span>
@@ -299,9 +290,9 @@
 								</strong>
 							</span>
 							@endif
-						</div>
+						</div> --}}
 					</div>
-					<div class="row mb-3">
+					{{-- <div class="row mb-3">
 						<div class="col-md-4">
 							<label for="" class="col-sm-4 col-form-label">
 								Single Vendor
@@ -335,7 +326,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> --}}
 					<div class="row justify-content-end">
 						<div class="col-sm-10 text-end">
 							<button type="submit" class="btn btn-primary update-operator">
@@ -349,36 +340,3 @@
 	</div>
 </div>
 @endsection
-
-@push('scripts')
-<script src="{{ asset('assets/js/mapInput.js') }}?v={{ filemtime(public_path('/assets/js/mapInput.js')) }}"></script>
-<script async src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize" defer></script>
-<script>
-	document.addEventListener('DOMContentLoaded', () => {
-		const addOperatorForm = document.querySelector('.edit-operator-form');
-		const saveOperatorButton = document.querySelector('.update-operator');
-
-		saveOperatorButton.addEventListener('click', function (event) {
-			event.preventDefault();
-
-			if (checkCoords()) {
-				addOperatorForm.submit();
-			}
-		});
-
-		function checkCoords() {
-			const address = document.getElementById('address-input');
-			const latitude = document.getElementById('address-latitude');
-			const longitude = document.getElementById('address-longitude');
-
-			if (latitude.value === '0' || longitude.value === '0') {
-				alert('Please select a valid location on the map.');
-				address.classList.add('is-invalid');
-				return false;
-			}
-
-			return true;
-		}
-	});
-</script>
-@endpush

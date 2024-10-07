@@ -12,26 +12,6 @@
 					@csrf
 					@method('PUT')
 					<div class="row mb-3">
-						<label for="vendor_type" class="col-sm-2 col-form-label">
-							Vendor Type
-						</label>
-						<div class="col-sm-10">
-							<select class="form-select" id="vendor_type" name="vendor_type">
-								<option value="">
-									Select Vendor Type
-								</option>
-								@foreach ($vendorTypes as $vendorType)
-								<option
-									value="{{ $vendorType->id }}"
-									{{ (old('vendor_type', $category->vendor_type_id) == $vendorType->id) ? 'selected' : '' }}
-								>
-									{{ $vendorType->type_name }}
-								</option>
-								@endforeach
-							</select>
-						</div>
-					</div>
-					<div class="row mb-3">
 						<label for="name" class="col-sm-2 col-form-label">
 							Category Name
 							<span class='text-danger' aria-hidden='true'>

@@ -40,12 +40,9 @@ class OperatorController extends Controller
 			'company_name' => 'required|string|min:3',
 			'email' => 'required|email|unique:operator_master,email',
 			'phone' => 'required|numeric',
-			'address_address' => 'required|string',
-			'commission_percentage' => 'required|numeric|min:2|max:20',
+			'address' => 'required|string',
 			'city' => 'required',
 			'area_name' => 'required|string',
-			'operation_radius' => 'required',
-			'operational_area' => 'required',
 			'logo' => 'required|image|mimes:jpeg,png,jpg|min:50|max:500',
 			// 'banner' => 'required|image|mimes:jpeg,png,jpg|min:100|max:500',
 		]);
@@ -83,13 +80,12 @@ class OperatorController extends Controller
 
 		$operator = new OperatorMaster;
 
-		$operator->name = $request->get('name');
-		$operator->company_name = $request->get('company_name');
-		$operator->email = $request->get('email');
-		$operator->phone = $request->get('phone');
+		$operator->name = $request->input('name');
+		$operator->company_name = $request->input('company_name');
+		$operator->email = $request->input('email');
+		$operator->phone = $request->input('phone');
 		$operator->logo = $logo;
 		// $operator->banner = $banner;
-		$operator->single_vendor = $request->get('single_vendor');
 
 		$operator->save();
 
@@ -97,13 +93,8 @@ class OperatorController extends Controller
 			$operatorDetails = new OperatorDetail;
 
 			$operatorDetails->operator_id = $operator->id;
-			$operatorDetails->city_id = $request->get('city');
-			$operatorDetails->address = $request->get('address_address');
-			$operatorDetails->commission_percentage = $request->get('commission_percentage');
-			// $operatorDetails->area_name = $request->get('area_name');
-			// $operatorDetails->operation_radius = $request->get('operation_radius');
-			// $operatorDetails->operational_area = $request->get('operational_area');
-			// $operatorDetails->operation_geo_location = $selectedCoords;
+			$operatorDetails->city_id = $request->input('city');
+			$operatorDetails->address = $request->input('address');
 
 			$operatorDetails->save();
 
@@ -133,14 +124,10 @@ class OperatorController extends Controller
 		$operator = OperatorMaster::where('id', $id)
 			->with('details')
 			->firstOrFail();
-		$geoLocation = jsoN_decode($operator->details->operation_geo_location);
-
-		$latitude = $geoLocation->latitude;
-		$longitude = $geoLocation->longitude;
 
 		$cities = City::all();
 
-		return view('admin.operators.edit', compact('operator', 'cities', 'latitude', 'longitude'));
+		return view('admin.operators.edit', compact('operator', 'cities'));
 	}
 
 	public function update(Request $request, $id)
@@ -150,14 +137,10 @@ class OperatorController extends Controller
 			'company_name' => 'required|string|min:3',
 			'email' => 'required|email|unique:operator_master,email,' . $id,
 			'phone' => 'required|numeric',
-			'address_address' => 'required|string',
-			'commission_percentage' => 'required|numeric|min:2|max:20',
+			'address' => 'required|string',
 			'city' => 'required',
-			'area_name' => 'required|string',
-			'operation_radius' => 'required',
-			'operational_area' => 'required',
 			'logo' => 'image|mimes:jpeg,png,jpg|min:100|max:500',
-			'banner' => 'image|mimes:jpeg,png,jpg|min:100|max:500',
+			// 'banner' => 'image|mimes:jpeg,png,jpg|min:100|max:500',
 		]);
 
 		$operator = OperatorMaster::findOrFail($id);
@@ -206,22 +189,21 @@ class OperatorController extends Controller
 			}
 		}
 
-		if ($operator->email !== $request->get('email')) {
+		if ($operator->email !== $request->input('email')) {
 			$operatorLogin = Admin::where('role', 1)
 				->where('user_id', $operator->id)
 				->firstOrFail();
 
-			$operatorLogin->email = $request->get('email');
+			$operatorLogin->email = $request->input('email');
 			
 			$operatorLogin->save();
 		}
 
-		$operator->name = $request->get('name');
-		$operator->company_name = $request->get('company_name');
-		$operator->email = $request->get('email');
-		$operator->phone = $request->get('phone');
-		$operator->single_vendor = $request->get('single_vendor');
-		
+		$operator->name = $request->input('name');
+		$operator->company_name = $request->input('company_name');
+		$operator->email = $request->input('email');
+		$operator->phone = $request->input('phone');
+
 		if (isset($logo)) {
 			$operator->logo = $logo;
 		}
@@ -236,19 +218,9 @@ class OperatorController extends Controller
 			$operatorDetails = OperatorDetail::where('operator_id', $operator->id)
 				->firstOrFail();
 
-			$latitude = $request->get('address_latitude');
-			$longitude = $request->get('address_longitude');
-
-			$selectedCoords = json_encode(['latitude' => $latitude, 'longitude' => $longitude]);
-
 			// $operatorDetails->operator_id = $operator->id;
-			$operatorDetails->city_id = $request->get('city');
-			$operatorDetails->operation_geo_location = $selectedCoords;
-			$operatorDetails->address = $request->get('address_address');
-			$operatorDetails->commission_percentage = $request->get('commission_percentage');
-			$operatorDetails->area_name = $request->get('area_name');
-			$operatorDetails->operational_area = $request->get('operational_area');
-			$operatorDetails->operation_radius = $request->get('operation_radius');
+			$operatorDetails->city_id = $request->input('city');
+			$operatorDetails->address = $request->input('address');
 
 			$operatorDetails->save();
 		}

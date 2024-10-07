@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
-use App\Models\VendorType;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 
@@ -25,7 +24,6 @@ class CategoriesController extends Controller
 
 	public function create()
 	{
-		// $vendorTypes = VendorType::where('status', 1)->get();
 		$parentCategories = Category::whereNull('parent_id')
 			->get();
 
@@ -35,9 +33,8 @@ class CategoriesController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			// 'vendor_type' => 'required',
 			'name' => 'required|string|max:40',
-			// 'image' => 'required|image|mimes:jpeg,png,jpg|dimensions:min_width=500,min_height=500|min:100|max:4096',
+			'image' => 'required|image|mimes:jpeg,png,jpg|dimensions:min_width=500,min_height=500|min:100|max:2048',
 		]);
 
 		if($request->hasfile('image')) {
@@ -70,14 +67,9 @@ class CategoriesController extends Controller
 
 		$category = new Category;
 
-		// $category->vendor_type_id = $request->get('vendor_type');
-		$category->name = $request->get('name');
-		// $category->image = $filename;
-
-		if ($request->input('category'))
-		{
-			$category->parent_id = $request->input('category');
-		}
+		$category->name = $request->input('name');
+		$category->parent_id = $request->input('category');
+		$category->image = $filename;
 
 		$category->save();
 
@@ -88,12 +80,10 @@ class CategoriesController extends Controller
 	public function edit($id)
 	{
 		$category = Category::findOrFail($id);
-
-		$vendorTypes = VendorType::where('status', 1)->get();
 		$parentCategories = Category::whereNull('parent_id')
 			->get();
 
-		return view('admin.categories.edit', compact('category', 'parentCategories', 'vendorTypes'));
+		return view('admin.categories.edit', compact('category', 'parentCategories'));
 	}
 
 	public function update(Request $request, $id)
@@ -145,10 +135,9 @@ class CategoriesController extends Controller
 			}
 		}
 
-		$category->vendor_type_id = $request->get('vendor_type');
-		$category->name = $request->get('name');
-		$category->parent_id = $request->get('category');
-		$category->is_mu = $request->get('is_mu');
+		$category->name = $request->input('name');
+		$category->parent_id = $request->input('category');
+		$category->is_mu = $request->input('is_mu');
 
 		if (isset($filename)) {
 			$category->image = $filename;

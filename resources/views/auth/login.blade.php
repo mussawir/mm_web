@@ -35,30 +35,9 @@
 			@isset($url)
 			<form method="POST" action='{{ url("login/$url") }}' aria-label="{{ __('Login') }}" id="formAuthentication" class="mb-3">
 			@else
-			<form method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
+			<form method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}" id="formAuthentication" class="mb-3">
 			@endisset
 				@csrf
-				{{-- @if (isset($url) && $url === 'customer') --}}
-				{{-- <div class="mb-3">
-					<label for="phone" class="form-label">
-						Phone Number:
-					</label>
-					<input
-						type="text"
-						name="phone"
-						id="phone"
-						value="{{ old('phone') }}"
-						class="form-control @error('phone') is-invalid @enderror"
-					>
-					@error('phone')
-					<span class="d-block invalid-feedback" role="alert">
-						<strong>
-							{{ $message }}
-						</strong>
-					</span>
-					@enderror
-				</div> --}}
-				{{-- @else --}}
 				<div class="mb-3">
 					<label for="email" class="form-label">
 						{{ __('Email') }}
@@ -112,8 +91,6 @@
 						@enderror
 					</div>
 				</div>
-				{{-- @endif --}}
-				{{-- @if (! (isset($url) && $url === 'customer')) --}}
 				<div class="mb-3">
 					<div class="form-check">
 						<input
@@ -128,7 +105,6 @@
 						</label>
 					</div>
 				</div>
-				{{-- @endif --}}
 				<div class="mb-3">
 					<button class="btn btn-primary d-grid w-100" type="submit">
 						{{ __('Login') }}
@@ -136,7 +112,7 @@
 				</div>
 				@if (isset($url) && $url === 'customer')
 				<p class="mb-2">
-					No account? Register and join us.
+					No account?
 				</p>
 				<div class="mb-3">
 					<a href="{{ route('customer.register') }}" class="btn btn-primary d-grid w-100">

@@ -16,18 +16,14 @@ class Vendor extends Model
 		'name',
 		'slug',
 		'company_name',
-		'shop_number',
 		'full_address',
 		'logo',
 		'banner1',
 		'banner2',
 		'banner3',
-		'current_balance',
-		'points_in_hand',
 		'date_joining',
 		'contact_number_primary',
 		'contact_number_sec',
-		'commission_percentage',
 		'delivery_free_after',
 		'delivery_charges',
 		'minimum_delivery_amount',
@@ -61,21 +57,6 @@ class Vendor extends Model
 	public function orders()
 	{
 		return $this->hasMany('App\Models\OrderMaster');
-	}
-
-	public function logins()
-	{
-		return $this->hasMany('App\Models\Admin');
-	}
-
-	public function vendorType()
-	{
-		return $this->belongsTo('App\Models\VendorType');
-	}
-
-	public function operator()
-	{
-		return $this->belongsTo('App\Models\OperatorMaster', 'operator_id');
 	}
 
 	public function customers()

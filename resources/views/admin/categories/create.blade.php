@@ -10,31 +10,6 @@
 			<div class="card-body">
 				<form method="POST" action="/admin/categories" enctype="multipart/form-data">
 					@csrf
-					{{-- <div class="row mb-3">
-						<label for="vendor_type" class="col-sm-2 col-form-label">
-							Vendor Type
-							<span class='text-danger' aria-hidden='true'>
-								*
-							</span>
-						</label>
-						<div class="col-sm-10">
-							<select class="form-select @error('vendor_type') is-invalid @enderror" id="vendor_type" name="vendor_type">
-								<option value="">Select Vendor Type</option>
-								@foreach ($vendorTypes as $vendorType)
-								<option value="{{ $vendorType->id }}" {{ (old('vendor_type', "") == $vendorType->id) ? 'selected' : '' }}>
-									{{ $vendorType->type_name }}
-								</option>
-								@endforeach
-							</select>
-							@if ($errors->has('vendor_type'))
-							<span class="invalid-feedback" role="alert">
-								<strong>
-									{{ $errors->first('vendor_type') }}
-								</strong>
-							</span>
-							@endif
-						</div>
-					</div> --}}
 					<div class="row mb-3">
 						<label for="name" class="col-sm-2 col-form-label">
 							Category Name
@@ -61,7 +36,7 @@
 							@endif
 						</div>
 					</div>
-					{{-- <div class="row mb-3">
+					<div class="row mb-3">
 						<label for="image" class="col-sm-2 col-form-label">
 							Image
 							<span class='text-danger' aria-hidden='true'>
@@ -84,7 +59,7 @@
 							</span>
 							@endif
 						</div>
-					</div> --}}
+					</div>
 					<div class="row mb-3">
 						<label for="category" class="col-sm-2 col-form-label">
 							Parent Category

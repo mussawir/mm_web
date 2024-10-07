@@ -11,8 +11,6 @@ class Item extends Model
 	use HasFactory;
 	use SoftDeletes;
 
-	protected $table = 'items_lists';
-
 	protected $fillable = [
 		'category_id',
 		'vendor_id',

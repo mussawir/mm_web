@@ -84,10 +84,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Customer::class,
         ],
-        // 'riders' => [
-        //     'driver' => 'eloquent',
-        //     'model' => App\Models\Rider::class,
-        // ]
     ],
 
     /*

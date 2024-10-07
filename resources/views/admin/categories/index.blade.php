@@ -48,7 +48,6 @@
 				<tr>
 					<th scope="col">Image</th>
 					<th scope="col">Name</th>
-					<th scope="col">Vendor Type</th>
 					<th scope="col">Most Used</th>
 					<th scope="col">Total Items</th>
 					<th scope="col">Actions</th>
@@ -67,7 +66,6 @@
 						/>
 					</td>
 					<td>{{ $category->name }}</td>
-					<td>{{ $category->vendorType->type_name ?? '' }}</td>
 					<td>
 						<span class="badge bg-label-{{ ($category->is_mu == '1') ? 'success' : 'danger' }} me-1">
 							{{ ($category->is_mu == '1') ? 'Yes' : 'No' }}
@@ -100,7 +98,7 @@
 				</tr>
 				@empty
 				<tr class="fw-semibold lead my-0 alert alert-danger text-center">
-					<td colspan="6">
+					<td colspan="5">
 						No categories available.
 					</td>
 				</tr>

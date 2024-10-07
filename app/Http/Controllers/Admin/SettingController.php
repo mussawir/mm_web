@@ -17,16 +17,7 @@ class SettingController extends Controller
 {
 	public function __construct()
 	{
-		$this->middleware('can:operator');
-	}
-
-	public function getReorderingView()
-	{
-		$branches = Branches::where('deleted', 0)
-			->with(['items'])
-			->get();
-
-		return view('admin.settings.reordering', compact('branches'));
+		$this->middleware('can:supplier');
 	}
 
 	public function reorderCategories($branchId)
