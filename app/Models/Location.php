@@ -19,4 +19,9 @@ class Location extends Model
 		'level',
 		'is_active',
 	];
+
+	// public function inventoryMaps()
+	// {
+	// 	return $this->hasMany(InventoryMap::class);
+	// }
 }

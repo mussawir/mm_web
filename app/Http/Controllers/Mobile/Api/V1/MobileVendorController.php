@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Mobile\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vendor;
-use App\Models\VendorType;
 use App\Models\OperatorMaster;
 use Illuminate\Http\Request;
 
@@ -56,21 +55,6 @@ class MobileVendorController extends Controller
 
 		// Extracting operator IDs from the filteredOperators array
 		$operatorIds = array_column($filteredOperators, 'id');
-
-		// fetching vendors based on operator ids and vendor type
-		// if($vendorType == 'all') {
-		// 	$vendors = Vendor::whereIn('operator_id', $operatorIds)->with('vendorType')->get();
-		// }
-		// elseif($vendorType == 'food') {
-		// 	$vendorTypes = VendorType::where('is_food', 1)->get('id');
-		// 	$vendors = Vendor::whereIn('operator_id', $operatorIds)->whereIn('vendor_type_id', $vendorTypes)->get();
-		// }elseif($vendorType == 'shops') {
-		// 	$vendorTypes = VendorType::where('is_food', 0)->get('id');
-		// 	$vendors = Vendor::whereIn('operator_id', $operatorIds)->whereIn('vendor_type_id', $vendorTypes)->get();
-		// }
-		// else{
-		// 	$vendors = Vendor::whereIn('operator_id', $operatorIds)->where('vendor_type_id', $vendorType)->get();
-		// }
 
 		$vendors = Vendor::whereIn('operator_id', $operatorIds)->with('vendorType')->get();
 
@@ -166,17 +150,6 @@ class MobileVendorController extends Controller
 			'status' => 200,
 			'message' => 'Vendor delivery details retrieved successfully.',
 			'data' => $vendor
-		]);
-	}
-
-	public function getVendorTypes()
-	{
-		$types = VendorType::get();
-
-		return response()->json([
-			'status' => 200,
-			'message' => 'Vendor types retrieved successfully.',
-			'data' => $types,
 		]);
 	}
 }

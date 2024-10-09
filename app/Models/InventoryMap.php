@@ -12,6 +12,25 @@ class InventoryMap extends Model
 	protected $table = 'inventory_maps';
 
 	protected $fillable = [
-		'quantity',
+		'item_id',
+		'location_id',
+		'customer_id',
+		'capacity',
+		'reorder_quantity',
 	];
+
+	public function item()
+	{
+		return $this->belongsTo(Item::class);
+	}
+
+	public function location()
+	{
+		return $this->belongsTo(Location::class);
+	}
+
+	public function customer()
+	{
+		return $this->belongsTo(Customer::class);
+	}
 }

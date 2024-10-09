@@ -30,7 +30,7 @@
 				</div>
 			</div>
 			<div class="col-md-6 text-md-end text-center">
-				<a href="/admin/inventory/create" class="btn btn-primary">
+				<a href="/admin/mapping/create" class="btn btn-primary">
 					New
 				</a>
 			</div>

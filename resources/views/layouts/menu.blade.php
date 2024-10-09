@@ -48,9 +48,9 @@
 					<div data-i18n="Cities">Cities</div>
 				</a>
 			</li>
-			<li class="menu-item {{ request()->is('admin/inventory-mapping') ? 'active' : '' }}">
-				<a href="{{ url('/admin/inventory-mapping') }}" class="menu-link">
-					<i class="menu-icon tf-icons bx bxs-user-circle"></i>
+			<li class="menu-item {{ request()->is('admin/mapping') ? 'active' : '' }}">
+				<a href="{{ url('/admin/mapping') }}" class="menu-link">
+					<i class="menu-icon tf-icons bx bxs-component"></i>
 					<div data-i18n="Inventory Mapping">Inventory Mapping</div>
 				</a>
 			</li>
