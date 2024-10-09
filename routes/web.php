@@ -278,6 +278,7 @@ Route::group(['middleware' => 'auth:customer'], function () {
 		Route::post('/load-suppliers', 'loadSuppliers')->name('load.suppliers');
 		Route::post('/save-selected-city', 'saveSelectedCity')
 			->name('save.selectedCity');
+		Route::get('/inventory-generator', 'inventoryAIGenerator')->name('inventory.generator');
 	});
 	# Front End Routes End
 

@@ -3,94 +3,148 @@
 namespace App\Http\Controllers\Mobile\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Branches;
-use App\Models\City;
+use App\Models\InventoryMap;
+use App\Models\Location;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class MobileLocationController extends Controller
 {
-	// public function index()
-	// {
-	// 	$locations = ServiceLocations::get();
-
-	// 	return response()->json([
-	// 		'status' => 200,
-	// 		'data' => $locations,
-	// 		'message' => 'All locations retrieved successfully!'
-	// 	]);
-	// }
-	
-	// public function current($country,$state, $city, $neighbourhood)
-	// {
-	// 	$current = ServiceLocations::where('country', $country)
-	// 		->where('state', $state)
-	// 		->where('city', $city)
-	// 		->where('neighbourhood', $neighbourhood)
-	// 		->get();
-		 
-	// 	if(count($current) > 0)
-	// 	{
-	// 		return response()->json([
-	// 			'status' => 200,
-	// 			'data' => $current,
-	// 			'message' => 'Found!'
-	// 		]);
-	// 	}
-	// 	else
-	// 	{
-	// 		return response()->json([
-	// 			'status' => 404,
-	// 			'data' => $current,
-	// 			'message' => 'Empty'
-	// 		]);
-	// 	}
-	// }
-
-	// public function getLocation()
-	// {
-	// 	$getLocation = ServiceLocations::where('id', '2')->first();
-
-	// 	return response()->json([
-	// 		'status' => 200,
-	// 		'data' => $getLocation,
-	// 		'message' => 'Location fetched succuessfully!'
-	// 	]);
-	// }
-
-	public function fetchCityBranches($city)
+	public function checkLocationCapacity(Request $request)
 	{
-		$cityBranches = Branches::where('deleted', 0)
-			->where('city_id', $city)
-			->get();
+		$request->validate([
+			'customer_id' => 'required|integer|exists:customers,id',
+			'storeroom' => 'required|integer',
+			'rack_number' => 'required|integer',
+			'rack_location' => 'required|integer',
+			'type' => 'required|string',
+			'level' => 'required|string',
+		]);
 
-		if ($cityBranches)
-		{
-			return response()->json([
-				'status' => 200,
-				'data' => $cityBranches,
-				'message' => 'City branches list fetched successfully.'
-			]);
+		$customerId = $request->input('customer_id');
+		$storeroomNumber = $request->input('storeroom_number');
+		$rackNumber = $request->input('rack_number');
+		$rackLocation = $request->input('rack_location');
+		$level = strtolower($request->input('level'));
+		$type = $request->input('type');
+
+		$row = (int)substr((string)$rackLocation, 0, 1);
+		$column = (int)substr((string)$rackLocation, 1, 1);
+
+		$location = Location::where('store_room', $storeroomNumber)
+			->where('rack', $rackNumber)
+			->where('type', $type)
+			->where('rack_location', $rackLocation)
+			->first();
+
+		if (!$location) {
+			return response()
+				->json(['message' => 'Location not found'], 404);
 		}
-		else
-		{
-			return response()->json([]);
+
+		$inventoryMap = InventoryMap::where('customer_id', $customerId)
+			->where('location_id', $location->id)
+			->first();
+
+		if (!$inventoryMap) {
+			return response()
+				->json(['message' => 'No items found at this location'], 404);
+		}
+
+		$levelFraction = $this->mapLevelToFraction($level);
+		$approxCurrentQuantity = $inventoryMap->capacity * (1 - $levelFraction);
+		$reorderQuantity = $inventoryMap->capacity - $approxCurrentQuantity;
+
+		return response()->json([
+			'location' => [
+				'row' => $row,
+				'column' => $column,
+				'description' => $location->description,
+			],
+			'item_details' => [
+				'item' => $inventoryMap->item->name,
+				'capacity' => $inventoryMap->capacity,
+				'approx_current_quantity' => $approxCurrentQuantity,
+				'reorder_quantity' => $reorderQuantity > 0 ? round($reorderQuantity) : 0,
+			],
+		]);
+	}
+
+	private function mapLevelToFraction($level)
+	{
+		switch ($level) {
+			case 'full':
+			case '100% full':
+				return 0;
+			case 'half':
+			case '50% full':
+			case '50% empty':
+				return 0.5;
+			case 'quarter':
+			case '25% full':
+			case '75% empty':
+				return 0.75;
+			case 'one third':
+				return 2 / 3;
+			case 'three quarters':
+				return 0.25;
+			case 'empty':
+			case '100% empty':
+				return 1;
+			default:
+				if (preg_match('/(\d+)% empty/', $level, $matches)) {
+					return min(1, max(0, (100 - intval($matches[1])) / 100));
+				}
+				return 0;
 		}
 	}
 
-	public function cityBranchCount()
+	public function update(Request $request)
 	{
-		$cityCount = City::all()->count();
-		
-		$branchCount = Branches::where('deleted', 0)
-			->get()
-			->count();
-
-		return response()->json([
-			'status' => 200,
-			'data' => [
-				'cityCount' => $cityCount,
-				'branchCount' => $branchCount,
-			],
-			'message' => 'City and branch count fetched successfully.'
+		$validator = Validator::make($request->all(), [
+			'customer_id' => 'required|integer|exists:customers,id',
 		]);
+
+		if ($validator->fails()) {
+			return response()
+			->json(['message' => $validator->errors()->first()], 400);
+		}
+
+		$customerId = $request->input('customer_id');
+
+		$itemIds = range(340, 366);
+		$locations = DB::table('locations')->inRandomOrder()->take(8)->get();
+
+		DB::beginTransaction();
+		try {
+			foreach ($locations as $location) {
+				$itemId = $itemIds[array_rand($itemIds)];
+
+				$capacity = rand(1, 100);
+				$reorderQuantity = ($capacity > 1) ? rand(1, $capacity - 1) : 0;
+
+				InventoryMap::updateOrCreate(
+					[
+						'customer_id' => $customerId,
+						'item_id' => $itemId,
+						'location_id' => $location->id,
+					],
+					[
+						'capacity' => $capacity,
+						'reorder_quantity' => $reorderQuantity,
+					]
+				);
+			}
+
+			DB::commit();
+
+			return response()
+				->json(['message' => "Inventory updated for customer ID: $customerId"], 200);
+		} catch (\Exception $e) {
+			DB::rollBack();
+			return response()
+				->json(['message' => 'Failed to update inventory.'], 500);
+		}
 	}
 }

@@ -4,7 +4,7 @@
 <div class="container">
 	<div class="my-4">
 		<div id="app">
-			<power-grid :inventory-data="{{ json_encode($inventoryData) }}" />
+			<inventory-generator />
 		</div>
 	</div>
 </div>

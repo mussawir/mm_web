@@ -25,6 +25,7 @@
 		<link rel="stylesheet" href="{{ asset('/assets/css/swiper-bundle.min.css') }}"/>
 		<link rel="stylesheet" href="{{ asset('/assets/css/flatpickr.min.css') }}">
 
+		@vite(['resources/css/app.css', 'resources/js/app.js'])
 		{{-- CDN Links --}}
 		<link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/toastify.min.css') }}">
 		<script type="text/javascript" src="{{ asset('/assets/js/toastify.js') }}"></script>

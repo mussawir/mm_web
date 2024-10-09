@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\DealMaster;
+use App\Models\InventoryMap;
 use App\Models\Item;
 use App\Models\OperatorMaster;
 use App\Models\Vendor;
@@ -186,6 +187,18 @@ class FrontController extends Controller
 
 	public function inventoryStatus()
 	{
-		return view('front.inventory-status');
+		$customerId = auth()->id();
+
+		$inventoryData = InventoryMap::where('customer_id', $customerId)
+			->with(['item', 'location'])
+			->get();
+	
+		return view('front.inventory-status', compact('inventoryData'));
+		// return view('front.inventory-status');
+	}
+
+	public function inventoryAIGenerator()
+	{
+		return view('front.inventory-ai-generator');
 	}
 }

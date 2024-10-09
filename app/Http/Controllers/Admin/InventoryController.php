@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\InventoryMap;
 use App\Models\Item;
 use App\Models\Location;
+use App\Models\Vendor;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
@@ -71,7 +73,7 @@ class InventoryController extends Controller
 
 	public function mapping()
 	{
-		$inventoryMaps = InventoryMap::with('item', 'location')->get();
+		$inventoryMaps = InventoryMap::with('item', 'location', 'customer', 'supplier')->get();
 		return view('admin.inventory-mapping.index', compact('inventoryMaps'));
 	}
 
@@ -79,7 +81,10 @@ class InventoryController extends Controller
 	{
 		$items = Item::all();
 		$locations = Location::all();
-		return view('admin.inventory-mapping.create', compact('items', 'locations'));
+		$customers = Customer::all();
+		$suppliers = Vendor::all();
+
+		return view('admin.inventory-mapping.create', compact('items', 'locations', 'customers', 'suppliers'));
 	}
 
 	public function mappingStore(Request $request)

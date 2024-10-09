@@ -29,16 +29,21 @@ class Item extends Model
 	
 	public function category()
 	{
-		return $this->belongsTo('App\Models\Category');
+		return $this->belongsTo(Category::class);
 	}
 
 	public function vendor ()
 	{
-		return $this->belongsTo('App\Models\Vendor');
+		return $this->belongsTo(Vendor::class);
 	}
 
-	public function addons()
+	// public function addons()
+	// {
+	// 	return $this->belongsToMany(Item::class, 'item_addons', 'item_id', 'addon_id');
+	// }
+
+	public function inventoryMaps()
 	{
-		return $this->belongsToMany(Item::class, 'item_addons', 'item_id', 'addon_id');
+		return $this->hasMany(InventoryMap::class);
 	}
 }
