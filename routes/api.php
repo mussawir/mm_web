@@ -1,23 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Mobile\Api\V1\MobileShopsItemsListController;
-use App\Http\Controllers\Mobile\Api\V1\MobileCustomerOrdersController;
-use App\Http\Controllers\Mobile\Api\V1\MobileCustomerRegistrationController;
-use App\Http\Controllers\Mobile\Api\V1\MobileShopKeeperLoginController;
-use App\Http\Controllers\Mobile\Api\V1\MobileShopKeeperRegistrationController;
-use App\Http\Controllers\Mobile\Api\V1\MobileShopkeerOrdersListController;
-use App\Http\Controllers\Mobile\Api\V1\MobileShopItemGroupController;
 use App\Http\Controllers\Mobile\Api\V1\MobileLocationController;
-use App\Http\Controllers\Mobile\Api\V1\MobileCustomerRegOtpController;
-use App\Http\Controllers\Mobile\Api\V1\MobileRiderController;
-use App\Http\Controllers\Mobile\Api\V1\MobileShopAddOnController;
-use App\Http\Controllers\Mobile\Api\V1\MobileShopDealController;
-use App\Http\Controllers\Mobile\Api\V1\MobileShopsCategoryController;
-use App\Http\Controllers\Mobile\Api\V1\MobileVendorController;
-use App\Http\Controllers\Mobile\Api\V1\MobileOperatorController;
-use App\Http\Controllers\Mobile\Api\V1\MobileAdminController;
-use App\Http\Controllers\Mobile\Api\V1\MobileShopCustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +17,7 @@ Route::middleware(['guest:admin'])->group(function () {});
 
 Route::prefix('v1')->group(function () {
 	Route::get('/inventory/capacity', [MobileLocationController::class, 'checkLocationCapacity']);
-	Route::post('/inventory/update', [MobileLocationController::class, 'update']);
+	Route::post('/inventory/update/camera', [MobileLocationController::class, 'update']);
 
 
 	# Old Routes From Bhejdo

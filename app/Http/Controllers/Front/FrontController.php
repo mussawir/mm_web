@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\AICameraInventory;
+use App\Models\AIPhotoInventory;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\DealMaster;
@@ -194,7 +196,19 @@ class FrontController extends Controller
 			->get();
 	
 		return view('front.inventory-status', compact('inventoryData'));
-		// return view('front.inventory-status');
+	}
+
+	public function aiInventory()
+	{
+		$customerId = auth()->id();
+
+		$inventoryData = AICameraInventory::where('customer_id', $customerId)
+			->get();
+		
+		$storedPhotos = AIPhotoInventory::where('customer_id', $customerId)
+			->get();
+	
+		return view('front.ai-inventory', compact('inventoryData', 'storedPhotos'));
 	}
 
 	public function inventoryAIGenerator()

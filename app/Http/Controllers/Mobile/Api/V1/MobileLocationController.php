@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Mobile\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\AICameraInventory;
 use App\Models\InventoryMap;
+use App\Models\Item;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -104,6 +106,8 @@ class MobileLocationController extends Controller
 	{
 		$validator = Validator::make($request->all(), [
 			'customer_id' => 'required|integer|exists:customers,id',
+			'label' => 'required|string',
+			'current_stock' => 'required|string',
 		]);
 
 		if ($validator->fails()) {
@@ -112,35 +116,34 @@ class MobileLocationController extends Controller
 		}
 
 		$customerId = $request->input('customer_id');
+		$label = $request->input('label');
+		$current_stock = $request->input('current_stock');
 
-		$itemIds = range(340, 366);
-		$locations = DB::table('locations')->inRandomOrder()->take(8)->get();
+		$item = Item::where('name', $label)->first();
+
+		if (!$item) {
+			return response()
+				->json(['message' => "Item not found: $label"], 404);
+		}
+		$itemId = $item->id;
 
 		DB::beginTransaction();
 		try {
-			foreach ($locations as $location) {
-				$itemId = $itemIds[array_rand($itemIds)];
-
-				$capacity = rand(1, 100);
-				$reorderQuantity = ($capacity > 1) ? rand(1, $capacity - 1) : 0;
-
-				InventoryMap::updateOrCreate(
-					[
-						'customer_id' => $customerId,
-						'item_id' => $itemId,
-						'location_id' => $location->id,
-					],
-					[
-						'capacity' => $capacity,
-						'reorder_quantity' => $reorderQuantity,
-					]
-				);
-			}
+			AICameraInventory::updateOrCreate(
+				[
+					'customer_id' => $customerId,
+					'item_id' => $itemId,
+				],
+				[
+					'item_label' => $label,
+					'current_stock' => $current_stock,
+				]
+			);
 
 			DB::commit();
 
 			return response()
-				->json(['message' => "Inventory updated for customer ID: $customerId"], 200);
+				->json(['message' => "Inventory updated for customer ID: $customerId, Item: $label"], 200);
 		} catch (\Exception $e) {
 			DB::rollBack();
 			return response()

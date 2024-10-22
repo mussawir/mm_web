@@ -265,6 +265,8 @@ Route::group(['middleware' => 'auth:customer'], function () {
 		->name('category.detail');
 		Route::get('/inventory-status', 'inventoryStatus')
 			->name('inventory.status');
+		Route::get('/ai-inventory', 'aiInventory')
+			->name('ai.inventory');
 		Route::get('/vendors/detail/{id}', 'vendorDetail')
 			->name('vendor.detail');
 		Route::get('/vendor/{vendorId}/items/detail/{itemId}', 'itemDetail')
