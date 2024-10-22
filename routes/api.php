@@ -18,6 +18,7 @@ Route::middleware(['guest:admin'])->group(function () {});
 Route::prefix('v1')->group(function () {
 	Route::get('/inventory/capacity', [MobileLocationController::class, 'checkLocationCapacity']);
 	Route::post('/inventory/update/camera', [MobileLocationController::class, 'update']);
+	Route::post('/inventory/update/photos', [MobileLocationController::class, 'storedPhotosUpdate']);
 
 
 	# Old Routes From Bhejdo
