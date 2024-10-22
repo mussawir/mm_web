@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mobile\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\AICameraInventory;
+use App\Models\AIPhotoInventory;
 use App\Models\InventoryMap;
 use App\Models\Item;
 use App\Models\Location;
@@ -99,6 +100,55 @@ class MobileLocationController extends Controller
 					return min(1, max(0, (100 - intval($matches[1])) / 100));
 				}
 				return 0;
+		}
+	}
+
+	public function storedPhotosUpdate(Request $request)
+	{
+		$validator = Validator::make($request->all(), [
+			'customer_id' => 'required|integer|exists:customers,id',
+			'label' => 'required|string',
+			'current_stock' => 'required|string',
+		]);
+
+		if ($validator->fails()) {
+			return response()
+			->json(['message' => $validator->errors()->first()], 400);
+		}
+
+		$customerId = $request->input('customer_id');
+		$label = $request->input('label');
+		$current_stock = $request->input('current_stock');
+
+		$item = Item::where('name', $label)->first();
+
+		if (!$item) {
+			return response()
+				->json(['message' => "Item not found: $label"], 404);
+		}
+		$itemId = $item->id;
+
+		DB::beginTransaction();
+		try {
+			AIPhotoInventory::updateOrCreate(
+				[
+					'customer_id' => $customerId,
+					'item_id' => $itemId,
+				],
+				[
+					'item_label' => $label,
+					'current_stock' => $current_stock,
+				]
+			);
+
+			DB::commit();
+
+			return response()
+				->json(['message' => "Inventory updated for customer ID: $customerId, Item: $label"], 200);
+		} catch (\Exception $e) {
+			DB::rollBack();
+			return response()
+				->json(['message' => 'Failed to update inventory.'], 500);
 		}
 	}
 
