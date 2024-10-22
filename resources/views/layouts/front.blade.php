@@ -10,7 +10,7 @@
 
 		<title>@yield('title', 'Inventory Ops')</title>
 
-		@laravelPWA
+		{{-- @laravelPWA --}}
 
 		{{-- Favicon --}}
 		<link rel="icon" href="/assets/images/favicon/favicon.png" sizes="any" />
@@ -36,7 +36,7 @@
 	<body class="vstack min-vh-100" @if(request()->is('/') || request()->is('home')) x-data="{ categoryTab: 'all' }" x-cloak @endif>
 		@include('layouts.header')
 
-		<div class="custom-container m-0 p-0">
+		<div class="custom-container m-0 p-0" id="app">
 			@if(session('success'))
 				<script>
 					Toastify({

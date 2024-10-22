@@ -167,14 +167,22 @@
 									</span>
 								</button>
 							</li>
-							<li class="bds-c-tab {{ (request()->is('inventory.generator')) ? 'is-selected' : '' }}" onclick="window.location.href='{{ route('inventory.generator') }}'" role="presentation">
+							<li class="bds-c-tab {{ (request()->is('ai-inventory')) ? 'is-selected' : '' }}" onclick="window.location.href='{{ route('ai.inventory') }}'" role="presentation">
+								<button role="tab" >
+									<div class="bds-c-tab__icon"></div>
+									<span class="bds-c-tab__label">
+										AI Inventory Status
+									</span>
+								</button>
+							</li>
+							{{-- <li class="bds-c-tab {{ (request()->is('inventory.generator')) ? 'is-selected' : '' }}" onclick="window.location.href='{{ route('inventory.generator') }}'" role="presentation">
 								<button role="tab" >
 									<div class="bds-c-tab__icon"></div>
 									<span class="bds-c-tab__label">
 										AI Inventory Generator
 									</span>
 								</button>
-							</li>
+							</li> --}}
 							<li class="bds-c-tab {{ (request()->is('order.history')) ? 'is-selected' : '' }}" role="presentation">
 								<button role="tab" >
 									<div class="bds-c-tab__icon"></div>

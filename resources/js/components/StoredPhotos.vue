@@ -1,9 +1,9 @@
 <script setup>
 import { ref, defineProps } from 'vue'
 
-const props = defineProps(['inventoryData'])
+const props = defineProps(['storedPhotos'])
 
-const inventoryData = ref(props.inventoryData)
+const storedPhotos = ref(props.storedPhotos)
 
 // Sorting
 const sortColumn = ref('location')
@@ -36,7 +36,10 @@ const sortData = (column) => {
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="(inventory, index) in inventoryData" :key="index">
+				<tr v-if="storedPhotos.length === 0">
+					<td colspan="2">No items available</td>
+				</tr>
+				<tr v-else v-for="(inventory, index) in storedPhotos" :key="index">
 					<td>{{ inventory.item_label }}</td>
 					<td>{{ inventory.current_stock }}</td>
 					<!-- <td>

@@ -5,29 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class InventoryMap extends Model
+class AIPhotoInventory extends Model
 {
 	use HasFactory;
-	
-	protected $table = 'inventory_maps';
+
+	protected $table = 'ai_photo_inventory';
 
 	protected $fillable = [
-		'item_id',
-		'location_id',
 		'customer_id',
-		'item_quantity',
-		'capacity',
-		'reorder_quantity',
+		'category_id',
+		'item_id',
+		'item_label',
+		'current_stock',
 	];
 
 	public function item()
 	{
 		return $this->belongsTo(Item::class);
-	}
-
-	public function location()
-	{
-		return $this->belongsTo(Location::class);
 	}
 
 	public function customer()
