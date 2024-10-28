@@ -106,13 +106,13 @@
 				</a>
 
 				<ul class="menu-sub">
-					<li class="menu-item {{ request()->is('/admin/vendors/item-list/' . Auth::guard("admin")->user()->id) ? 'active' : '' }}">
-						<a href="{{ url('/admin/vendors/item-list/' . Auth::guard('admin')->user()->id) }}" class="menu-link">
+					<li class="menu-item {{ request()->is('/admin/vendors/item-list/' . Auth::guard("admin")->user()->user_id) ? 'active' : '' }}">
+						<a href="{{ url('/admin/vendors/item-list/' . Auth::guard('admin')->user()->user_id) }}" class="menu-link">
 							<div data-i18n="New">Item List</div>
 						</a>
 					</li>
-					<li class="menu-item {{ request()->is('/admin/addnew/item/' . Auth::guard('admin')->user()->id) ? 'active' : '' }}">
-						<a href="{{ url('/admin/addnew/item/' . Auth::guard('admin')->user()->id) }}" class="menu-link">
+					<li class="menu-item {{ request()->is('/admin/addnew/item/' . Auth::guard('admin')->user()->user_id) ? 'active' : '' }}">
+						<a href="{{ url('/admin/addnew/item/' . Auth::guard('admin')->user()->user_id) }}" class="menu-link">
 							<div data-i18n="Approved Orders">
 								New Item
 							</div>
