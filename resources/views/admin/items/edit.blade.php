@@ -70,11 +70,11 @@
 						</div>
 					</div>
 					<div class="row mb-3">
-						<label for="image" class="col-sm-2 col-form-label">
+						<label for="images" class="col-sm-2 col-form-label">
 							Additional Images
 						</label>
 						<div class="col-sm-10">
-							<input class="form-control" type="file" name="image" id="image" multiple />
+							<input class="form-control" type="file" name="images" id="images" multiple />
 						</div>
 					</div>
 					<div class="row mb-3">
@@ -142,7 +142,7 @@
 							Quantity
 						</label>
 						<div class="col-sm-10">
-							<input class="form-control" name="quantity" id="quantity" value="{{ old('quantity', $item->qty) }}" type="number" placeholder="Type quantity">
+							<input class="form-control" name="quantity" id="quantity" value="{{ old('quantity', $item->quantity) }}" type="number" placeholder="Type quantity">
 							@if($errors->has('quantity'))
 							<span class="d-block invalid-feedback" role="alert">
 								<strong>

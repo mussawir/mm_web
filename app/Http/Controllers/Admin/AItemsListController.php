@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\Vendor;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 
@@ -130,14 +131,13 @@ class AItemsListController extends Controller
 		$request->validate([
 			'category' => 'required',
 			'name' => 'required|max:160',
-			'discount' => 'required|numeric|between:0,99.99',
-			'instock' => 'required|numeric',
-			'price' => 'required|numeric|between:0.00,9999.99',
 			'description' => 'required|min:4|max:1000',
-			'image' => 'image|mimes:jpeg,png,jpg|dimensions:min_width=500,min_height=500|min:100|max:4096',
+			'price' => 'required|numeric|between:0.00,9999.99',
+			'discount' => 'required|numeric|between:0,99.99',
 			'quantity' => 'required|integer',
 			'max_order_quantity' => 'required|integer',
-			// 'preparation_time' => 'required',
+			'instock' => 'required|numeric',
+			'image' => 'image|mimes:jpeg,png,jpg|dimensions:min_width=100,min_height=100|min:100|max:4096',
 		]);
 
 		$item = Item::findOrFail($request->id);
@@ -191,9 +191,8 @@ class AItemsListController extends Controller
 		$item->discount = $request->input('discount');
 		$item->price = $request->input('price');
 		$item->description = $request->input('description');
-		$item->qty = $request->input('quantity');
+		$item->quantity = $request->input('quantity');
 		$item->max_order_qty = $request->input('max_order_quantity');
-		$item->preparation_time = $request->input('preparation_time');
 		$item->category_id = $request->input('category');
 		$item->vendor_id = $vendorID;
 		$item->instock = $request->input('instock');
@@ -204,7 +203,9 @@ class AItemsListController extends Controller
 
 		$item ->save();
 
-		return redirect("/admin/vendors/item-list/{$vendorID}")
+		$supplierID = Auth::guard("admin")->user()->user_id;
+
+		return redirect("/admin/vendors/item-list/{$supplierID}")
 			->with('message', 'Item updated successfully!');
 	}
 
