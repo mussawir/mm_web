@@ -206,8 +206,9 @@ class FrontController extends Controller
 			->get();
 		
 		$storedPhotos = AIPhotoInventory::where('customer_id', $customerId)
+			->with('item')
 			->get();
-	
+
 		return view('front.ai-inventory', compact('inventoryData', 'storedPhotos'));
 	}
 

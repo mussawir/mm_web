@@ -10,6 +10,8 @@ use App\Models\Item;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Validator;
 
 class MobileLocationController extends Controller
@@ -109,6 +111,7 @@ class MobileLocationController extends Controller
 			'customer_id' => 'required|integer|exists:customers,id',
 			'label' => 'required|string',
 			'current_stock' => 'required|string',
+			'image' => 'required|file|mimes:png,jpg,jpeg',
 		]);
 
 		if ($validator->fails()) {
@@ -119,6 +122,7 @@ class MobileLocationController extends Controller
 		$customerId = $request->input('customer_id');
 		$label = $request->input('label');
 		$current_stock = $request->input('current_stock');
+		$image = $request->file('image');
 
 		$item = Item::where('name', $label)->first();
 
@@ -140,6 +144,31 @@ class MobileLocationController extends Controller
 					'current_stock' => $current_stock,
 				]
 			);
+
+			if($request->hasfile('image'))
+			{
+				$file = $request->file('image');
+
+				if ($file->isValid()) {
+					$filename = time() . '.' . $file->extension();
+					$sizes = [150, 250, 500];
+
+					foreach ($sizes as $size) {
+						$image = Image::make($file);
+						$path = "images/ai-inventory/{$customerId}/{$size}x{$size}/";
+
+						if (!File::isDirectory($path)) {
+							File::makeDirectory($path, 0755, true, true);
+						}
+
+						$image->resize($size, null, function ($constraint) {
+							$constraint->aspectRatio();
+						})->save($path . $filename);
+					}
+				} else {
+					return redirect()->back()->withErrors(['image' => 'Invalid image file.']);
+				}
+			}
 
 			DB::commit();
 
