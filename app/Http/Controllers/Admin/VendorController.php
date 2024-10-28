@@ -303,7 +303,7 @@ class VendorController extends Controller
 	public function vendorItemList($vendorID)
 	{
 		$items = Item::where('vendor_id', $vendorID)
-			->where('is_addon', 0)
+			// ->where('is_addon', 0)
 			->with('category')
 			->latest()
 			->paginate(25);
