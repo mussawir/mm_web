@@ -37,10 +37,10 @@ class Item extends Model
 		return $this->belongsTo(Vendor::class);
 	}
 
-	// public function addons()
-	// {
-	// 	return $this->belongsToMany(Item::class, 'item_addons', 'item_id', 'addon_id');
-	// }
+	public function addons()
+	{
+		return $this->belongsToMany(Item::class, 'item_addons', 'item_id', 'addon_id');
+	}
 
 	public function inventoryMaps()
 	{

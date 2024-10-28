@@ -302,7 +302,7 @@ class VendorController extends Controller
 
 	public function vendorItemList($vendorID)
 	{
-		$supplier = Vendor::where('operator_id', $vendorID)->get();
+		$supplier = Vendor::where('operator_id', $vendorID)->firstOrFail();
 		$items = Item::where('vendor_id', $supplier->id)
 			// ->where('is_addon', 0)
 			->with('category')
