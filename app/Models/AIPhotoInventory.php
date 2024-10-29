@@ -16,6 +16,7 @@ class AIPhotoInventory extends Model
 		'category_id',
 		'item_id',
 		'item_label',
+		'item_image',
 		'current_stock',
 	];
 

@@ -130,6 +130,25 @@ class MobileLocationController extends Controller
 			return response()
 				->json(['message' => "Item not found: $label"], 404);
 		}
+
+		if($request->hasfile('image'))
+		{
+			$file = $request->file('image');
+
+			if ($file->isValid()) {
+				$filename = time() . '.' . $file->extension();
+				$path = "images/ai-inventory/{$customerId}/";
+
+				if (!File::isDirectory($path)) {
+					File::makeDirectory($path, 0755, true, true);
+				}
+
+				$file->move($path, $filename);
+			} else {
+				return redirect()->back()->withErrors(['image' => 'Invalid image file.']);
+			}
+		}
+
 		$itemId = $item->id;
 
 		DB::beginTransaction();
@@ -141,34 +160,10 @@ class MobileLocationController extends Controller
 				],
 				[
 					'item_label' => $label,
+					'item_image' => $filename,
 					'current_stock' => $current_stock,
 				]
 			);
-
-			if($request->hasfile('image'))
-			{
-				$file = $request->file('image');
-
-				if ($file->isValid()) {
-					$filename = time() . '.' . $file->extension();
-					$sizes = [150, 250, 500];
-
-					foreach ($sizes as $size) {
-						$image = Image::make($file);
-						$path = "images/ai-inventory/{$customerId}/{$size}x{$size}/";
-
-						if (!File::isDirectory($path)) {
-							File::makeDirectory($path, 0755, true, true);
-						}
-
-						$image->resize($size, null, function ($constraint) {
-							$constraint->aspectRatio();
-						})->save($path . $filename);
-					}
-				} else {
-					return redirect()->back()->withErrors(['image' => 'Invalid image file.']);
-				}
-			}
 
 			DB::commit();
 
