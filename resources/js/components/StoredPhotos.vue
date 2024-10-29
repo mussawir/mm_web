@@ -54,7 +54,7 @@ const orderItems = () => {
 					<td>
 						<div class="d-flex align-items-center">
 							<img
-								class="img-fluid img-thumbnail"
+								class="img-fluid img-thumbnail w-50"
 								:src="`/images/ai-inventory/${inventory.customer_id}/${inventory.item_image}`"
 								alt="Item image"
 							/>
