@@ -15,7 +15,7 @@ const toggleSelection = (index) => {
 }
 
 const buttonLabel = computed(() => {
-	return selectedItems.value.length > 0 ? 'Order Checked Items' : 'Order All Items'
+	return selectedItems.value.length > 0 ? 'Order Selected' : 'Order All Items'
 })
 
 const orderItems = () => {
@@ -39,11 +39,11 @@ const orderItems = () => {
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th>Select</th>
 					<th>Image</th>
 					<th>Item</th>
-					<th>Current Stock</th>
-					<th>Actions</th>
+					<th>Quantity</th>
+					<th>Approx Order</th>
+					<th>Select</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -51,6 +51,22 @@ const orderItems = () => {
 					<td colspan="5">No items available</td>
 				</tr>
 				<tr v-else v-for="(inventory, index) in storedPhotos" :key="index">
+					<td>
+						<div class="d-flex align-items-center">
+							<img
+								class="img-fluid img-thumbnail"
+								:src="`/images/ai-inventory/${inventory.customer_id}/${inventory.item_image}`"
+								alt="Item image"
+							/>
+						</div>
+					</td>
+					<td>{{ inventory.item_label }}</td>
+					<td>{{ inventory.current_stock }}</td>
+					<td>
+						<button @click="addToCart(inventory)" class="btn btn-sm btn-danger">
+							Approx Order
+						</button>
+					</td>
 					<td>
 						<div class="form-check">
 							<input
@@ -62,25 +78,9 @@ const orderItems = () => {
 								:checked="selectedItems.includes(index)"
 							/>
 							<label class="form-check-label" :for="`itemCheck${index}`">
-								<span class="sr-only">Item Checkbox</span>
+								Select Item
 							</label>
 						</div>
-					</td>
-					<td>
-						<div class="d-flex align-items-center">
-							<img
-								class="img-fluid img-thumbnail"
-								:src="`/images/vendors/${inventory.item.vendor_id}/items/150x150/${inventory.item.image}`"
-								alt="Item image"
-							/>
-						</div>
-					</td>
-					<td>{{ inventory.item_label }}</td>
-					<td>{{ inventory.current_stock }}</td>
-					<td>
-						<button @click="addToCart(inventory)" class="btn btn-sm btn-danger">
-							Approx Order
-						</button>
 					</td>
 				</tr>
 			</tbody>
