@@ -34,4 +34,9 @@ class InventoryMap extends Model
 	{
 		return $this->belongsTo(Customer::class);
 	}
+
+	public function aiPhotoInventory()
+	{
+		return $this->belongsTo(AIPhotoInventory::class, 'item_id', 'item_id');
+	}
 }

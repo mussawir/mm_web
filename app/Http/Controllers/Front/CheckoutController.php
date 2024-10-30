@@ -4,31 +4,20 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\CartAddon;
-use App\Models\CartDealOption;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\OrderMaster;
 use App\Models\OrderDetails;
 use App\Models\CartMaster;
 use App\Models\CartDetail;
-use App\Models\CustomerOperator;
 use App\Models\FavouriteVendor;
-use App\Models\Item;
-use App\Models\OperatorDues;
-use App\Models\OperatorMaster;
 use App\Models\OrderAddon;
-use App\Models\OrderDealOption;
 use App\Models\Vendor;
 
 class CheckoutController extends Controller
 {
 	public function index(Request $request)
 	{
-		$selectedCoords = session('selectedCoords') ?? null;
-		
-		$latitude = $selectedCoords->lat ?? 0;
-		$longitude = $selectedCoords->long ?? 0;
-
 		// Check if the user is already logged in
 		if (Auth::guard('customer')->check()) {
 			$vendorID = session('vendor');
@@ -38,7 +27,9 @@ class CheckoutController extends Controller
 			$address = Auth::guard('customer')->user()->address;
 
 			$ip = $request->ip();
-			$cart = CartMaster::where('ip_address', $ip)->first();
+			$cart = CartMaster::where('ip_address', $ip)
+				->where('customer_id', auth()->id())
+				->first();
 
 			if ($cart->grand_total == 0) {
 				return redirect()
@@ -55,7 +46,7 @@ class CheckoutController extends Controller
 			// Free delivery calculation
 			$deliveryCharges = ($cart->grand_total >= $vendor->delivery_free_after) ? 0 : $vendor->delivery_charges;
 
-			return view('front.checkout', compact('deliveryCharges', 'minimumOrderCheck', 'minimumOrderAmount', 'deliveryFreeAfer', 'latitude', 'longitude', 'name', 'address'));
+			return view('front.checkout', compact('deliveryCharges', 'minimumOrderCheck', 'minimumOrderAmount', 'deliveryFreeAfer', 'name', 'address'));
 		}
 		else {
 			return redirect()->route('customer.login');
@@ -66,7 +57,6 @@ class CheckoutController extends Controller
 	{
 		$request->validate([
 			'name' => 'required|string',
-			'user_address' => 'required|string'
 		]);
 
 		$orderType = $request->input('order_type');
@@ -84,10 +74,6 @@ class CheckoutController extends Controller
 			$orderAddress = $request->input('user_address');
 			$deliveryCharges = $request->input('delivery_charges');
 
-			$latitude = floatval($request->input('address_latitude'));
-			$longitude = floatval($request->input('address_longitude'));
-			$selectedCoords = json_encode(['latitude' => $latitude, 'longitude' => $longitude]);
-
 			$cart = CartMaster::where('ip_address', $ip)->first();
 
 			if ($cart->count())
@@ -98,9 +84,8 @@ class CheckoutController extends Controller
 
 				$order->operator_id = $vendor->operator_id;
 				$order->vendor_id = $vendor->id;
-				$order->customer_id = Auth::guard('customer')->user()->id ?? null;
+				$order->customer_id = Auth::guard('customer')->user()->id;
 				$order->order_address = $orderAddress;
-				$order->order_geo_location = $selectedCoords;
 				$order->further_instructions = $request->input('instructions');
 				$order->item_quantity = $cart->item_quantity;
 				$order->order_amount = $cart->grand_total;
@@ -108,9 +93,9 @@ class CheckoutController extends Controller
 				$order->grand_total = ($cart->grand_total + $deliveryCharges);
 				$order->operator_commission = $vendor->commission_percentage * ($cart->grand_total / 100);
 				
-				$operatorRecord = OperatorMaster::where('id', $vendor->operator_id)->first();
-				$adminCommissionRate = $operatorRecord->details->commission_percentage;
-				$order->admin_commission = $adminCommissionRate * ($cart->grand_total / 100);
+				// $operatorRecord = OperatorMaster::where('id', $vendor->operator_id)->first();
+				// $adminCommissionRate = $operatorRecord->details->commission_percentage;
+				// $order->admin_commission = $adminCommissionRate * ($cart->grand_total / 100);
 
 				if ($orderType == 'delivery') {
 					$order->order_type = 1;
@@ -127,28 +112,28 @@ class CheckoutController extends Controller
 
 				$order->save();
 
-				$operatorDues = new OperatorDues;
+				// $operatorDues = new OperatorDues;
 
-				$operatorDues->order_id = $order->id;
-				$operatorDues->vendor_id = $vendor->id;
-				$operatorDues->operator_id = $vendor->operator_id;
-				$operatorDues->amount = $adminCommissionRate * ($cart->grand_total / 100);
+				// $operatorDues->order_id = $order->id;
+				// $operatorDues->vendor_id = $vendor->id;
+				// $operatorDues->operator_id = $vendor->operator_id;
+				// $operatorDues->amount = $adminCommissionRate * ($cart->grand_total / 100);
 
-				$operatorDues->save();
+				// $operatorDues->save();
 
-				$this->saveUserInfo($orderAddress, $selectedCoords);
+				// $this->saveUserInfo($orderAddress, $selectedCoords);
 
-				$customerOperatorHistory = CustomerOperator::where('customer_id', $order->customer_id)
-					->where('operator_id', $vendor->operator_id)
-					->first();
+				// $customerOperatorHistory = CustomerOperator::where('customer_id', $order->customer_id)
+				// 	->where('operator_id', $vendor->operator_id)
+				// 	->first();
 
-				if (! $customerOperatorHistory) {
-					$cusOperHist = new CustomerOperator;
-					$cusOperHist->customer_id = $order->customer_id;
-					$cusOperHist->operator_id = $vendor->operator_id;
+				// if (! $customerOperatorHistory) {
+				// 	$cusOperHist = new CustomerOperator;
+				// 	$cusOperHist->customer_id = $order->customer_id;
+				// 	$cusOperHist->operator_id = $vendor->operator_id;
 
-					$cusOperHist->save();
-				}
+				// 	$cusOperHist->save();
+				// }
 			}
 
 			$itemsArray = [];
@@ -190,43 +175,18 @@ class CheckoutController extends Controller
 						$orderAddon->save();
 					}
 				}
-
-				if ($cartItem->is_deal)
-				{
-					$cartDealOptions = $cartItem->cartDealOptions;
-
-					foreach ($cartDealOptions as $cartDealOption)
-					{
-						$orderDealOption = new OrderDealOption;
-
-						$orderDealOption->deal_id = $cartDealOption->deal_id;
-						$orderDealOption->order_master_id = $order->id;
-						$orderDealOption->order_detail_id = $orderDetail->id;
-						$orderDealOption->item_id = $cartDealOption->item_id;
-						$orderDealOption->item_name = $cartDealOption->item_name;
-						$orderDealOption->item_description = $cartDealOption->item_description;
-						$orderDealOption->item_image = $cartDealOption->item_image;
-						$orderDealOption->item_original_price = $cartDealOption->item_original_price;
-						$orderDealOption->deal_price = $cartDealOption->deal_price;
-						$orderDealOption->quantity = 0;
-
-						$orderDealOption->save();
-
-						$itemsArray[] = $cartDealOption->item_id;
-					}
-				}
 			}
 
-			$preparationTime = Item::whereIn('id', $itemsArray)
-				->max('preparation_time');
+			// $preparationTime = Item::whereIn('id', $itemsArray)
+			// 	->max('preparation_time');
 
 			$cart->delete();
 
 			CartDetail::destroy($cartDetail->pluck('id'));
 
-			if (isset($cartDealOption) && $cartDealOption->count()) {
-				CartDealOption::destroy($cartDealOption->pluck('id'));
-			}
+			// if (isset($cartDealOption) && $cartDealOption->count()) {
+			// 	CartDealOption::destroy($cartDealOption->pluck('id'));
+			// }
 			
 			if (isset($cartAddon) && $cartAddon->count()) {
 				CartAddon::destroy($cartAddon->pluck('id'));
@@ -237,12 +197,6 @@ class CheckoutController extends Controller
 			$successData = [
 				'orderId' => $order->id,
 				'total' => $order->grand_total,
-				'deliveryTime' => $preparationTime,
-				'operatorName' => $operatorRecord->company_name,
-				'operatorContact' => $operatorRecord->phone,
-				'operatorAddress' => $operatorRecord->details->address,
-				'operatorLogo' => $operatorRecord->logo,
-				'operatorBanner' => $operatorRecord->banner,
 			];
 
 			return redirect()
@@ -297,15 +251,15 @@ class CheckoutController extends Controller
 		}
 	}
 
-	private function saveUserInfo($orderAddress, $selectedCoords)
-	{
-		if (auth()->check()) {
-			$customer = auth()->guard('customer')->user();
+	// private function saveUserInfo($orderAddress, $selectedCoords)
+	// {
+	// 	if (auth()->check()) {
+	// 		$customer = auth()->guard('customer')->user();
 
-			$customer->address = $orderAddress;
-			$customer->geo_location = $selectedCoords;
+	// 		$customer->address = $orderAddress;
+	// 		$customer->geo_location = $selectedCoords;
 
-			$customer->save();
-		}
-	}
+	// 		$customer->save();
+	// 	}
+	// }
 }

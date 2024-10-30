@@ -11,19 +11,19 @@
 						{{-- Hidden Inputs --}}
 						<input type="hidden" name="order_type" id="order-type" />
 						<input type="hidden" name="delivery_charges" id="delivery-charges" value="{{ $deliveryCharges }}" />
-						<input type="hidden" name="address_latitude" id="address-latitude" value="{{ $latitude }}" />
-						<input type="hidden" name="address_longitude" id="address-longitude" value="{{ $longitude }}" />
+						{{-- <input type="hidden" name="address_latitude" id="address-latitude" value="{{ $latitude }}" />
+						<input type="hidden" name="address_longitude" id="address-longitude" value="{{ $longitude }}" /> --}}
 						{{-- Hidden Inputs End --}}
 
 						<div class="row">
 							<div class="col-lg-8">
-								<div class="row g-3 mt-4">
+								{{-- <div class="row g-3 mt-4">
 									<div class="col-md-12">
 										<div class="w-100 border border-2 rounded-3" id="address-map-container" style="height:400px;">
 											<div class="h-100" id="address-map"></div>
 										</div>
 									</div>
-								</div>
+								</div> --}}
 								<div class="row g-3 mt-4">
 									<div class="col-lg-12 mb-3">
 										<p class="fs-6 fw-semibold">
@@ -198,7 +198,7 @@
 															@endforeach
 															@endforeach
 														@endif
-															@if (count($item['addons']))
+															@if (isset($item['addons']) && count($item['addons']))
 															<span class="d-flex fw-semibold text-muted ps-1" style="font-size:.775em;">
 																Addons:
 															</span>
@@ -255,7 +255,7 @@
 														@endforeach
 														@endforeach
 													@endif
-													@if (count($item['addons']))
+													@if (isset($item['addons']) && count($item['addons']))
 														@foreach ($item['addons'] as $addon)
 														<div class="d-flex align-items-center">
 															<span class="d-flex align-items-center justify-content-center text-muted fw-semibold ps-1 small">
@@ -289,10 +289,10 @@
 														$itemTotal = $item['quantity'] * $item['price'];
 														$addonTotal = 0;
 												
-														foreach ($item['addons'] as $addon)
-														{
-															$addonTotal += $addon['price'] * $addon['quantity'];
-														}
+														// foreach ($item['addons'] as $addon)
+														// {
+														// 	$addonTotal += $addon['price'] * $addon['quantity'];
+														// }
 													@endphp
 												@endforeach
 											@endforeach
@@ -397,10 +397,11 @@
 
 		orderButton.addEventListener('click', function (event) {
 			event.preventDefault();
+			checkoutForm.submit();
 
-			if (checkCoords()) {
-				checkoutForm.submit();
-			}
+			// if (checkCoords()) {
+			// 	checkoutForm.submit();
+			// }
 		});
 
 		function showAddressField(value) {
@@ -411,19 +412,19 @@
 			}
 		}
 
-		function checkCoords() {
-			const address = document.getElementById('address-input');
-			const latitude = document.getElementById('address-latitude');
-			const longitude = document.getElementById('address-longitude');
+		// function checkCoords() {
+		// 	const address = document.getElementById('address-input');
+		// 	const latitude = document.getElementById('address-latitude');
+		// 	const longitude = document.getElementById('address-longitude');
 
-			if (latitude.value === '0' || longitude.value === '0') {
-				alert('Please select a valid location on the map.');
-				address.classList.add('is-invalid');
-				return false;
-			}
+		// 	if (latitude.value === '0' || longitude.value === '0') {
+		// 		alert('Please select a valid location on the map.');
+		// 		address.classList.add('is-invalid');
+		// 		return false;
+		// 	}
 
-			return true;
-		}
+		// 	return true;
+		// }
 	});
 </script>
 @endpush

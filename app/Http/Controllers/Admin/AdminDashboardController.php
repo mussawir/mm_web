@@ -50,8 +50,8 @@ class AdminDashboardController extends Controller
 		$phoneNumber = $orderMaster->customer->phone_number ?? '';
 		$customerAddress = $orderMaster->customer->address ?? '';
 		$vendorName = $orderMaster->vendor->company_name ?? '';
-		$branchName = $orderMaster->branch->name;
-		$branchId = $orderMaster->branch->id;
+		$branchName = $orderMaster->branch->name ?? '';
+		$branchId = $orderMaster->branch->id ?? '';
 		$orderDate = $orderMaster->created_at->format('M d Y');
 		$orderAmount = $orderMaster->order_amount;
 		$deliveryCharges = $orderMaster->delivery_charges;
