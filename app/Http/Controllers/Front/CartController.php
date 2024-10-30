@@ -9,10 +9,6 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\CartMaster;
 use App\Models\CartDetail;
-use App\Models\DealDetail;
-use App\Models\DealMaster;
-use App\Models\DealOption;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
@@ -24,148 +20,63 @@ class CartController extends Controller
 	
 	public function addToCart(Request $request)
 	{
-		if ($request->input('vendor') !== session('vendor')) {
-			session::forget('cart');
-		}
+		// if ($request->input('vendor') !== session('vendor')) {
+		// 	session::forget('cart');
+		// }
 
 		$ip = $request->ip();
+		// $vendor = $request->input('vendor');
+		$customer = auth()->id();
+		// This should be removed later
 		$type = $request->input('type');
-		$vendor = $request->input('vendor');
-		$id = $request->input('id');
-		$quantity = $request->input('quantity');
-		$selectedAddons = $request->input('addons', []);
-		$addonQuantities = $request->input('addon_quantities', []);
+		// $id = $request->input('id');
+		// $quantity = $request->input('quantity');
+		
+		// $selectedAddons = $request->input('addons', []);
+		// $addonQuantities = $request->input('addon_quantities', []);
+
+		$item = null;
+		// $itemImageColumn = '';
+		// $itemPriceColumn = '';
 
 		$cart = session()->get('cart', []);
 
-		$item = null;
-		$itemImageColumn = '';
-		$itemPriceColumn = '';
+		$items = $request->input('items');
 
-		if ($type === 'deal') {
-			$item = DealMaster::findOrFail($id);
-			$itemImageColumn = 'banner';
-			$itemPriceColumn = 'grand_total';
-			$uniqueKey = $id . '-' . implode('-', Arr::flatten($request->input('options')));
-		} elseif ($type === 'item') {
-			$item = Item::findOrFail($id);
-			$itemImageColumn = 'main_image';
-			$itemPriceColumn = 'price';
-			$uniqueKey = $id;
-		}
+		$ids = array_column($items, 'id');
+		$itemsData = Item::select(['id', 'name', 'price', 'image'])
+			->whereIn('id', $ids)
+			->get()
+			->keyBy('id');
 
-		// Check if item quantity exceeds max order quantity set by admin
-		if (isset($item->max_order_qty) && $quantity > $item->max_order_qty) {
-			return redirect()
-				->back()
-				->withErrors(['quantity' => "Maximum order quantity for this {$type} is: {$item->max_order_qty}"]);
-		}
+		$uniqueKeys = [];
+		foreach ($items as $item) {
+			$itemData = $itemsData[$item['id']];
+			$uniqueKey = $itemData->id;
 
-		if (!isset($cart[$type][$uniqueKey])) {
-			$cart[$type][$uniqueKey] = [
-				"name" => $item->name,
-				"quantity" => $quantity,
-				"price" => $item->$itemPriceColumn,
-				"image" => $item->$itemImageColumn,
-			];
-		}
+			$uniqueKeys[] = $itemData->id;
 
-		// Update item or deal quantity
-		$cart[$type][$uniqueKey]['quantity'] = $quantity;
-
-		if ($request->input('options') && count($request->input('options'))) {
-			foreach($request->input('options') as $key => $item)
-			{
-				$dealDetail = DealDetail::findorFail($key);
-
-				$cart[$type][$uniqueKey]['options'][$key] = [
-					'name' => $dealDetail->item_type_name,
-					'quantity' => $dealDetail->quantity,
+			// If item does not exist in cart, add it with all details
+			if (!isset($cart[$type][$uniqueKey])) {
+				$cart[$type][$uniqueKey] = [
+					'name' => $itemData->name,
+					'quantity' => $item['quantity'],
+					'price' => $itemData->price,
+					'image' => $itemData->image,
 				];
-
-				$optionIds = is_array($item) ? $item : [$item];
-
-				$dealOptions = [];
-
-				foreach($optionIds as $optionId)
-				{
-					$dealOption = DealOption::find($optionId);
-
-					if ($dealOption)
-					{
-						$dealOptions[] = $dealOption;
-					}
-				}
-
-				foreach ($dealOptions as $dealOption)
-				{
-					$cart[$type][$uniqueKey]['options'][$key][] = [
-						'id' => $dealOption->item_id,
-						'name' => $dealOption->item_name,
-						'description' => $dealOption->item_description,
-						'image' => $dealOption->item_image,
-						'original_price' => $dealOption->item_original_price,
-						'deal_price' => $dealOption->deal_price,
-					];
-				}
 			}
+
+			// Update quantity if item already in cart
+			$cart[$type][$uniqueKey]['quantity'] = $item['quantity'];
 		}
 
-		if (!isset($cart[$type][$uniqueKey]['addons']))
-		{
-			$cart[$type][$uniqueKey]['addons'] = [];
-		}
 
-		// Reference to the addons in the cart
-		$cartAddons = &$cart[$type][$uniqueKey]['addons'];
-
-		foreach ($cartAddons as $index => $cartAddon)
-		{
-			$addonId = $cartAddon['id'];
-			if (isset($selectedAddons[$addonId]) && $selectedAddons[$addonId]) {
-				$cartAddons[$index]['quantity'] = $addonQuantities[$addonId] ?? 0;
-			} else {
-				// If the addon doesn't exist in selectedAddons, remove it
-				unset($cartAddons[$index]);
-			}
-		}
-
-		// Loop through selectedAddons to add new addons to the cart
-		foreach ($selectedAddons as $addonId => $selected) {
-			if ($selected) {
-				$addon = Item::findOrFail($addonId);
-				$addonQuantity = $addonQuantities[$addonId] ?? 0;
-	
-				$existingAddon = null;
-				foreach ($cartAddons as $index => $cartAddon) {
-					if ($cartAddon['id'] === $addonId) {
-						$existingAddon = $index;
-						break;
-					}
-				}
-	
-				if ($existingAddon !== null) {
-					// If the addon already exists in the cart, update its quantity
-					$cartAddons[$existingAddon]['quantity'] = $addonQuantity;
-				} else {
-					// If the addon doesn't exist in the cart, add it directly to the addons array
-					$cartAddons[] = [
-						'id' => $addon->id,
-						'name' => $addon->name,
-						'quantity' => $addonQuantity,
-						'price' => $addon->price,
-					];
-				}
-			}
-		}
-
-		session()->put('vendor', $vendor);
 		session()->put('cart', $cart);
 		session()->put('cartTotal', $this->getGrandTotal($cart, $uniqueKey));
 
-		$this->saveCarttoDB($ip, $vendor, $uniqueKey, $type, $request->get('options', []));
+		$this->saveCarttoDB($ip, $customer, $uniqueKeys, $type);
 
-		return redirect()->back()->with('success', 'Item added to cart successfully!');
+		return redirect()->back()->with('success', 'Added to cart successfully!');
 	}
 	
 	public function update(Request $request)
@@ -236,24 +147,13 @@ class CartController extends Controller
 			if(isset($cart[$type][$id]))
 			{
 				$itemID = explode('-', $id)[0];
-				if ($type === 'deal') {
-					$cartDetail = CartDetail::where('unique_key', $id)
+
+				$cartDetail = CartDetail::where('item_id', $itemID)
 					->first();
-				} else {
-					$cartDetail = CartDetail::where('item_id', $itemID)
-					->first();
-				}
-				
+
 				if ($cartDetail)
 				{
-					if ($type === 'deal')
-					{
-						CartDealOption::where('cart_detail_id', $cartDetail->id)
-							->where('deal_id', $itemID)
-							->delete();
-					}
-
-					if (count($cart[$type][$id]['addons']))
+					if (isset($cart[$type][$id]['addons']) && count($cart[$type][$id]['addons']))
 					{
 						CartAddon::where('cart_detail_id', $cartDetail->id)
 							->where('item_id', $itemID)
@@ -272,13 +172,11 @@ class CartController extends Controller
 					'ip_address' => $request->ip(),
 				]);
 
-				$deals = count(session()->get('cart.deal', []));
-				$items = count(session()->get('cart.item', []));
-
-				$cartMaster->item_quantity = ($deals + $items);
-				if ($deals + $items == 0) {
+				$cartMaster->item_quantity = count(session()->get('cart.item', []));
+				if (count(session()->get('cart.item', [])) == 0) {
 					session()->forget('vendor');
 				}
+
 				$cartMaster->grand_total = $this->getGrandTotal(session('cart'), $id);
 
 				$cartMaster->save();
@@ -287,128 +185,72 @@ class CartController extends Controller
 		}
 	}
 
-	private function saveCarttoDB($ip, $vendor, $id, $type, $options = [])
+	// private function saveCarttoDB($ip, $vendor, $id, $type, $options = [])
+	private function saveCarttoDB($ip, $customer, $ids, $type)
 	{
-		if ($type === 'deal') {
-			$deal = DealMaster::with('vendor')->findOrFail($id);
-		} elseif ($type === 'item') {
+		// This needs to be fetched from session cart
+		// Performance issue if DB is called too many times
+		foreach($ids as $id) {
 			$item = Item::with('vendor')->findOrFail($id);
-		}
-
-		$cartMaster = CartMaster::firstOrNew([
-			'ip_address' => $ip
-		]);
-
-		$cartMaster->ip_address = $ip;
-
-		if ($type === 'deal') {
-			$cartMaster->operator_id = $deal->vendor->operator_id;
-		} elseif ($type === 'item') {
+			session()->put('vendor', $item->vendor->id);
+			$cartMaster = CartMaster::firstOrNew([
+				'ip_address' => $ip,
+				'customer_id' => $customer,
+			]);
+	
+			$cartMaster->ip_address = $ip;
 			$cartMaster->operator_id = $item->vendor->operator_id;
-		}
 
-		$deals = count(session()->get('cart.deal', []));
-		$items = count(session()->get('cart.item', []));
-		$cartMaster->item_quantity = ($deals + $items);
+			$cartMaster->item_quantity = count(session()->get('cart.item', []));
 
-		$cartMaster->grand_total = $this->getGrandTotal(session('cart'), $id);
-		$cartMaster->vendor_id = $vendor;
-		$cartMaster->status = 1;
+			$cartMaster->grand_total = $this->getGrandTotal(session('cart'), $id);
+			$cartMaster->vendor_id = $item->vendor->id;
+			$cartMaster->status = 1;
 
-		$cartMaster->save();
-		
-		foreach(session('cart') as $key => $cartItem)
-		{
-			if ($key == $type)
+			$cartMaster->save();
+			
+			foreach(session('cart') as $key => $cartItem)
 			{
-				$itemTotal = $cartItem[$id]['quantity'] * $cartItem[$id]['price'];
-				$addonTotal = 0;
-				
-				foreach ($cartItem[$id]['addons'] as $addon)
+				if ($key == $type)
 				{
-					$addonTotal += $addon['price'] * $addon['quantity'];
-				}
+					$itemTotal = $cartItem[$id]['quantity'] * $cartItem[$id]['price'];
+					$itemID = explode('-', $id)[0];
 
-				$itemID = explode('-', $id)[0];
-
-				$cartDetail = CartDetail::updateOrCreate(
-					['unique_key' => $id, 'cart_master_id' => $cartMaster->id],
-					[
-						'item_id' => $itemID,
-						'sub_total' => ($itemTotal + $addonTotal),
-						'qty' => $cartItem[$id]['quantity'],
-						'item_name' => $cartItem[$id]['name'],
-						'main_image' => $cartItem[$id]['image'],
-						'item_price' => $cartItem[$id]['price'],
-						'is_deal' => ($type === 'deal') ? '1' : '0',
-					]
-				);
-
-				if ($cartItem[$id]['addons'] ?? null)
-				{
-					CartAddon::where('cart_master_id', $cartMaster->id)
-						->where('cart_detail_id', $cartDetail->id)
-						->where('item_id', $itemID)
-						->delete();
-
-					foreach($cartItem[$id]['addons'] as $addon)
-					{
-						$addons[] = [
-							'cart_master_id' => $cartMaster->id,
-							'cart_detail_id' => $cartDetail->id,
+					$cartDetail = CartDetail::updateOrCreate(
+						['unique_key' => $id, 'cart_master_id' => $cartMaster->id],
+						[
 							'item_id' => $itemID,
-							'addon_id' => $addon['id'],
-							'quantity' => $addon['quantity'],
-							'is_deal' => ($type === 'deal') ? 1 : 0,
-						];
-					}
-					if (!empty($addons))
+							'sub_total' => $itemTotal,
+							// 'sub_total' => ($itemTotal + $addonTotal),
+							'qty' => $cartItem[$id]['quantity'],
+							'item_name' => $cartItem[$id]['name'],
+							'main_image' => $cartItem[$id]['image'],
+							'item_price' => $cartItem[$id]['price'],
+							'is_deal' => ($type === 'deal') ? '1' : '0',
+						]
+					);
+
+					if ($cartItem[$id]['addons'] ?? null)
 					{
-						CartAddon::insert($addons);
-					}
-				}
+						CartAddon::where('cart_master_id', $cartMaster->id)
+							->where('cart_detail_id', $cartDetail->id)
+							->where('item_id', $itemID)
+							->delete();
 
-				$newOptions = array_keys($options);
-
-				if ($newOptions)
-				{
-					CartDealOption::where('deal_id', $deal->id)
-						->where('cart_master_id', $cartMaster->id)
-						->where('cart_detail_id', $cartDetail->id)
-						->delete();
-
-					foreach($newOptions as $newOption)
-					{
-						if (array_key_exists($newOption, session("cart.{$key}.{$id}.options")))
+						foreach($cartItem[$id]['addons'] as $addon)
 						{
-							$thisOption = session("cart.{$key}.{$id}.options.{$newOption}");
-
-							$thisOption = array_filter($thisOption, function ($item) {
-								return is_array($item);
-							});
-
-							$newDealOptions = [];
-
-							foreach ($thisOption as $onlyOption)
-							{
-								$newDealOptions[] = [
-									'deal_id' => $deal->id,
-									'cart_master_id' => $cartMaster->id,
-									'cart_detail_id' => $cartDetail->id,
-									'item_id' => $onlyOption['id'],
-									'item_name' => $onlyOption['name'],
-									'item_description' => $onlyOption['description'] ?? null,
-									'item_image' => $onlyOption['image'] ?? null,
-									'item_original_price' => $onlyOption['original_price'] ?? 0,
-									'deal_price' => $onlyOption['deal_price'] ?? 0,
-									'quantity' => 0,
-								];
-							}
-
-							if (!empty($newDealOptions))
-							{
-								CartDealOption::insert($newDealOptions);
-							}
+							$addons[] = [
+								'cart_master_id' => $cartMaster->id,
+								'cart_detail_id' => $cartDetail->id,
+								'item_id' => $itemID,
+								'addon_id' => $addon['id'],
+								'quantity' => $addon['quantity'],
+								'is_deal' => ($type === 'deal') ? 1 : 0,
+							];
+						}
+						if (!empty($addons))
+						{
+							CartAddon::insert($addons);
 						}
 					}
 				}
@@ -445,33 +287,34 @@ class CartController extends Controller
 					{
 						$itemTotal = $item['quantity'] * $item['price'];
 						$addonTotal = 0;
-						$dealOptionsTotal = 0;
+						// $dealOptionsTotal = 0;
 
-						if ($key === 'deal')
-						{
-							if (is_array($item['options']) && count($item['options']))
-							{
-								foreach($item['options'] as $option)
-								{
-									foreach($option as $dealOption)
-									{
-										if (is_array($dealOption) && count($dealOption))
-										{
-											if (intval($dealOption['deal_price']) !== 0) {
-												$dealOptionsTotal += intval($dealOption['deal_price'] * intval($item['quantity']));
-											}
-										}
-									}
-								}
-							}
-						}
+						// if ($key === 'deal')
+						// {
+						// 	if (is_array($item['options']) && count($item['options']))
+						// 	{
+						// 		foreach($item['options'] as $option)
+						// 		{
+						// 			foreach($option as $dealOption)
+						// 			{
+						// 				if (is_array($dealOption) && count($dealOption))
+						// 				{
+						// 					if (intval($dealOption['deal_price']) !== 0) {
+						// 						$dealOptionsTotal += intval($dealOption['deal_price'] * intval($item['quantity']));
+						// 					}
+						// 				}
+						// 			}
+						// 		}
+						// 	}
+						// }
 
-						foreach ($item['addons'] as $addon)
-						{
-							$addonTotal += $addon['price'] * $addon['quantity'];
-						}
+						// foreach ($item['addons'] as $addon)
+						// {
+						// 	$addonTotal += $addon['price'] * $addon['quantity'];
+						// }
 
-						$total += ($itemTotal + $addonTotal + $dealOptionsTotal);
+						// $total += ($itemTotal + $addonTotal + $dealOptionsTotal);
+						$total += ($itemTotal + $addonTotal);
 					}
 				}
 				elseif (count($items))

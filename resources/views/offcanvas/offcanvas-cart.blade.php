@@ -89,7 +89,7 @@
 									@endforeach
 								@endif
 
-								@if (count($item['addons']))
+								@if (isset($item['addons']) && count($item['addons']))
 									<span class="fw-semibold text-muted ps-3" style="font-size:.775em;">
 										Addons:
 									</span>
